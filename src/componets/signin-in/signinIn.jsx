@@ -5,15 +5,19 @@ import {
   TextField, Button,
   InputAdornment,
   IconButton,
+ 
 } from '@mui/material'
+import { Link } from 'react-router-dom';
+
 import './signinIn.css'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { get_users } from '../../api/users';
 import { AuthContext } from '../../authcontext';
 
+
 export const SignIn = () => {
-  const { user } = useContext(AuthContext)
+  const { user, loginWithEmailAndPassword } = useContext(AuthContext)
   const [users, setUsers] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,10 +46,12 @@ export const SignIn = () => {
 
     let isValid = true;
 
-    if (email === '') {
-      setEmailError('O e-mail é obrigatório.');
+  
+    if (!IsEmail(email)) {
+      setEmailError('O e-mail é obrigatório ou inválido.');
       isValid = false;
     }
+    
 
     if (password.length < 6) {
       setPasswordError('A senha deve ter pelo menos 6 caracteres.');
@@ -60,13 +66,13 @@ export const SignIn = () => {
       alert('Formulário válido! Execute a lógica de autenticação aqui.');
     }
 
-    // function IsEmail(email) {
-    //   var exclude = /[^@-.w]|^[_@.-]|[._-]{2}|[@.]{2}|(@)[^@]*1/;
-    //   var check = /@[w-]+./;
-    //   var checkend = /.[a-zA-Z]{2,3}$/;
-    //   if (((email.search(exclude) != -1) || (email.search(check)) == -1) || (email.search(checkend) == -1)) { return false; }
-    //   else { return true; }
-    // }
+    function IsEmail(email) {
+      var exclude = /[^@.\w]|^[_@.-]|[._-]{2}|[@.]{2}|(@)[^@]*1/;
+      var check = /@[.\w-]+\./;
+      var checkend = /.[a-zA-Z]{2,3}$/;
+      return !exclude.test(email) && check.test(email) && checkend.test(email);
+    }
+    
   };
 
   const logarWithPassword = () => {
@@ -109,7 +115,6 @@ export const SignIn = () => {
                 {emailError}
               </Typography>
             </Box>
-
 
 
             <Box>
@@ -161,7 +166,8 @@ export const SignIn = () => {
                 color: '#1a2428',
               }}>Já tem uma conta?</Typography>
               <li>
-                <a className='linkCadastro' href="./cadastro.html">Cadastrar-se</a>
+              <Link to="/cadastro" className='linkCadastro'>Cadastrar-se</Link>
+
               </li>
             </Box>
 
@@ -181,7 +187,9 @@ export const SignIn = () => {
               }}
               className="BotaoLogar"
               type="button"
-              onClick={logarWithPassword}
+              onClick={() => loginWithEmailAndPassword(
+                email, password
+              )}
             >
               Logar
             </Button>
@@ -191,3 +199,14 @@ export const SignIn = () => {
     </>
   )
 }
+
+
+
+
+
+
+
+
+
+
+

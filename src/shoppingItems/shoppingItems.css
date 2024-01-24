@@ -67,9 +67,32 @@ img {
   align-items: center;
   justify-content: space-between;
   column-gap: 0.5rem;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   max-width: 180px;
+
+  &:hover {
+    background: var(--orange-color);
+    color: var(--bg-color);
+    font-weight: 600;
+  }
 }
+
+
+.btnArrow .bx {
+  padding: 4px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  border-radius: 1rem;
+  font-size: 20px;
+  margin: auto;
+}
+
+
+
+
+
+
+
 
 @media (max-width: 1080px) {
   .home-text {

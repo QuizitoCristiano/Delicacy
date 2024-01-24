@@ -158,12 +158,6 @@ button:hover {
   color: var(--green-color);
 }
 
-.categoria {
-  max-width: 968px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 
 
 .contante_laoder {
@@ -209,12 +203,7 @@ button:hover {
     transform: rotate(360deg);
   }
 } 
-/* .categoria-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, auto));
-  gap: 1rem;
-  margin-top: 2rem;
-} */
+
 
 @media (max-width: 800px) {
   .conatiner-login {

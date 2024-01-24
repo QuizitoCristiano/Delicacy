@@ -1,6 +1,6 @@
 import React from 'react'
 import './shoppingItems.css'
-import { TextField, Typography, Stack, Box } from '@mui/material'
+import { Stack, Box } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import Tropical from '../images/tropical-fruits.png'
 
@@ -73,7 +73,7 @@ export const ShoppingItems = () => {
                 <span>{item.titleP}</span>
                 <p>{item.discretion}</p>
                 <a class="btnArrow">
-                  Compre agora <ArrowForwardIcon/>
+                  Compre agora <ArrowForwardIcon className='bx'/>
                 </a>
               </Box>
               <Box className="containerImg">

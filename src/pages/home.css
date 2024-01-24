@@ -18,13 +18,12 @@
 }
 
 :root {
-  --primary-text: #101828;
-  --bg-color1: #1f242d;
-  --primary-text-color: #ed1d24;
-  --color-bg2: #ad0207;
-  --primary-hover: #dd242a;
-  --bg-body: #dedede;
-  --secondary: #667085;
+  --green-color: #3cb815;
+  --Light-green-color: #c0eb7b;
+  --orange-color: #ff7e00;
+  --light-orange-color: #f75f1d;
+  --text-color: #1a2428;
+  --bg-color: #fff;
 }
 
 html {
@@ -94,7 +93,33 @@ html {
 
 
 
+.logoutButton {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 50px;
+  font-weight: 800;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--light-orange-color);
+  color: white;
+  border: none;
+  outline: none !important;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.6);
+  transition: box-shadow 0.3s ease;
+  z-index: 2000;
+}
 
+.logoutButton:hover {
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.9);
+  background-color: var(--light-orange-color);
+}
 
 
 @media screen and (max-width: 805px) {
