@@ -27,7 +27,7 @@
 /* Custom Scroll Bar */
 ::-webkit-scrollbar {
   width: 0.5rem;
-  background: var(--green-color);
+  /* background: var(--green-color); */
 }
 
 ::-webkit-scrollbar-thumb {

@@ -143,6 +143,7 @@ export const Category = () => {
           gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
           gap: '1rem',
           marginTop: '2rem',
+         
         
           alignItems: 'center',
           justifyContent: 'center', 

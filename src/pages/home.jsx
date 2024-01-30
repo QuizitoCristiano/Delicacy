@@ -7,6 +7,7 @@ import { SignIn } from '../componets/signin-in/signinIn'
 import { SignUp } from '../componets/signUp/signUp'
 import { AuthContext } from '../authcontext'
 import { Category } from '../componets/category/category'
+import { Products } from '../componets/Products/Products'
 
 export const MyHome = () => {
   const { user } = useContext(AuthContext);
@@ -47,6 +48,8 @@ export const MyHome = () => {
 
 
         <Category/>
+
+        <Products/>
         <h2>Ola mundo!!</h2>
         <MyFooter />
       </Stack>
