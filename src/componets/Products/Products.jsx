@@ -49,7 +49,7 @@ export const Products = () => {
       <Box
         sx={{
           padding: '10px',
-          boxShadow: '1px 2px 11px 4px rgb(14 55 54 / 55%)',
+          boxShadow: '1px 2px 11px 4px rgb(14 55 54 / 25%)',
           borderRadius: '0.5rem',
           bgcolor: 'black',
           height: '280px',
