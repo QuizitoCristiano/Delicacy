@@ -141,7 +141,7 @@ export const ProductsLegumes = () => {
             }}>
         <h2>
         Nossos Produtos Populares <br />
-          <span>Produtos de Frutas</span>
+          <span>Produtos de Frutaas</span>
         </h2>
         <a href="#" className="btnMyButton">
           Ver tudo <ArrowForwardIcon className="bx"/>
