@@ -636,70 +636,6 @@ header {
   justify-content: center;
 }
 
-/* <!-- Clientes --> */
-.Clientes {
-  max-width: 968px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.Clientes h2 {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: 600;
-}
-
-.customers-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, auto));
-
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-.customers-container .box {
-  padding: 20px;
-  box-shadow: 1px 2px 11px 4px rgb(14 55 54 / 15%);
-  border-radius: 7px solid var(--green-color);
-  border-radius: 0.5rem;
-}
-.customers-container .box:hover {
-  transform: translateY(10px);
-  transition: 0.2s;
-}
-
-.customers-container .box .bx {
-  font-size: 24px;
-  color: var(--green-color);
-}
-
-.customers-container .box .stares .bx {
-  font-size: 1rem;
-  color: var(--light-orange-color);
-}
-
-.customers-container .box p {
-  font-size: 0.938rem;
-}
-
-.review-profile {
-  display: flex;
-  align-items: center;
-  margin-top: 1rem;
-  font-weight: 700;
-  column-gap: 0.5rem;
-}
-
-.review-profile .total-carrinho {
-  color: var(--light-orange-color);
-  font-weight: 500;
-}
-.review-profile img {
-  width: 79px;
-  height: 79px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center;
-}
 
 /* Footer */
 .footer {
@@ -1303,9 +1239,7 @@ header {
     margin-right: 0px;
   }
 
-  .Clientes h2 {
-    font-size: 1.2rem;
-  }
+ 
   .total-dosItens {
     width: 268px;
     gap: 0.2rem;

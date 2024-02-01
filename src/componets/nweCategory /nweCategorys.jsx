@@ -1,56 +1,94 @@
 import React from 'react';
 import { TextField, Typography, Stack, Box } from '@mui/material';
-import './category.css';
+import './nweCategory .css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
-import manga from '../../images/manga.jpg';
-import morango from '../../images/morango.jpg';
-import Uva1 from '../../images/Uva1.png';
-import abacate from '../../images/abacate.jpg';
-import papaia from '../../images/papaia.png';
+import Pimentao from '../../img/Pimentao.png';
+import Abobrinha from '../../img/Abobrinha.png';
+import lecumes from '../../img/lecumes.png';
+import tomate1 from '../../img/tomate1.png';
+import Cenoura1 from '../../img/Cenoura1.png';
+import batataDoce from '../../img/batata-doce.png';
+import alho from '../../img/alho.jpg';
+import feijoaVermelo from '../../img/feijoa-Vermelo.png';
+import broccoli1 from '../../img/broccoli1.png';
+import piripire from '../../img/piripire.jpg';
 
 
 
-const CategoryItem = [
+
+
+const dadosDosCartoes = [
   {
-    nome: 'Abacate e Manga',
-    descricao: '22 Item',
-    img: manga,
-    backgroundColor: '#fef4ea',
+    img: Pimentao,
+    descricao: '4 Item',
+    nome: "Pimentão",
+    backgroundColor: "#fef4ea",
   },
   {
-    nome: 'Morango',
+    img: Abobrinha,
+    descricao: '8 Item',
+    nome: "Abobrinha ",
+    backgroundColor: "#eeeef9",
+  },
+  {
+    img: lecumes,
+    descricao: '95 Item',
+    nome: "Lecumes ",
+    backgroundColor: "#faeaea",
+  },
+  {
+    img: batataDoce,
+    descricao: '18 Item',
+    nome: "Batata-Doce",
+    backgroundColor: "#eeeef9",
+  },
+  {
+    img: tomate1,
+    descricao: '12 Item',
+    nome: "Tomate",
+    backgroundColor: "#e1fed3",
+  },
+  {
+    img: Cenoura1,
+    descricao: '7 Item',
+    nome: "Cenoura",
+    backgroundColor: "#e4fada ",
+  },
+
+  {
+    img: alho,
     descricao: '19 Item',
-    img: morango,
-    backgroundColor: '#e9f4e3', 
+    nome: "Alho ",
+    backgroundColor: "#fad2f5",
   },
   {
-    nome: 'Uva',
-    descricao: '13 Item',
-    img: Uva1,
-    backgroundColor: '#faeaea', 
+    img: feijoaVermelo,
+    descricao: '12 Item',
+    nome: "feijoa Vermeloumes ",
+    backgroundColor: "#ebf7f5",
   },
   {
-    nome: 'Abacate',
-    descricao: '9 Item',
-    img: abacate,
-    backgroundColor: '#eeeef9', 
+    img: broccoli1,
+    descricao: '17 Item',
+    nome: "Broccoli1 ",
+    backgroundColor: "#c8ccc8",
   },
   {
-    nome: 'Mamão ou Papaia',
-    descricao: '22 Item',
-    img: papaia,
-    backgroundColor: '#f7f6d7', 
+    img: piripire,
+    descricao: '25 Item',
+    nome: "Piripire ",
+    backgroundColor: "#dee2ff",
   },
 ];
 
 
 
 
-export const Category = () => {
-  const newCategoryItem = CategoryItem.map((item, index) => {
+
+export const NweCategorys = () => {
+  const NewCategoryItem = dadosDosCartoes.map((item, index) => {
     return (
-      <>
       <Stack
         key={index}
         sx={{
@@ -117,9 +155,6 @@ export const Category = () => {
           }} className="bx"/>
         </Box>
       </Stack>
-
-      
-      </>
     );
   });
 
@@ -127,7 +162,7 @@ export const Category = () => {
     <Stack className="categoria">
       <Stack className="heading">
         <h1>
-          Explorando a Diversidade da Natureza <br />
+        Nossos Produtos Populares<br />
           <span>Frutas</span>
         </h1>
         <a href="#" className="btnMyButton">
@@ -162,7 +197,7 @@ export const Category = () => {
           },
         }}
       >
-        {newCategoryItem}
+        {NewCategoryItem}
       </Stack>
     </Stack>
   );

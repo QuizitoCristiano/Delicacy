@@ -3,15 +3,12 @@ import { Grid } from '@mui/material'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import ImageList from '@mui/material/ImageList'
-import ImageListItem from '@mui/material/ImageListItem'
-import ImageListItemBar from '@mui/material/ImageListItemBar'
-import './Products.css'
-import ProductItem from './frutas.jsx'
+import './ProductsLegumes.css'
+import ProductItemLegume from './legunes.jsx'
 
 
-export const Products = () => {
-  const newProductsItem = ProductItem.map((item, index) => (
+export const ProductsLegumes = () => {
+  const newProductsItem = ProductItemLegume.map((item, index) => (
     <Grid item key={index}>
   
       <Box

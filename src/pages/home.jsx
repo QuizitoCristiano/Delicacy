@@ -8,6 +8,10 @@ import { SignUp } from '../componets/signUp/signUp'
 import { AuthContext } from '../authcontext'
 import { Category } from '../componets/category/category'
 import { Products } from '../componets/Products/Products'
+import { NweCategorys } from '../componets/nweCategory /nweCategorys'
+import { ProductsLegumes } from '../componets/ProductsLegumes/ProductsLegumes'
+import { AboutUs } from '../componets/about/aboutUs'
+import { Clientes } from '../componets/clientes/cliente'
 
 export const MyHome = () => {
   const { user } = useContext(AuthContext);
@@ -18,8 +22,9 @@ export const MyHome = () => {
         sx={{
           minHeight: '100vh',
           width: '100%',
-          backgroundColor: '#fff',
-          // background: 'red',
+          // backgroundColor: '#fff',
+     
+          gap: '2rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -28,6 +33,7 @@ export const MyHome = () => {
 
           '@media only screen and (max-width: 800px)': {
             width: '100%',
+            marginTop: '4rem',
             position: 'relative',
           },
         }}
@@ -50,8 +56,13 @@ export const MyHome = () => {
         <Category/>
 
         <Products/>
+    
         <h2>Ola mundo!!</h2>
-        <MyFooter />
+       <NweCategorys/>
+       <ProductsLegumes/>
+       <AboutUs/>
+       <Clientes/>
+        <MyFooter/>
       </Stack>
     </>
   )
