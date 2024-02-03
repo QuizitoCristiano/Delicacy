@@ -8,10 +8,10 @@ import { SignUp } from '../componets/signUp/signUp'
 import { AuthContext } from '../authcontext'
 import { Category } from '../componets/category/category'
 import { Products } from '../componets/Products/Products'
-import { NweCategorys } from '../componets/nweCategory /nweCategorys'
 import { ProductsLegumes } from '../componets/ProductsLegumes/ProductsLegumes'
 import { AboutUs } from '../componets/about/aboutUs'
 import { Clientes } from '../componets/clientes/cliente'
+import { NewCategorys } from '../componets/newCategory /newCategorys'
 
 export const MyHome = () => {
   const { user } = useContext(AuthContext);
@@ -57,8 +57,9 @@ export const MyHome = () => {
 
         <Products/>
     
-        <h2>Ola mundo!!</h2>
-       <NweCategorys/>
+        <h2>Ola mundo tudo cerdo!!!</h2>
+        <p>Vamos nessa</p>
+       <NewCategorys/>
        <ProductsLegumes/>
        <AboutUs/>
         <MyFooter/>
