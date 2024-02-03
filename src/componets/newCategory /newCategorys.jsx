@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, Typography, Stack, Box } from '@mui/material';
-import './newCategory .css';
+import './category .css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 import Pimentao from '../../img/Pimentao.png';

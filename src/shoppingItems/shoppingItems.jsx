@@ -1,5 +1,5 @@
 import React from 'react'
-import './shoppingItems.css'
+import './shoppincss.css'
 import { Stack, Box } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import Tropical from '../images/tropical-fruits.png'

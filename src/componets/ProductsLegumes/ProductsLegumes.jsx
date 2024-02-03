@@ -3,7 +3,7 @@ import { Grid } from '@mui/material'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import './ProductsLegumes.css'
+import './legumescss.css'
 import ProductItemLegume from './legunes.jsx'
 
 
