@@ -61,7 +61,6 @@ export const MyHome = () => {
        <NweCategorys/>
        <ProductsLegumes/>
        <AboutUs/>
-       <Clientes/>
         <MyFooter/>
       </Stack>
     </>
