@@ -15,7 +15,12 @@ import SearchIcon from '@mui/icons-material/Search'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import LocalMallIcon from '@mui/icons-material/LocalMall'
 import { TextField, Typography, Stack, Box } from '@mui/material'
-import { useState } from 'react'
+import { useState } from 'react';
+import { useContext } from 'react'
+import { BagMarket } from '../componet/marketBag/marketbag'
+
+
+
 
 const pages = ['Home', 'Categoria', 'Produtos', 'Sobre - Nos', 'Clientes']
 const settings = ['Home', 'Categoria', 'Produtos', 'Sobre - Nos', 'Clientes']
@@ -23,7 +28,9 @@ const settings = ['Home', 'Categoria', 'Produtos', 'Sobre - Nos', 'Clientes']
 export const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
-  const [avatarFile, setAvatarFile] = useState(null)
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [sacola, setSacola] = useState(false);
+
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
@@ -73,6 +80,7 @@ export const Header = () => {
               <i className="bx bxs-basket">Delicacy</i>
             </a>
           </Box>
+          
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <Menu
@@ -240,6 +248,9 @@ export const Header = () => {
             >
               <Tooltip title="Open carinho">
                 <ShoppingCartIcon
+                onClick={()=> {
+                  setSacola(!sacola)
+                }}
                   sx={{
                     fontSize: '2.4rem',
                     color: '#ff7e00',
@@ -273,6 +284,7 @@ export const Header = () => {
           </Stack>
         </Toolbar>
       </Container>
+      <BagMarket sacola={sacola} setSacola={setSacola}/>
     </AppBar>
   )
 }

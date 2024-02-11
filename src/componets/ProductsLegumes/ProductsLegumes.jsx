@@ -1,22 +1,30 @@
-import { Typography, Stack, Box } from '@mui/material'
-import { Grid } from '@mui/material'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import './legumescss.css'
-import ProductItemLegume from './legunes.jsx'
-
+import React, { useState } from 'react';
+import { Typography, Stack, Box } from '@mui/material';
+import { Grid } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import './legumescss.css';
+import ProductItemLegume from './legunes.jsx';
 
 export const ProductsLegumes = () => {
+  const [carinho, setCarinho] = useState([]);
+
+  const adicionaItemAoCarinho = (item) => {
+    setCarinho([...carinho, item]);
+  };
+
+  const totalItensCarrinho = carinho.length;
+
   const newProductsItem = ProductItemLegume.map((item, index) => (
     <Grid item key={index}>
-  
+     
       <Box
+
         sx={{
           padding: '10px',
           boxShadow: '1px 2px 11px 4px rgb(14 55 54 / 25%)',
           borderRadius: '0.5rem',
-        
           height: '280px',
           width: '315px',
           position: 'relative',
@@ -29,7 +37,6 @@ export const ProductsLegumes = () => {
         <Stack>
           <Stack
             sx={{
-              
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -43,20 +50,16 @@ export const ProductsLegumes = () => {
                 objectFit: 'contain',
                 objectPosition: 'center',
 
-                
                 '@media only screen and (max-width: 500px)': {
                   width: '150%',
-                  height: '210px'
+                  height: '210px',
                 },
-                
               },
             }}
           >
-            <img  src={`${item.img}`}
-             alt={item.title}
-             />
+            <img src={item.img} alt={item.title} />
           </Stack>
-
+       
           <Typography
             variant="h1"
             sx={{
@@ -108,6 +111,7 @@ export const ProductsLegumes = () => {
                     transition: '0.2s',
                   },
                 }}
+                onClick={() => adicionaItemAoCarinho(item)}
               >
                 <ShoppingCartIcon
                   sx={{
@@ -130,27 +134,49 @@ export const ProductsLegumes = () => {
         </Stack>
       </Box>
     </Grid>
-  ))
+  ));
 
   return (
     <Stack className="categoriaProducts">
-       <Stack sx={{
-        padding:' 6rem 2% 2rem',
-        fontSize: '1rem',
-        color: 'var(--text-color: #1a2428',
-            }}>
+      <Stack
+        sx={{
+          padding: ' 6rem 2% 2rem',
+          fontSize: '1rem',
+          color: 'var(--text-color: #1a2428',
+        }}
+      >
         <h2>
-        Nossos Produtos Populares <br />
-          <span>Produtos de Frutaas</span>
+          Nossos Produtos Populares <br />
+          <span>Produtos de Frutas</span>
         </h2>
         <a href="#" className="btnMyButton">
-          Ver tudo <ArrowForwardIcon className="bx"/>
+          Ver tudo <ArrowForwardIcon className="bx" />
         </a>
       </Stack>
 
       <Grid container spacing={3} justifyContent="center">
         {newProductsItem}
       </Grid>
+
+      {/* Div para exibir total de itens no carrinho */}
+      <Box
+        style={{
+          position: 'absolute',
+          top: '0',
+          right: '0',
+          padding: '10px',
+        
+          borderRadius: '50%',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.9)',
+    
+          fontSize: '1.4rem',
+          fontWeight: '900',
+          background: 'red'
+        }}
+      >
+        <Typography></Typography>
+        <Typography>{totalItensCarrinho}</Typography>
+      </Box>
     </Stack>
-  )
-}
+  );
+};

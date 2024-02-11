@@ -1,6 +1,6 @@
 import React from "react";
-import { Typography, Stack, Box } from "@mui/material";
-import { Grid } from "@mui/material";
+
+import {  Typography, Stack, Box, Grid} from "@mui/material";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import "./cliente.css";
 

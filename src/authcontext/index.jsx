@@ -1,127 +1,134 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
-    GoogleAuthProvider,
-    getAuth,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    onAuthStateChanged,
-} from 'firebase/auth';
+  GoogleAuthProvider,
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  onAuthStateChanged,
+} from "firebase/auth";
 import {
-    getFirestore,
-    collection,
-    query,
-    where,
-    getDocs,
-    doc,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore';
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 export const AuthContext = createContext();
 const provider = new GoogleAuthProvider();
 export const AuthProvider = ({ children }) => {
-    const auth = getAuth();
-    const firestore = getFirestore();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState({});
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState(null);
-    const checkUserAuthentication = () => {
-        const loggedInStatus = localStorage.getItem('isLoggedIn');
-        setIsLoggedIn(loggedInStatus === 'true');
+  const auth = getAuth();
+  const firestore = getFirestore();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState(null);
 
-        if (loggedInStatus === 'true') {
-            const userDataFromLocalStorage = JSON.parse(localStorage.getItem('user'));
-            setUser(userDataFromLocalStorage);
-        }
+  const checkUserAuthentication = () => {
+    const loggedInStatus = localStorage.getItem("isLoggedIn");
+    setIsLoggedIn(loggedInStatus === "true");
 
-        const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-            if (authUser) {
-                setUser(authUser);
-            } else {
-                setUser(null);
-            }
-        });
+    if (loggedInStatus === "true") {
+      const userDataFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+      setUser(userDataFromLocalStorage);
+    }
 
-        return unsubscribe;
-    };
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        setUser(authUser);
+      } else {
+        setUser(null);
+      }
+    });
 
-    useEffect(() => {
-        const unsubscribe = checkUserAuthentication();
-        return () => unsubscribe();
-    }, []);
+    return unsubscribe;
+  };
 
-    const login = async (userData) => {
-        setIsLoggedIn(true);
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('user', JSON.stringify(userData));
-    };
+  useEffect(() => {
+    const unsubscribe = checkUserAuthentication();
+    return () => unsubscribe();
+  }, []);
 
-    const logout = () => {
-        setIsLoggedIn(false);
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('user');
-    };
+  const login = async (userData) => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
 
-    const loginWithGoogle = async () => {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const { user } = result;
+  const logout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
+  };
 
-            const usersRef = collection(firestore, 'users');
-            const querySnapshot = await getDocs(query(usersRef, where('email', '==', user.email)));
-            const existingUser = querySnapshot.docs[0];
+  const loginWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const { user } = result;
 
-            if (existingUser) {
-                const userData = { name: user.displayName };
-                await updateDoc(doc(usersRef, existingUser.id), userData);
-                setUser(existingUser.data());
-            } else {
-                const newUser = {
-                    id: user.uid,
-                    name: user.displayName,
-                    email: user.email,
-                    photoURL: user.photoURL,
-                };
+      const usersRef = collection(firestore, "users");
+      const querySnapshot = await getDocs(
+        query(usersRef, where("email", "==", user.email))
+      );
+      const existingUser = querySnapshot.docs[0];
 
-                await setDoc(doc(usersRef, user.uid), newUser);
-                setUser(newUser);
-            }
+      if (existingUser) {
+        const userData = { name: user.displayName };
+        await updateDoc(doc(usersRef, existingUser.id), userData);
+        setUser(existingUser.data());
+      } else {
+        const newUser = {
+          id: user.uid,
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        };
 
-            login(user);
-        } catch (error) {
-            setOpen(true);
-            const errorMessage = error.message || 'Ocorreu um erro ao fazer login.';
-            setMessage(errorMessage);
-        }
-    };
+        await setDoc(doc(usersRef, user.uid), newUser);
+        setUser(newUser);
+      }
 
-    const loginWithEmailAndPassword = async (email, password) => {
-        try {
-            if (!email || !password) return;
+      login(user);
+    } catch (error) {
+      setOpen(true);
+      const errorMessage = error.message || "Ocorreu um erro ao fazer login.";
+      setMessage(errorMessage);
+    }
+  };
 
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            setUser(userCredential.user);
-            login(userCredential.user);
-        } catch (error) {
-            setOpen(true);
-            const errorMessage = error.message || 'Ocorreu um erro ao fazer login.';
-            setMessage(errorMessage);
-        }
-    };
+  const loginWithEmailAndPassword = async (email, password) => {
+    try {
+      if (!email || !password) return;
 
-    return (
-        <AuthContext.Provider
-            value={{
-                isLoggedIn,
-                login,
-                logout,
-                loginWithGoogle,
-                loginWithEmailAndPassword,
-                user,
-            }}
-        >
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user);
+      login(userCredential.user);
+    } catch (error) {
+      setOpen(true);
+      const errorMessage = error.message || "Ocorreu um erro ao fazer login.";
+      setMessage(errorMessage);
+    }
+  };
 
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        login,
+        logout,
+        loginWithGoogle,
+        loginWithEmailAndPassword,
+        user,
+     
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };

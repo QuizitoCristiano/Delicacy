@@ -4,15 +4,22 @@ import viteLogo from '/vite.svg';
 import './App.css';
 
 
+
 import { AuthProvider } from './authcontext';
-import { MainRoutes } from './routes';
 import { BrowserRouter } from 'react-router-dom';
+import { MainRoutes } from './routes';
 
 function App() {
   return (
+  
     <AuthProvider>
+        <BrowserRouter>
+   
+        <MainRoutes/>
+        </BrowserRouter>
+       
  
-        <MainRoutes />
+    
 
     </AuthProvider>
   );

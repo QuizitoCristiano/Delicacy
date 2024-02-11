@@ -14,12 +14,11 @@ export const MainRoutes = () => {
     if (isLoggedIn && myArrayLinks.includes(pathname.current)) {
         return (
 
-            <BrowserRouter>
-                <Routes>
+          
                     <Route path="/" element={<MyHome />} />
 
-                </Routes>
-            </BrowserRouter>
+            
+            
 
         )
 
@@ -27,11 +26,14 @@ export const MainRoutes = () => {
 
     return (
         <MainLayout>
-            <BrowserRouter>
+            
+         
                 <Routes>
                     <Route path="/" element={<MyHome />} />
+                
                 </Routes>
-            </BrowserRouter>
+               
+           
         </MainLayout>
     )
 

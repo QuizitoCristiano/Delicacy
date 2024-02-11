@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, Typography, Stack, Box } from '@mui/material';
-import './category.css';
+import './styles/myCategory.css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 import manga from '../../images/manga.jpg';
@@ -44,6 +44,7 @@ const CategoryItem = [
   },
 ];
 
+// delicacy-company 
 
 
 
@@ -117,8 +118,6 @@ export const Category = () => {
           }} className="bx"/>
         </Box>
       </Stack>
-
-      
       </>
     );
   });
