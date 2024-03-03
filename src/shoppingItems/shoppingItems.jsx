@@ -48,7 +48,7 @@ export const ShoppingItems = () => {
       >
         <Stack
           sx={{
-            gap: '2rem',
+            
             height: 'auto',
             width: '100%',
             color: 'black',

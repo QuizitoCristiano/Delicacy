@@ -70,7 +70,7 @@ const dadosDosCartoes = [
   },
   {
     img: broccoli1,
-    descricao: '17 Item',
+    descricao: '16 Item',
     nome: "Broccoli1 ",
     backgroundColor: "#c8ccc8",
   },
@@ -81,8 +81,6 @@ const dadosDosCartoes = [
     backgroundColor: "#dee2ff",
   },
 ];
-
-
 
 
 
