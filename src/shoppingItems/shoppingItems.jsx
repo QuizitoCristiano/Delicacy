@@ -40,9 +40,10 @@ export const ShoppingItems = () => {
           flexDirection: 'column',
           background: '#fff',
           color: 'black',
-          //   padding: '5rem 9% 2rem',
+            padding: '5rem 9% 2rem',
           '@media only screen and (max-width: 805px)': {
             minHeight: '768px',
+            padding: '5rem 1% 2rem',
           },
         }}
       >

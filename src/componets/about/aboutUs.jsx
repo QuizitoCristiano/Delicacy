@@ -63,8 +63,6 @@ export const AboutUs = () => {
       >
         <Stack
           sx={{
-            gap: "1.8rem",
-            position: 'relative',
             gap: '2rem',
             height: "auto",
             width: "100%",
