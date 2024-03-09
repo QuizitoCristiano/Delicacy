@@ -3,12 +3,12 @@ import './header.css';
 import { Link, useLocation } from "react-router-dom";
 import { Avatar, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import DehazeIcon from "@mui/icons-material/Dehaze";
-import CloseIcon from "@mui/icons-material/Close";
 import { Box, Stack, Typography } from "@mui/material";
 import StoreIcon from "@mui/icons-material/Store";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
 import { BagMarket } from "../componet/marketBag/marketbag";
+import CloseIcon from '@mui/icons-material/Close';
 
 const myLink = [
   {
@@ -41,6 +41,10 @@ export const Header = () => {
 
   const fecharMenu = () => {
     setAbreMeno(false);
+  };
+
+  const handleToggleSacola = () => {
+    setSacola(!sacola); // Inverte o estado da sacola ao clicar no ícone do carrinho
   };
 
   const handleAvatarChange = (event) => {
@@ -214,7 +218,7 @@ export const Header = () => {
                 width: '37px',
               }}>
 
-              <ShoppingCartIcon sx={{fontSize: '20px'}} onClick={() => setSacola(!sacola)} />
+              <ShoppingCartIcon sx={{fontSize: '20px'}}   onClick={handleToggleSacola} />
               </Box>
 
               <Box sx={{
@@ -270,15 +274,49 @@ export const Header = () => {
         </Stack>
 
         {/* Componente da Sacola de Compras */}
-        <Stack sx={{
-         
         
-        }}>
-        <BagMarket sx={{
-            position: 'absolute',
-            zIndex: '1000'
-        }}  sacola={sacola} setSacola={setSacola} />
-        </Stack>
+        {sacola && (
+  <Stack
+    sx={{
+      position: "fixed",
+      height: "100vh",
+      width: "450px",
+
+      // backgroundColor: "rgba(128,128,128,0.9)", 
+      bgcolor: '#fff',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: 'flex-start',
+      zIndex: "1000",
+      top:  '82px',
+      right: '0',
+      padding: '20px',
+      boxShadow: '0 8px 11px rgb(14 55 54 / 55%)',
+
+      "@media only screen and (max-width: 805px)": {
+        width: "97%",
+      }
+    }}
+    className={sacola ? "sacola-ativa" : ""} // Aplica a classe 'sacola-ativa' quando a sacola está aberta
+  >
+    <Box sx={{
+      position: 'absolute',
+      top: '10px',
+      right: '5px',
+      cursor: 'pointer',
+      color: 'var(--light-orange-color)',
+      fontSize: '30px',
+    }}>
+    <CloseIcon sx={{fontSize: '20px'}}   onClick={handleToggleSacola} />
+    </Box>
+    <BagMarket sacola={sacola} setSacola={setSacola}/>
+
+    
+
+  </Stack>
+)}
+
+
       </Stack>
     </>
   );

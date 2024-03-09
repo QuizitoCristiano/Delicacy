@@ -14,6 +14,11 @@
 }
 
 
+
+
+
+
+
 .header-button {
   border: none !important; /* Remover a borda */
 }
@@ -89,6 +94,23 @@ body {
       justify-content: center;
   }
 
+}
+
+
+@keyframes aparecerDaEsquerda {
+  from {
+    transform: translateX(100%); /* Inicia a sacola totalmente fora da tela, no lado esquerdo */
+  }
+  to {
+    transform: translateX(0); /* Move a sacola para a posição inicial na tela */
+  }
+}
+
+.sacola-ativa {
+  animation-name: aparecerDaEsquerda;
+  animation-duration: 0.6s; /* Duração da animação é de 3 segundos */
+  animation-fill-mode: forwards;
+  animation-timing-function: ease;
 }
 
 

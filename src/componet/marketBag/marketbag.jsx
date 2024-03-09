@@ -1,75 +1,184 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import CloseIcon from "@mui/icons-material/Close";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import React, { useState } from "react";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-// Supondo que você tenha os itens do carrinho disponíveis neste formato
 const carrinho = [
   {
-    nome: 'Produto 1',
+    nome: " Tangerina",
     quantidade: 2,
     preco: 10.99,
   },
   {
-    nome: 'Produto 2',
+    nome: "Laranja",
+    quantidade: 1,
+    preco: 5.99,
+  },
+  {
+    nome: "Ameixa",
+    quantidade: 1,
+    preco: 5.99,
+  },
+  {
+    nome: "Blueberry",
     quantidade: 1,
     preco: 5.99,
   },
 ];
 
 export const BagMarket = ({ sacola, setSacola }) => {
-  const toggleDrawer = (open) => () => {
-    setSacola(open);
+  const [sacolaAberta, setSacolaAberta] = useState(false);
+
+  const toggleSacola = () => {
+    setSacolaAberta(!sacolaAberta);
+    if (setSacola) {
+      setSacola(!sacolaAberta);
+    }
   };
 
-  // Função para renderizar os itens do carrinho
   const renderizarItensCarrinho = () => {
     return carrinho.map((produto, index) => (
-      <Box key={index}>
-        <Box>
-          <ShoppingCartIcon />
+      <Stack
+        sx={{
+          width: "100%",
+          bgcolor: "pink",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: "2rem",
+        }}
+        key={index}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "5px",
+            flexDirection: "row",
+            width: "100%",
+            
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                fontWeight: "600",
+                fontSize: "1.2rem",
+              }}
+            >
+              {produto.nome}
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: "600",
+                fontSize: "1.2rem",
+                marginTop: " 0.5rem",
+                color: " var(--light-orange-color)",
+              }}
+            >
+              Preço: R$ {produto.preco}
+            </Typography>
+
+            <Typography
+              sx={{
+                fontWeight: "600",
+                fontSize: "1.2rem",
+                marginTop: " 0.5rem",
+              }}
+            >
+              Quantidade: {produto.quantidade}
+            </Typography>
+          </Box>
+          <Stack
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
+              flexDirection: "column",
+              gap: "3px",
+              margin: "5px",
+            }}
+          >
+            <Box>
+              <DeleteIcon
+                sx={{
+                  color: "var(--light-orange-color)",
+
+                  fontWeight: 800,
+                  fontSize: "2.3rem",
+                }}
+              />
+            </Box>
+
+            <Box sx={{
+              display: 'flex',
+              gap: '8px',
+              justifyContent: 'flex-end',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+              <Button sx={{
+                border: 'none',
+                outline: 'none',
+                background: 'var(--green-color)',
+                color: 'var(--bg-color)',
+                fontSize: '20px',
+                borderRadius: '1.5rem 0 1.5rem 0',
+              }}>+</Button>
+              <Button 
+              sx={{
+                background: 'var(--green-color)',
+                color: 'var(--bg-color)',
+                fontSize: '20px',
+                borderRadius: '1.5rem 0 1.5rem 0',
+              }}
+              >-</Button>
+            </Box>
+          </Stack>
         </Box>
-        <ListItemText
-          primary={produto.nome}
-          secondary={`Quantidade: ${produto.quantidade}`}
-        />
-      </Box>
+      </Stack>
     ));
   };
 
   return (
-    <Drawer anchor="right" open={sacola} onClose={toggleDrawer(false)}>
-      <Box
-        sx={{
-          position: "relative",
-          padding: "20px",
-          bgcolor: "#fff",
-          height: "100%",
-          display: "flex",
-          justifyContent: "flex-start",
-          flexDirection: "column",
-        }}
-      >
-        <h2>Itens no Carrinho</h2>
-        <CloseIcon
+    <Stack
+      sx={{
+        width: "100%",
+        height: "auto",
+        bgcolor: "peachpuff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: "2rem",
+
+        boxShadow: "1px 2px 11px 4px rgba(14, 55, 54, 0.15)",
+      }}
+    >
+      <h2>Minha Sacola de Compras</h2>
+      <button onClick={toggleSacola}>Abrir Sacola</button>
+      {sacolaAberta && (
+        <Stack
           sx={{
-            top: 10,
-            right: 10,
-            position: "absolute",
-            cursor: "pointer",
-            fontWeight: "800",
-            fontSize: "2rem",
-            color: "var(--light-orange-color)",
+            width: "100%",
+            margin: "10px",
+            borderRadius: "5px",
+            display: "flex",
+            gap: "2rem",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexDirection: "column",
           }}
-          onClick={toggleDrawer(false)}
-        />
-        <List>{renderizarItensCarrinho()}</List>
-      </Box>
-    </Drawer>
+        >
+          <button onClick={toggleSacola}>Fechar Sacola</button>
+          {renderizarItensCarrinho()}
+        </Stack>
+      )}
+    </Stack>
   );
 };
