@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import './header.css';
-import { Link, useLocation } from "react-router-dom";
 import { Avatar, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import DehazeIcon from "@mui/icons-material/Dehaze";
 import { Box, Stack, Typography } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
 import StoreIcon from "@mui/icons-material/Store";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
@@ -280,7 +280,7 @@ export const Header = () => {
     sx={{
       position: "fixed",
       height: "100vh",
-      width: "450px",
+      width: "360px",
 
       // backgroundColor: "rgba(128,128,128,0.9)", 
       bgcolor: '#fff',
@@ -297,7 +297,7 @@ export const Header = () => {
         width: "97%",
       }
     }}
-    className={sacola ? "sacola-ativa" : ""} // Aplica a classe 'sacola-ativa' quando a sacola está aberta
+    className={sacola ? "sacola-ativa" : ""} 
   >
     <Box sx={{
       position: 'absolute',

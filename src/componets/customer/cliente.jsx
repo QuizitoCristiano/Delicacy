@@ -164,7 +164,7 @@ const dadosDosClientes = [
             <span>Produtos de Frutas</span>
           </h2>
           <a href="#" className="btnMyButton">
-            Ver tudo <ArrowForwardIcon className="bx" />
+            Ver tudo 
           </a>
         </Stack>
   

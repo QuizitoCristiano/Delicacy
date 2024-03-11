@@ -5,6 +5,8 @@ import WifiCalling3Icon from '@mui/icons-material/WifiCalling3'
 import FacebookSharpIcon from '@mui/icons-material/FacebookSharp'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+import { Link, useLocation } from "react-router-dom";
+import StoreIcon from "@mui/icons-material/Store";
 import YouTubeIcon from '@mui/icons-material/YouTube'
 import { useEffect, useState } from 'react'
 import './footer.css'
@@ -25,7 +27,7 @@ export const MyFooter = () => {
       <Stack sx={{
         bgcolor: '#fff',
         position: 'relative',
-        // background: '#fef4ea',
+        background: '#fef4ea',
         width: '100%',
         padding: '0.1rem 5% 0.1rem',
       
@@ -45,8 +47,31 @@ export const MyFooter = () => {
         }}>
           <div className="footer-box">
             <a href="" className="logo">
-            <LocalMallIcon className="bx bxs-basket"/>
-              <i className="bx bxs-basket">Delicacy</i>
+            <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+            // bgcolor: "#b3d6e4",
+            justifyContent: "center",
+            height: "100%",
+            width: "30%",
+          }}
+        >
+          <StoreIcon
+           
+              sx={{
+                color: "var(--light-orange-color)",
+                fontSize: "3rem",
+              }}/>
+          
+          
+          <Typography>
+            <Link className="logoDelicacy" to="/">
+              Delicacy
+            </Link>
+          </Typography>
+        </Box>
             </a>
             <p>Rua Curupis, 363 - Santa Quiteria, Curitiba</p>
 

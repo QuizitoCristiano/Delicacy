@@ -1,8 +1,29 @@
 import React, { useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import "./newStyle.css";
 
 const carrinho = [
+  {
+    nome: " Tangerina",
+    quantidade: 2,
+    preco: 10.99,
+  },
+  {
+    nome: "Laranja",
+    quantidade: 1,
+    preco: 5.99,
+  },
+  {
+    nome: "Ameixa",
+    quantidade: 1,
+    preco: 5.99,
+  },
+  {
+    nome: "Blueberry",
+    quantidade: 1,
+    preco: 5.99,
+  },
   {
     nome: " Tangerina",
     quantidade: 2,
@@ -27,6 +48,7 @@ const carrinho = [
 
 export const BagMarket = ({ sacola, setSacola }) => {
   const [sacolaAberta, setSacolaAberta] = useState(false);
+  const [itemsCarrinho, setItemsCarrinho] = useState(carrinho);
 
   const toggleSacola = () => {
     setSacolaAberta(!sacolaAberta);
@@ -35,16 +57,42 @@ export const BagMarket = ({ sacola, setSacola }) => {
     }
   };
 
+  const adicionarItem = (index) => {
+    const novoCarrinho = [...itemsCarrinho];
+    novoCarrinho[index].quantidade++;
+    setItemsCarrinho(novoCarrinho);
+  };
+
+  const removerItemIcon = (index) => {
+    const novoCarrinho = itemsCarrinho.filter((_, i) => i !== index);
+    setItemsCarrinho(novoCarrinho);
+  };
+
+  const removerItem = (index) => {
+    const novoCarrinho = [...itemsCarrinho];
+    if (novoCarrinho[index].quantidade > 1) {
+      novoCarrinho[index].quantidade--;
+    } else {
+      if (window.confirm("Tem certeza que deseja remover este item?")) {
+        novoCarrinho.splice(index, 1);
+      }
+    }
+    setItemsCarrinho(novoCarrinho);
+  };
+
   const renderizarItensCarrinho = () => {
-    return carrinho.map((produto, index) => (
+    return itemsCarrinho.map((produto, index) => (
       <Stack
         sx={{
           width: "100%",
-          bgcolor: "pink",
+          bgcolor: "#fff",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           flexDirection: "column",
+          borderRadius: "5px",
+          margin: "0px 5px 5px 0px",
+          boxShadow: "1px 2px 11px 4px rgb(14 55 54 / 45%)",
           gap: "2rem",
         }}
         key={index}
@@ -54,40 +102,39 @@ export const BagMarket = ({ sacola, setSacola }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            borderRadius: "5px",
+            borderRadius: "10px",
             flexDirection: "row",
             width: "100%",
-            
           }}
         >
           <Box
             sx={{
               width: "100%",
+              margin: "5px",
             }}
           >
             <Typography
               sx={{
-                fontWeight: "600",
-                fontSize: "1.2rem",
+                fontWeight: "700",
+                fontSize: "1.8rem",
               }}
             >
               {produto.nome}
             </Typography>
             <Typography
               sx={{
-                fontWeight: "600",
-                fontSize: "1.2rem",
+                fontWeight: "700",
+                fontSize: "1.8rem",
                 marginTop: " 0.5rem",
                 color: " var(--light-orange-color)",
               }}
             >
               Preço: R$ {produto.preco}
             </Typography>
-
             <Typography
               sx={{
-                fontWeight: "600",
-                fontSize: "1.2rem",
+                fontWeight: "700",
+                fontSize: "1.8rem",
                 marginTop: " 0.5rem",
               }}
             >
@@ -100,44 +147,42 @@ export const BagMarket = ({ sacola, setSacola }) => {
               justifyContent: "center",
               alignItems: "flex-end",
               flexDirection: "column",
-              gap: "3px",
               margin: "5px",
+              gap: "3px",
             }}
           >
             <Box>
               <DeleteIcon
+                onClick={() => removerItemIcon(index)}
                 sx={{
                   color: "var(--light-orange-color)",
-
                   fontWeight: 800,
                   fontSize: "2.3rem",
+                  cursor: "pointer",
                 }}
               />
             </Box>
-
-            <Box sx={{
-              display: 'flex',
-              gap: '8px',
-              justifyContent: 'flex-end',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-              <Button sx={{
-                border: 'none',
-                outline: 'none',
-                background: 'var(--green-color)',
-                color: 'var(--bg-color)',
-                fontSize: '20px',
-                borderRadius: '1.5rem 0 1.5rem 0',
-              }}>+</Button>
-              <Button 
+            <Box
               sx={{
-                background: 'var(--green-color)',
-                color: 'var(--bg-color)',
-                fontSize: '20px',
-                borderRadius: '1.5rem 0 1.5rem 0',
+                display: "flex",
+                gap: "8px",
+                justifyContent: "flex-end",
+                flexDirection: "row",
+                alignItems: "center",
               }}
-              >-</Button>
+            >
+              <button
+                className="buttonQuntidade"
+                onClick={() => adicionarItem(index)}
+              >
+                +
+              </button>
+              <button
+                className="buttonQuntidade"
+                onClick={() => removerItem(index)}
+              >
+                -
+              </button>
             </Box>
           </Stack>
         </Box>
@@ -150,14 +195,10 @@ export const BagMarket = ({ sacola, setSacola }) => {
       sx={{
         width: "100%",
         height: "auto",
-        bgcolor: "peachpuff",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
-        gap: "2rem",
-
-        boxShadow: "1px 2px 11px 4px rgba(14, 55, 54, 0.15)",
       }}
     >
       <h2>Minha Sacola de Compras</h2>
@@ -167,18 +208,71 @@ export const BagMarket = ({ sacola, setSacola }) => {
           sx={{
             width: "100%",
             margin: "10px",
-            borderRadius: "5px",
+            height: "690px",
             display: "flex",
-            gap: "2rem",
+            gap: "1rem",
             alignItems: "center",
             justifyContent: "space-between",
             flexDirection: "column",
+            overflowY: "auto",
+            padding: "10px",
+            overflowX: "hidden",
           }}
         >
           <button onClick={toggleSacola}>Fechar Sacola</button>
           {renderizarItensCarrinho()}
         </Stack>
       )}
+
+      <Box
+        sx={{
+          width: "100%",
+          margin: "10px",
+          display: "flex",
+          gap: "1rem",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexDirection: "row",
+        }}
+      >
+        <Typography
+          sx={{
+            fontWeight: "700",
+            color: "var(--light-orange-color)",
+          }}
+        >
+         Total: R${" "}
+          {itemsCarrinho
+            .reduce(
+              (total, item) => total + item.preco * item.quantidade,
+              0
+            )
+            .toFixed(2)
+            .toLocaleString()}
+        </Typography>
+
+        <Button
+          sx={{
+            color: "white",
+            border: "none",
+            padding: "10px 15px",
+            cursor: "pointer",
+            borderRadius: "5px",
+            fontSize: "1rem",
+            fontWeight: "600",
+            bgcolor: "var(--green-color)",
+
+            ":hover": {
+              backgroundColor: "var(--orange-color)",
+            },
+          }}
+          onClick={() => {
+            setSacola(true);
+          }}
+        >
+          Finalizar Compra
+        </Button>
+      </Box>
     </Stack>
   );
 };
