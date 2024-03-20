@@ -1,8 +1,8 @@
-import React from "react";
 
-import {  Typography, Stack, Box, Grid} from "@mui/material";
+import React from "react";
+import { Stack, Grid } from "@mui/material";
 import StarRateIcon from "@mui/icons-material/StarRate";
-import "./cliente.css";
+
 
 import sol from "../../images/sol.jpg";
 import Quizito2 from "../../images/quizito2.jpeg";
@@ -10,6 +10,9 @@ import mamae from "../../images/mamae.jpeg";
 import nascerd from "../../images/nascerd-o-sol.jpg";
 import Quizito from "../../images/Quizito.jpeg";
 import temotio from "../../images/temotio.jpeg";
+import Cliente from './childClient/child'
+
+
 
 const dadosDosClientes = [
   {
@@ -76,109 +79,29 @@ const dadosDosClientes = [
   },
 ];
 
-  export const Clientes = () => {
-    const dadosItem = dadosDosClientes.map((item, index) => (
-      <Grid item key={index}>
-        <Stack
-          sx={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-            gap: "2rem",
-            "@media only screen and (max-width: 305px)": {
-              gap: "1rem",
-            },
-          }}
-        >
-          <Box
-            className="box"
-            sx={{
-              width: "100%",
-              backgroundColor: item.backgroundColor,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              borderRadius: "0.5rem",
-              "& img": {
-                width: "100%",
-                height: "100px",
-                objectFit: "contain",
-                objectPosition: "center",
-              },
-              "& h2": {
-                fontSize: "1.7rem",
-                color: "black",
-                fontWeight: 600,
-              },
-              "& span": {
-                fontSize: "0.8rem",
-                fontWeight: 400,
-                marginBottom: "1rem",
-              },
-              "& .bx": {
-                padding: "10px",
-                color: "var(--bg-color)",
-                borderRadius: "5rem",
-                marginTop: "2rem",
-                position: "absolute",
-                bottom: "-8%",
-                display: "none",
-              },
-              "&:hover .bx": {
-                display: "block",
-                transition: "0.5s all linear",
-              },
-            }}
-          >
-            <img
-              src={item.customerImage}
-              alt="Opa!! Não deu certo, tenta novamente."
-            />
-            <Typography className="textName">{item.nome}</Typography>
-            <p>{item.message}</p>
-            <ArrowForwardIcon
-              sx={{
-                color: "var(--bg-color)",
-                fontSize: "3.8rem",
-              }}
-              className="bx"
-            />
-          </Box>
-        </Stack>
+const Clientes = () => {
+  const dadosItem = dadosDosClientes.map((item, index) => (
+    <Cliente
+      key={index}
+      nome={item.nome}
+      imagem={item.customerImage}
+      mensagem={item.message}
+    />
+  ));
+
+  return (
+    <Stack className="categoriaProducts">
+      {/* Seção de produtos... */}
+      <div className="stars">
+        {Array.from({ length: 5 }, (_, index) => (
+          <StarRateIcon key={index} className="myStares" />
+        ))}
+      </div>
+      <Grid container spacing={3} justifyContent="center">
+        {dadosItem}
       </Grid>
-    ));
-  
-    return (
-      <Stack className="categoriaProducts">
-        <Stack
-          sx={{
-            padding: " 6rem 2% 2rem",
-            fontSize: "1rem",
-            color: "var(--text-color: #1a2428",
-          }}
-        >
-          <h2>
-            Nossos Produtos Populares <br />
-            <span>Produtos de Frutas</span>
-          </h2>
-          <a href="#" className="btnMyButton">
-            Ver tudo 
-          </a>
-        </Stack>
-  
-        <div className="stares">
-          <StarRateIcon className="myStares" />
-          <StarRateIcon className="myStares" />
-          <StarRateIcon className="myStares" />
-          <StarRateIcon className="myStares" />
-          <StarRateIcon className="myStares" />
-        </div>
-  
-        <Grid container spacing={3} justifyContent="center">
-          {dadosItem}
-        </Grid>
-      </Stack>
-    );
-  };
+    </Stack>
+  );
+};
+
+export default Clientes;

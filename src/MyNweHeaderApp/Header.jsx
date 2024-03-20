@@ -24,6 +24,10 @@ const myLink = [
     link: "/quem_Somos",
   },
   {
+    label: "Clintes",
+    link: "/clintes",
+  },
+  {
     label: "Contato",
     link: "/contato",
   },
