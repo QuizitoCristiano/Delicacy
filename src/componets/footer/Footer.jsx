@@ -1,89 +1,160 @@
-import { TextField, Typography, Stack, Box, Button, Input } from '@mui/material'
-import WhatsAppIcon from '@mui/icons-material/WhatsApp'
-import WifiCalling3Icon from '@mui/icons-material/WifiCalling3'
+import {
+  TextField,
+  Typography,
+  Stack,
+  Box,
+  Button,
+  Input,
+} from "@mui/material";
 
-import FacebookSharpIcon from '@mui/icons-material/FacebookSharp'
-import InstagramIcon from '@mui/icons-material/Instagram'
-import LocalMallIcon from '@mui/icons-material/LocalMall';
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 import { Link, useLocation } from "react-router-dom";
 import StoreIcon from "@mui/icons-material/Store";
-import YouTubeIcon from '@mui/icons-material/YouTube'
-import { useEffect, useState } from 'react'
-import './footer.css'
+
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import { useEffect, useState } from "react";
+import "./footer.css";
 
 export const MyFooter = () => {
-  const [trocarIcon, setTrocarIcon] = useState(true)
+  const [trocarIcon, setTrocarIcon] = useState(true);
 
   useEffect(() => {
     const tempoTemorato = setTimeout(() => {
-      setTrocarIcon((prevIcon) => !prevIcon)
-    }, 2000)
+      setTrocarIcon((prevIcon) => !prevIcon);
+    }, 2000);
 
-    return () => clearTimeout(tempoTemorato)
-  }, [trocarIcon])
+    return () => clearTimeout(tempoTemorato);
+  }, [trocarIcon]);
 
   return (
     <>
-      <Stack sx={{
-        bgcolor: '#fff',
-        position: 'relative',
-        background: '#fef4ea',
-        width: '100%',
-        padding: '0.1rem 5% 0.1rem',
-      
-        
-      }}>
-        <Box sx={{
-           width: '100%',
-           marginLeft: 'auto',
-           marginRight: 'auto',
-           display: 'grid',
-           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, auto))',
-           gap: '1.5rem',
-           marginTop: '2rem',
-           background: '#fef4ea',
-         
-           padding:'5px'
-        }}>
-          <div className="footer-box">
-            <a href="" className="logo">
-            <Box
+      <Stack
+        sx={{
+          bgcolor: "#fff",
+          position: "relative",
+          background: "#fef4ea",
+          width: "100%",
+          padding: "0.1rem 5% 0.1rem",
+        }}
+      >
+        <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "row",
-            // bgcolor: "#b3d6e4",
-            justifyContent: "center",
-            height: "100%",
-            width: "30%",
+            width: "100%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, auto))",
+            gap: "1.5rem",
+            marginTop: "2rem",
+            background: "#fef4ea",
+
+            padding: "5px",
           }}
         >
-          <StoreIcon
-           
-              sx={{
-                color: "var(--light-orange-color)",
-                fontSize: "3rem",
-              }}/>
-          
-          
-          <Typography>
-            <Link className="logoDelicacy" to="/">
-              Delicacy
-            </Link>
-          </Typography>
-        </Box>
+          <div className="footer-box">
+            <a href="" className="logo">
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  // bgcolor: "#b3d6e4",
+                  justifyContent: "center",
+                  height: "100%",
+                  width: "30%",
+                }}
+              >
+                <StoreIcon
+                  sx={{
+                    color: "var(--light-orange-color)",
+                    fontSize: "3rem",
+                  }}
+                />
+
+                <Typography>
+                  <Link className="logoDelicacy" to="/">
+                    Delicacy
+                  </Link>
+                </Typography>
+              </Box>
             </a>
             <p>Rua Curupis, 363 - Santa Quiteria, Curitiba</p>
 
-            <div className="social">
-              <YouTubeIcon className="boxNewIcon" />
-              <YouTubeIcon className="boxNewIcon" />
-
-              <i className="bx bxl-whatsapp"></i>
-              <i className="bx bxl-twitter"></i>
-              <i className="bx bxl-instagram"></i>
-              <i className="bx bxl-youtube"></i>
-            </div>
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              columnGap:' 0.5rem',
+              fontSize:' 1.9rem',
+              margin: '0.5rem 0 1rem',
+            }}>
+              <WhatsAppIcon sx={{
+                 width: '50px',
+                  height:'50px',
+                  padding: '10px',
+                 background:' #fff',
+                 color: ' #3cb815',
+                 borderRadius:' 5rem',
+                 fontSize:' 30px',
+                 
+                 '&:hover': {
+                   background: '#3cb815',
+                   color: '#fff',
+                   transition: '0.2s',
+                 }
+                 
+              }}/>
+              <InstagramIcon sx={{
+                 width: '50px',
+                  height:'50px',
+                  padding: '10px',
+                 background:' #fff',
+                 color: ' #3cb815',
+                 borderRadius:' 5rem',
+                 fontSize:' 30px',
+                 
+                 '&:hover': {
+                   background: '#3cb815',
+                   color: '#fff',
+                   transition: '0.2s',
+                 }
+                 
+              }}/>
+              <FacebookTwoToneIcon sx={{
+                 width: '50px',
+                  height:'50px',
+                  padding: '10px',
+                 background:' #fff',
+                 color: ' #3cb815',
+                 borderRadius:' 5rem',
+                 fontSize:' 30px',
+                 
+                 '&:hover': {
+                   background: '#3cb815',
+                   color: '#fff',
+                   transition: '0.2s',
+                 }
+                 
+              }}/>
+              <YouTubeIcon sx={{
+                 width: '50px',
+                  height:'50px',
+                  padding: '10px',
+                 background:' #fff',
+                 color: ' #3cb815',
+                 borderRadius:' 5rem',
+                 fontSize:' 30px',
+                 
+                 '&:hover': {
+                   background: '#3cb815',
+                   color: '#fff',
+                   transition: '0.2s',
+                 }
+                 
+              }}/>
+            </Box>
           </div>
 
           <div className="footer-box">
@@ -131,5 +202,5 @@ export const MyFooter = () => {
         </Box>
       </Stack>
     </>
-  )
-}
+  );
+};

@@ -27,6 +27,7 @@ export const MyHome = () => {
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'colunm',
+      
 
 
           '@media only screen and (max-width: 800px)': {

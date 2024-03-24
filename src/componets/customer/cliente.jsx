@@ -1,8 +1,6 @@
-
 import React from "react";
-import { Stack, Grid } from "@mui/material";
+import { Stack, Grid, Box } from "@mui/material";
 import StarRateIcon from "@mui/icons-material/StarRate";
-
 
 import sol from "../../images/sol.jpg";
 import Quizito2 from "../../images/quizito2.jpeg";
@@ -10,8 +8,8 @@ import mamae from "../../images/mamae.jpeg";
 import nascerd from "../../images/nascerd-o-sol.jpg";
 import Quizito from "../../images/Quizito.jpeg";
 import temotio from "../../images/temotio.jpeg";
-import Cliente from './childClient/child'
-
+import Cliente from "./childClient/child";
+import { StyleClient } from "./StyleClient";
 
 
 const dadosDosClientes = [
@@ -90,17 +88,15 @@ const Clientes = () => {
   ));
 
   return (
-    <Stack className="categoriaProducts">
-      {/* Seção de produtos... */}
-      <div className="stars">
-        {Array.from({ length: 5 }, (_, index) => (
-          <StarRateIcon key={index} className="myStares" />
-        ))}
-      </div>
+    <StyleClient.container bg="#fff">
+      <StyleClient.wrapper>
+        <h2>por que os clientes nos amam?</h2>
+      </StyleClient.wrapper>
+
       <Grid container spacing={3} justifyContent="center">
         {dadosItem}
       </Grid>
-    </Stack>
+    </StyleClient.container>
   );
 };
 

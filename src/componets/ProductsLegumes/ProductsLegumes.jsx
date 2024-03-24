@@ -6,6 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import './legumescss.css';
 import ProductItemLegume from './legunes.jsx';
+import { Root } from '../../Styles/Root/index.jsx';
 
 export const ProductsLegumes = () => {
   const [carinho, setCarinho] = useState([]);
@@ -104,12 +105,10 @@ export const ProductsLegumes = () => {
                   justifyItems: 'center',
                   alignItems: 'center',
                   padding: '8px',
-                  background: 'var(--green-color)',
+                  background: Root.color_button,
                   borderRadius: '0.5rem 0px',
-                  '&:hover': {
-                    background: 'var(--orange-color)',
-                    transition: '0.2s',
-                  },
+                  ...Root.hover
+                 
                 }}
                 onClick={() => adicionaItemAoCarinho(item)}
               >
