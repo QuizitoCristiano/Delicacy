@@ -10,6 +10,7 @@ import { Products } from '../componets/Products/Products'
 import { ProductsLegumes } from '../componets/ProductsLegumes/ProductsLegumes'
 import { AboutUs } from '../componets/about/aboutUs'
 import Clientes from '../componets/customer/cliente'
+import { NewCategorys } from '../componets/screens/newCategorys'
 
 export const MyHome = () => {
   const { user } = useContext(AuthContext);
@@ -55,10 +56,9 @@ export const MyHome = () => {
         <Category/>
 
         <Products/>
+
+        <NewCategorys/>
     
-        <h2>Ola mundo tudo cerdo!!</h2>
-        <p>Vamos nessa</p>
-        <h2>Eba!!</h2>
        <ProductsLegumes/>
        <AboutUs/>
        <Clientes/>

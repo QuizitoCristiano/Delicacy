@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, Typography, Stack, Box } from '@mui/material';
-import './styles/myCategory.css'
+import './styles/StyleMyCategory.css'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 import Pimentao from '../../img/Pimentao.png';
@@ -178,7 +178,7 @@ export const NewCategorys = () => {
           display: 'grid',
           width:'100',
           gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: '1rem',
+          gap: '2rem',
           marginTop: '2rem',
          
         
