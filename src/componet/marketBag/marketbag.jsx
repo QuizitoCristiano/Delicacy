@@ -1,141 +1,106 @@
-import React, { useState } from "react";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import "./newStyle.css";
-
-const carrinho = [
-  {
-    nome: " Tangerina",
-    quantidade: 2,
-    preco: 10.99,
-  },
-  {
-    nome: "Laranja",
-    quantidade: 1,
-    preco: 5.99,
-  },
-  {
-    nome: "Ameixa",
-    quantidade: 1,
-    preco: 5.99,
-  },
-  {
-    nome: "Blueberry",
-    quantidade: 1,
-    preco: 5.99,
-  },
-  {
-    nome: " Tangerina",
-    quantidade: 2,
-    preco: 10.99,
-  },
-  {
-    nome: "Laranja",
-    quantidade: 1,
-    preco: 5.99,
-  },
-  {
-    nome: "Ameixa",
-    quantidade: 1,
-    preco: 5.99,
-  },
-  {
-    nome: "Blueberry",
-    quantidade: 1,
-    preco: 5.99,
-  },
-];
+import React, { useContext, useState } from 'react'
+import { Box, Button, Stack, Typography } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import './newStyle.css'
+import { AuthContext } from '../../authcontext'
 
 export const BagMarket = ({ sacola, setSacola }) => {
+  const { carinho, setCarinho } = useContext(AuthContext);
   const [sacolaAberta, setSacolaAberta] = useState(false);
-  const [itemsCarrinho, setItemsCarrinho] = useState(carrinho);
+  const [itemsCarrinho, setItemsCarrinho] = useState(carinho);
+  const [removItemArray, setRemoveItemArray] = useState(null);
 
   const toggleSacola = () => {
-    setSacolaAberta(!sacolaAberta);
+    setSacolaAberta(!sacolaAberta)
     if (setSacola) {
-      setSacola(!sacolaAberta);
+      setSacola(!sacolaAberta)
     }
-  };
+  }
 
   const adicionarItem = (index) => {
-    const novoCarrinho = [...itemsCarrinho];
-    novoCarrinho[index].quantidade++;
-    setItemsCarrinho(novoCarrinho);
-  };
+    const novoCarrinho = [...itemsCarrinho]
+    novoCarrinho[index].quantidade++
+    setItemsCarrinho(novoCarrinho)
+  }
 
   const removerItemIcon = (index) => {
-    const novoCarrinho = itemsCarrinho.filter((_, i) => i !== index);
-    setItemsCarrinho(novoCarrinho);
-  };
+    setRemoveItemArray(index);
+    setTimeout(() => {
+      const novoCarrinho = carinho.filter((_, i) => i !== index)
+      setCarinho(novoCarrinho)
+      setRemoveItemArray(null); 
+    }, [500])
+  }
 
   const removerItem = (index) => {
-    const novoCarrinho = [...itemsCarrinho];
+    const novoCarrinho = [...itemsCarrinho]
     if (novoCarrinho[index].quantidade > 1) {
-      novoCarrinho[index].quantidade--;
+      novoCarrinho[index].quantidade--
     } else {
-      if (window.confirm("Tem certeza que deseja remover este item?")) {
-        novoCarrinho.splice(index, 1);
+      if (window.confirm('Tem certeza que deseja remover este item?')) {
+        novoCarrinho.splice(index, 1)
       }
     }
-    setItemsCarrinho(novoCarrinho);
-  };
+    setItemsCarrinho(novoCarrinho)
+  }
+
 
   const renderizarItensCarrinho = () => {
-    return itemsCarrinho.map((produto, index) => (
+    return carinho.map((produto, index) => (
       <Stack
         sx={{
-          width: "100%",
-          bgcolor: "#fff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          borderRadius: "5px",
-          margin: "0px 5px 5px 0px",
-          boxShadow: "1px 2px 11px 4px rgb(14 55 54 / 45%)",
-          gap: "2rem",
+          width: '100%',
+          bgcolor: removItemArray === index? 'rgba(255, 0, 0, 0.3)' : '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          borderRadius: '5px',
+          margin: '0px 5px 5px 0px',
+          boxShadow: '1px 2px 11px 4px rgb(14 55 54 / 45%)',
+          gap: '2rem',
         }}
         key={index}
       >
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: "10px",
-            flexDirection: "row",
-            width: "100%",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '10px',
+            flexDirection: 'row',
+            width: '100%',
           }}
         >
           <Box
             sx={{
-              width: "100%",
-              margin: "5px",
+              width: '100%',
+              margin: '5px',
             }}
           >
             <Typography
               sx={{
-                fontWeight: "700",
-                fontSize: "1.8rem",
+                fontWeight: '700',
+                fontSize: '1.8rem',
               }}
             >
               {produto.nome}
             </Typography>
             <Typography
               sx={{
-                fontWeight: "700",
-                fontSize: "1.8rem",
-                marginTop: " 0.5rem",
-                color: " var(--light-orange-color)",
+                fontWeight: '700',
+                fontSize: '1.8rem',
+                marginTop: ' 0.5rem',
+                color: ' var(--light-orange-color)',
               }}
             >
-              Preço: R$ {produto.preco}
+              Preço: R$ {produto.price}
             </Typography>
             <Typography
               sx={{
-                fontWeight: "700",
-                fontSize: "1.8rem",
-                marginTop: " 0.5rem",
+                fontWeight: '700',
+                fontSize: '1.8rem',
+                marginTop: ' 0.5rem',
               }}
             >
               Quantidade: {produto.quantidade}
@@ -143,32 +108,32 @@ export const BagMarket = ({ sacola, setSacola }) => {
           </Box>
           <Stack
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "flex-end",
-              flexDirection: "column",
-              margin: "5px",
-              gap: "3px",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              flexDirection: 'column',
+              margin: '5px',
+              gap: '3px',
             }}
           >
             <Box>
               <DeleteIcon
                 onClick={() => removerItemIcon(index)}
                 sx={{
-                  color: "var(--light-orange-color)",
+                  color: 'var(--light-orange-color)',
                   fontWeight: 800,
-                  fontSize: "2.3rem",
-                  cursor: "pointer",
+                  fontSize: '2.3rem',
+                  cursor: 'pointer',
                 }}
               />
             </Box>
             <Box
               sx={{
-                display: "flex",
-                gap: "8px",
-                justifyContent: "flex-end",
-                flexDirection: "row",
-                alignItems: "center",
+                display: 'flex',
+                gap: '8px',
+                justifyContent: 'flex-end',
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
             >
               <button
@@ -187,92 +152,85 @@ export const BagMarket = ({ sacola, setSacola }) => {
           </Stack>
         </Box>
       </Stack>
-    ));
-  };
+    ))
+  }
 
   return (
     <Stack
       sx={{
-        width: "100%",
-        height: "auto",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
+        width: '100%',
+        height: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
       }}
     >
       <h2>Minha Sacola de Compras</h2>
-      <button onClick={toggleSacola}>Abrir Sacola</button>
-      {sacolaAberta && (
-        <Stack
-          sx={{
-            width: "100%",
-            margin: "10px",
-            height: "690px",
-            display: "flex",
-            gap: "1rem",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexDirection: "column",
-            overflowY: "auto",
-            padding: "10px",
-            overflowX: "hidden",
-          }}
-        >
-          <button onClick={toggleSacola}>Fechar Sacola</button>
-          {renderizarItensCarrinho()}
-        </Stack>
-      )}
+      <Stack
+        sx={{
+          width: '100%',
+          margin: '10px',
+          height: '690px',
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          flexDirection: 'column',
+          overflowY: 'auto',
+          padding: '10px',
+          overflowX: 'hidden',
+        }}
+      >
+        {renderizarItensCarrinho()}
+      </Stack>
 
       <Box
         sx={{
-          width: "100%",
-          margin: "10px",
-          display: "flex",
-          gap: "1rem",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexDirection: "row",
+          width: '100%',
+          margin: '10px',
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexDirection: 'row',
         }}
       >
         <Typography
           sx={{
-            fontWeight: "700",
-            color: "var(--light-orange-color)",
+            fontWeight: '700',
+            color: 'var(--light-orange-color)',
           }}
         >
-         Total: R${" "}
+          Total: R${' '}
           {itemsCarrinho
-            .reduce(
-              (total, item) => total + item.preco * item.quantidade,
-              0
-            )
+            .reduce((total, item) => total + item.preco * item.quantidade, 0)
             .toFixed(2)
             .toLocaleString()}
         </Typography>
 
         <Button
           sx={{
-            color: "white",
-            border: "none",
-            padding: "10px 15px",
-            cursor: "pointer",
-            borderRadius: "5px",
-            fontSize: "1rem",
-            fontWeight: "600",
-            bgcolor: "var(--green-color)",
+            color: 'white',
+            border: 'none',
+            padding: '10px 15px',
+            cursor: 'pointer',
+            borderRadius: '5px',
+            fontSize: '1rem',
+            fontWeight: '600',
+            bgcolor: 'var(--green-color)',
 
-            ":hover": {
-              backgroundColor: "var(--orange-color)",
+            ':hover': {
+              backgroundColor: 'var(--orange-color)',
             },
           }}
           onClick={() => {
-            setSacola(true);
+            setSacola(true)
           }}
         >
           Finalizar Compra
         </Button>
       </Box>
     </Stack>
-  );
-};
+  )
+}

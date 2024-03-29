@@ -8,9 +8,16 @@ import ImageListItem from '@mui/material/ImageListItem'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
 import './Products.css'
 import ProductItem from './frutas.jsx'
+import { useContext, useState } from 'react'
+import { AuthContext } from '../../authcontext/index.jsx'
 
 
 export const Products = () => {
+
+
+  const {adicionaItemAoCarinho, carinho, setCarinho} = useContext(AuthContext)
+  
+
   const newProductsItem = ProductItem.map((item, index) => (
     <Grid item key={index}>
   
@@ -83,6 +90,7 @@ export const Products = () => {
               }}
             >
               R$:{item.price}
+              
             </Typography>
 
             <Box
@@ -111,6 +119,7 @@ export const Products = () => {
                     transition: '0.2s',
                   },
                 }}
+                onClick={() => adicionaItemAoCarinho(item)}
               >
                 <ShoppingCartIcon
                   sx={{
@@ -154,6 +163,8 @@ export const Products = () => {
       <Grid container spacing={3} justifyContent="center">
         {newProductsItem}
       </Grid>
+
+    
     </Stack>
   )
 }

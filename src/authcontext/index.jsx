@@ -16,6 +16,8 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import ProductItemLegume from "../componets/ProductsLegumes/legunes";
+import ProductItem from "../componets/Products/frutas"
 export const AuthContext = createContext();
 const provider = new GoogleAuthProvider();
 export const AuthProvider = ({ children }) => {
@@ -25,6 +27,39 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(null);
+
+  const [carinho, setCarinho] = useState([]);
+
+  const adicionaItemAoCarinho = (item) => {
+    setCarinho([...carinho, item]);
+  };
+
+  const totalItensCarrinho = carinho.length;
+
+
+
+  const [termoPesquisa, setTermoPesquisa] = useState('');
+  const [resultados, setResultados] = useState([]);
+
+  const handlePesquisar = () => {
+    // Filtra os produtos com base no termo de pesquisa
+    const produtos = [...ProductItem, ...ProductItemLegume]; // Combina os arrays de produtos
+    const resultadosFiltrados = produtos.filter((produto) =>
+      produto.nome.toLowerCase().includes(termoPesquisa.toLowerCase())
+    );
+
+    // Se houver resultados correspondentes, atualiza o estado
+    // Caso contrário, sugere um nome parecido
+    if (resultadosFiltrados.length > 0) {
+      setResultados(resultadosFiltrados);
+    } else {
+      // Aqui você pode implementar a lógica para sugerir um nome parecido
+      setResultados([{ id: -1, nome: `Nenhum resultado encontrado para "${termoPesquisa}". Tente novamente.` }]);
+    }
+  };
+
+
+
 
   const checkUserAuthentication = () => {
     const loggedInStatus = localStorage.getItem("isLoggedIn");
@@ -125,9 +160,19 @@ export const AuthProvider = ({ children }) => {
         loginWithGoogle,
         loginWithEmailAndPassword,
         user,
+        carinho,
+        setCarinho,
+        adicionaItemAoCarinho,
+        totalItensCarrinho,
+        termoPesquisa,
+        setTermoPesquisa,
+        resultados,
+        setResultados,
+        handlePesquisar,
      
       }}
     >
+   
       {children}
     </AuthContext.Provider>
   );

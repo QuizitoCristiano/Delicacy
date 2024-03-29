@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Typography, Stack, Box } from '@mui/material';
 import { Grid } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -7,15 +7,13 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import './legumescss.css';
 import ProductItemLegume from './legunes.jsx';
 import { Root } from '../../Styles/Root/index.jsx';
+import { AuthContext } from '../../authcontext/index.jsx';
 
 export const ProductsLegumes = () => {
-  const [carinho, setCarinho] = useState([]);
+  
 
-  const adicionaItemAoCarinho = (item) => {
-    setCarinho([...carinho, item]);
-  };
+  const {  adicionaItemAoCarinho, carinho ,setCarinho } = useContext(AuthContext);
 
-  const totalItensCarrinho = carinho.length;
 
   const newProductsItem = ProductItemLegume.map((item, index) => (
     <Grid item key={index}>
@@ -157,25 +155,7 @@ export const ProductsLegumes = () => {
         {newProductsItem}
       </Grid>
 
-      {/* Div para exibir total de itens no carrinho */}
-      <Box
-        style={{
-          position: 'absolute',
-          top: '0',
-          right: '0',
-          padding: '10px',
-        
-          borderRadius: '50%',
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.9)',
-    
-          fontSize: '1.4rem',
-          fontWeight: '900',
-          background: 'red'
-        }}
-      >
-        <Typography></Typography>
-        <Typography>{totalItensCarrinho}</Typography>
-      </Box>
+      
     </Stack>
   );
 };
