@@ -16,10 +16,13 @@
     "@mui/icons-material": "^5.15.2",
     "@mui/material": "^5.15.2",
     "@mui/styled-engine-sc": "^6.0.0-alpha.10",
+    "bootstrap": "^5.3.3",
     "boxicons": "^2.1.4",
     "firebase": "^10.7.2",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
+    "react-input-mask": "^2.0.4",
     "react-router-dom": "^6.21.1",
     "styled-components": "^6.1.4"
   },

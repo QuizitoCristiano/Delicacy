@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       setResultados(resultadosFiltrados);
     } else {
       // Aqui você pode implementar a lógica para sugerir um nome parecido
-      setResultados([{ id: -1, nome: `Nenhum resultado encontrado para "${termoPesquisa}". Tente novamente.` }]);
+      setResultados([{ id: -1, nome: `Nenhum resultado  para "${termoPesquisa}". Tente novamente.` }]);
     }
   };
 

@@ -20,15 +20,15 @@ const myLink = [
 
   {
     label: 'Quem_Somos',
-    link: '/quem_Somos',
+    link: '/HomePage',
   },
   {
     label: 'Clintes',
-    link: '/clintes',
+    link: '/CustomerEvaluation',
   },
   {
     label: 'Contato',
-    link: '/contato',
+    link: '/NewHelpeContato',
   },
 ]
 
@@ -97,6 +97,7 @@ export const Header = () => {
           },
         }}
       >
+      
         {/* Logo e Título */}
         <Box
           sx={{

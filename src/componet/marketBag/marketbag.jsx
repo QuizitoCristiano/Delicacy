@@ -1,56 +1,57 @@
-import React, { useContext, useState } from 'react'
-import { Box, Button, Stack, Typography } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
-import './newStyle.css'
-import { AuthContext } from '../../authcontext'
+import React, { useContext, useState } from 'react';
+import { Box, Button, Stack, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import './newStyle.css';
+import { AuthContext } from '../../authcontext';
 
 export const BagMarket = ({ sacola, setSacola }) => {
   const { carinho, setCarinho } = useContext(AuthContext);
   const [sacolaAberta, setSacolaAberta] = useState(false);
   const [itemsCarrinho, setItemsCarrinho] = useState(carinho);
-  const [removItemArray, setRemoveItemArray] = useState(null);
-
+  const [removItemArray, setRemoveItemArray] = useState(null); 
   const toggleSacola = () => {
-    setSacolaAberta(!sacolaAberta)
+    setSacolaAberta(!sacolaAberta);
     if (setSacola) {
-      setSacola(!sacolaAberta)
+      setSacola(!sacolaAberta);
     }
-  }
+  };
 
   const adicionarItem = (index) => {
-    const novoCarrinho = [...itemsCarrinho]
-    novoCarrinho[index].quantidade++
-    setItemsCarrinho(novoCarrinho)
-  }
+    const novoCarrinho = [...itemsCarrinho];
+    novoCarrinho[index].quantidade++;
+    setItemsCarrinho(novoCarrinho);
+  };
 
   const removerItemIcon = (index) => {
     setRemoveItemArray(index);
     setTimeout(() => {
-      const novoCarrinho = carinho.filter((_, i) => i !== index)
-      setCarinho(novoCarrinho)
-      setRemoveItemArray(null); 
-    }, [500])
-  }
+      const novoCarrinho = carinho.filter((_, i) => i !== index);
+      setCarinho(novoCarrinho);
+      setRemoveItemArray(null);
+    }, [500]);
+  };
 
   const removerItem = (index) => {
-    const novoCarrinho = [...itemsCarrinho]
+    const novoCarrinho = [...itemsCarrinho];
     if (novoCarrinho[index].quantidade > 1) {
-      novoCarrinho[index].quantidade--
+      novoCarrinho[index].quantidade--;
     } else {
       if (window.confirm('Tem certeza que deseja remover este item?')) {
-        novoCarrinho.splice(index, 1)
+        novoCarrinho.splice(index, 1);
       }
     }
-    setItemsCarrinho(novoCarrinho)
-  }
+    setItemsCarrinho(novoCarrinho);
+  };
+
 
 
   const renderizarItensCarrinho = () => {
     return carinho.map((produto, index) => (
       <Stack
+        key={index}
         sx={{
           width: '100%',
-          bgcolor: removItemArray === index? 'rgba(255, 0, 0, 0.3)' : '#fff',
+          bgcolor: removItemArray === index ? 'rgba(255, 0, 0, 0.3)' : '#fff',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -60,7 +61,6 @@ export const BagMarket = ({ sacola, setSacola }) => {
           boxShadow: '1px 2px 11px 4px rgb(14 55 54 / 45%)',
           gap: '2rem',
         }}
-        key={index}
       >
         <Box
           sx={{
@@ -152,17 +152,17 @@ export const BagMarket = ({ sacola, setSacola }) => {
           </Stack>
         </Box>
       </Stack>
-    ))
-  }
-
+    ));
+  };
+  
   return (
     <Stack
       sx={{
         width: '100%',
-        height: 'auto',
+        height: '100vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'start',
         flexDirection: 'column',
       }}
     >
@@ -171,7 +171,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
         sx={{
           width: '100%',
           margin: '10px',
-          height: '690px',
+          height: '71%',
           display: 'flex',
           gap: '1rem',
           alignItems: 'center',
@@ -180,6 +180,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
           overflowY: 'auto',
           padding: '10px',
           overflowX: 'hidden',
+          // bgcolor: 'ActiveCaption',
         }}
       >
         {renderizarItensCarrinho()}
@@ -203,8 +204,11 @@ export const BagMarket = ({ sacola, setSacola }) => {
           }}
         >
           Total: R${' '}
-          {itemsCarrinho
-            .reduce((total, item) => total + item.preco * item.quantidade, 0)
+          {carinho
+            .reduce(
+              (total, item) => total + item.price * item.quantidade,
+              0
+            )
             .toFixed(2)
             .toLocaleString()}
         </Typography>
@@ -225,12 +229,12 @@ export const BagMarket = ({ sacola, setSacola }) => {
             },
           }}
           onClick={() => {
-            setSacola(true)
+            toggleSacola(true);
           }}
         >
           Finalizar Compra
         </Button>
       </Box>
     </Stack>
-  )
-}
+  );
+};
