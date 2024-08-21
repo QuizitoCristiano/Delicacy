@@ -1,27 +1,17 @@
-import { useState } from 'react';
-
+import React from 'react';
 import './App.css';
-
-
-
 import { AuthProvider } from './authcontext';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { MainRoutes } from './routes';
 
 function App() {
   return (
-  
-    <AuthProvider>
-        <BrowserRouter>
-   
-        <MainRoutes/>
-        </BrowserRouter>
-       
- 
-    
-
+    <AuthProvider> {/* Aqui o AuthProvider está no nível mais alto */}
+      <BrowserRouter>
+        <MainRoutes />
+      </BrowserRouter>
     </AuthProvider>
   );
 }
 
-export default App
+export default App;

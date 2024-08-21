@@ -1,20 +1,36 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-import React, { createContext, useContext, useState } from 'react';
+const AuthContext = createContext();
 
-const CarrinhoContext = createContext();
-
-export const CarrinhoProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [carinho, setCarinho] = useState([]);
 
   const adicionaItemAoCarinho = (item) => {
     setCarinho([...carinho, item]);
   };
 
+  useEffect(() => {
+    // Lógica para verificar se o usuário está logado
+    const loggedIn = false; // Substitua isso pela sua lógica de autenticação
+    setIsLoggedIn(loggedIn);
+  }, []);
+
+  const login = () => {
+    // Lógica de login
+    setIsLoggedIn(true);
+  };
+
+  const logout = () => {
+    // Lógica de logout
+    setIsLoggedIn(false);
+  };
+
   return (
-    <CarrinhoContext.Provider value={{ carinho, adicionaItemAoCarinho }}>
+    <AuthContext.Provider value={{ carinho, adicionaItemAoCarinho, isLoggedIn, login, logout }}>
       {children}
-    </CarrinhoContext.Provider>
+    </AuthContext.Provider>
   );
 };
 
-export const useCarrinho = () => useContext(CarrinhoContext);
+export const useAuth = () => useContext(AuthContext);

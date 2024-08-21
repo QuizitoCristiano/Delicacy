@@ -4,7 +4,7 @@ import { Button, Box, Stack, TextField, TextareaAutosize } from '@mui/material'
 import InputMask from 'react-input-mask'
 
 const StepCardsclient = () => {
-  const [nomeUser, setNomeUser] = useState('');
+  const [Usernome, setNomeUser] = useState('');
   const [emailUser, setEmailUser] = useState('');
   const [telefoneUser, setTelefoneUser] = useState('');
   const [mensagemUser, setMensagemUser] = useState('');
@@ -14,64 +14,65 @@ const StepCardsclient = () => {
   const [telefoneError, setTelefoneError] = useState('');
   const [mensagemError, setMensagemError] = useState('');
 
+  const [selectedNewFile, setSelectedNewFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    selectedNewFile(event.target.files[0])
+  }
+
+
   const handleNomeChange = (event) => {
-    const value = event.target.value;
-    setNomeUser(value);
-    if (!value.trim()) {
+
+    event.preventDefault();
+
+    if (Usernome.trim() === '') {
       setNomeError('O nome é obrigatório');
+     return
     } else {
       setNomeError('');
-    }
-  };
+    };
 
-  const handleEmailChange = (event) => {
-    const value = event.target.value;
-    setEmailUser(value);
-    if (!value.trim()) {
+    if (mensagemUser.trim() === '') {
+      setMensagemError('A mensagem é obrigatória');
+     return
+    } else {
+      setMensagemError('');
+    }
+
+    if (emailUser.trim() === '') {
       setEmailError('O email é obrigatório');
     } else if (!validaEmail(value)) {
       setEmailError('Formato de email inválido');
     } else {
       setEmailError('');
     }
-  };
 
-  const handleTelefoneChange = (event) => {
-    const value = event.target.value;
-    setTelefoneUser(value);
-    if (!value.trim()) {
+    if (telefoneUser.trim()) {
       setTelefoneError('O telefone é obrigatório');
     } else if (!validaTelefone(value)) {
       setTelefoneError('Formato de telefone inválido');
     } else {
       setTelefoneError('');
     }
-  };
 
-  const handleMensagemChange = (event) => {
-    const value = event.target.value;
-    setMensagemUser(value);
-    if (!value.trim()) {
-      setMensagemError('A mensagem é obrigatória');
-    } else {
-      setMensagemError('');
-    }
-  };
+ // Se todos os campos estiverem preenchidos, você pode enviar o formulário
+ if (Usernome && selectedNewFile && message) {
+  // Aqui você pode adicionar a lógica para enviar o formulário
+  console.log('Formulário enviado:', { name, selectedFile, message });
+}
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Submit logic here if all fields are valid
-  };
+  }
 
-  const validaTelefone = (telefone) => {
-    const cleanedPhoneNumber = telefone.replace(/\D/g, '');
-    return /^(\d{11})$/.test(cleanedPhoneNumber) || /^(\d{10})$/.test(cleanedPhoneNumber);
-  };
 
-  const validaEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  // const validaTelefone = (telefone) => {
+  //   const cleanedPhoneNumber = telefone.replace(/\D/g, '');
+  //   return /^(\d{11})$/.test(cleanedPhoneNumber) || /^(\d{10})$/.test(cleanedPhoneNumber);
+  // };
+
+  // const validaEmail = (email) => {
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   return emailRegex.test(email);
+  // };
  
 
   return (
@@ -90,7 +91,7 @@ const StepCardsclient = () => {
         color: 'green',
       }}
     >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleNomeChange}>
       <Stack
         sx={{
           display: 'flex',
@@ -266,11 +267,13 @@ const StepCardsclient = () => {
             variant="contained"
             color="primary"
           >
-            Insira os Dados
+            Enviar mensagem
           </Button>
         </Box>
       </Stack>
       </form>
+
+
     </Stack>
   )
 }

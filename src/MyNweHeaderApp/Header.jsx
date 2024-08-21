@@ -1,6 +1,14 @@
 import React, { useContext, useState } from 'react'
 import './StileHeader.css'
-import { Avatar, IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
+import {
+  Avatar,
+  boxClasses,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from '@mui/material'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import { Box, Stack, Typography } from '@mui/material'
 import { Link, useLocation } from 'react-router-dom'
@@ -15,7 +23,7 @@ import { AuthContext } from '../authcontext'
 const myLink = [
   {
     label: 'Home',
-    link: '/',
+    link: '/MyHome',
   },
 
   {
@@ -31,6 +39,20 @@ const myLink = [
     link: '/NewHelpeContato',
   },
 ]
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth'
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  query,
+  where,
+  getDocs,
+} from 'firebase/firestore'
 
 export const Header = () => {
   const { user, carinho } = useContext(AuthContext)
@@ -97,7 +119,6 @@ export const Header = () => {
           },
         }}
       >
-      
         {/* Logo e Título */}
         <Box
           sx={{
@@ -118,7 +139,7 @@ export const Header = () => {
           />
 
           <Typography>
-            <Link className="logoDelicacy" to="/">
+            <Link className="logoDelicacy" to="/MyHome">
               Delicacy
             </Link>
           </Typography>
@@ -168,6 +189,7 @@ export const Header = () => {
             </div>
 
             {/* Ícones */}
+
             <Stack
               sx={{
                 display: 'flex',
@@ -181,7 +203,13 @@ export const Header = () => {
                 width: '100%',
               }}
             >
-              <Box sx={{ flexGrow: 0 }}>
+              <Box
+                sx={{
+                  flexGrow: 0,
+                  borderRadius: '50%',
+                  border: '1px solid #3cb815',
+                }}
+              >
                 <Tooltip title="Open settings">
                   <label htmlFor="avatarInput">
                     <IconButton component="span">
@@ -201,6 +229,56 @@ export const Header = () => {
                   style={{ display: 'none' }}
                   onChange={handleAvatarChange}
                 />
+                <Box
+                  sx={{
+                    display: 'none',
+                    backgroundColor: '#ff7e00',
+                    height: '200px',
+                    width: '190px',
+                    position: 'fixed', // 'absolute' não pode coexistir com 'fixed'
+                    justifyContent: 'space-around',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    right: '25%',
+                    top: '9.6%',
+                    borderRadius: '8px',
+                    color: '#eeeef9',
+                    boxShadow: '0 0 50px 0 rgba(0, 0, 0, 0.7)',
+                    opacity: 0,
+                    transform: 'translateY(-200px)',
+                    animationName: 'animarEdeeFor',
+                    animationDuration: '0.3s',
+                    animationFillMode: 'forwards',
+                    animationTimingFunction: 'ease',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: 'none',
+                      backgroundColor: '#ff7e00',
+                      height: '200px',
+                      width: '190px',
+                      position: 'fixed', // 'absolute' não pode coexistir com 'fixed'
+                      justifyContent: 'space-around',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      right: '25%',
+                      top: '9.6%',
+                      borderRadius: '8px',
+                      color: '#eeeef9',
+                      boxShadow: '0 0 50px 0 rgba(0, 0, 0, 0.7)',
+                      opacity: 0,
+                      transform: 'translateY(-200px)',
+                      animationName: 'animarEdeeFor',
+                      animationDuration: '0.3s',
+                      animationFillMode: 'forwards',
+                      animationTimingFunction: 'ease',
+                    }}
+                  >
+                    <p>Editar Avata</p>
+                    <Button>Salvar</Button>
+                  </Box>
+                </Box>
               </Box>
               <Box
                 sx={{
