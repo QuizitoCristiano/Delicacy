@@ -9,6 +9,8 @@ import { AuthContext } from '../authcontext'; // Apenas AuthContext aqui
 import { HomePage } from '../environments/helpers/history';
 import { NewHelpeContato } from '../environments/complaint/helpeContato';
 import { CustomerEvaluation } from '../environments/assessment/customerReview';
+import { ForgotPassword } from '../recovery/recoverySenha';
+
 
 // Definindo a rota protegida
 const ProtectedRoute = ({ children }) => {
@@ -22,6 +24,8 @@ export const MainRoutes = () => {
     <Routes>
       <Route path="/login" element={<SignIn />} />
       <Route path="/SignUp" element={<SignUp />} />
+      <Route path="/ForgotPassword" element={<ForgotPassword />} />
+
       <Route
         path="/*"
         element={

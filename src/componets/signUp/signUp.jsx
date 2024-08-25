@@ -84,6 +84,7 @@ export const SignUp = () => {
   const [myNewloading, setMyNewloading] = useState(false);
   const [formData, setFormData] = useState({
     cep: '',
+    imgUser: '',
     bairro: '',
     cidade: '',
     estado: '',
@@ -100,6 +101,7 @@ export const SignUp = () => {
   const [formErrors, setFormErrors] = useState({
     cep: '',
     bairro: '',
+   
     cidade: '',
     estado: '',
     rua: '',
@@ -128,6 +130,7 @@ export const SignUp = () => {
   const clearErrors = () => {
     setFormErrors({
       cep: '',
+      imgUser: '',
       bairro: '',
       cidade: '',
       estado: '',
@@ -289,12 +292,14 @@ export const SignUp = () => {
           bairro: formData.bairro,
           cidade: formData.cidade,
           estado: formData.estado,
+          imgUser: formData.imgUser,
           numeroDoEdificios: formData.numeroDoEdificios,
         });
   
         alert("Usuário cadastrado com sucesso!");
         setFormData({
           cep: '',
+          imgUser: '',
           bairro: '',
           cidade: '',
           estado: '',
@@ -374,13 +379,16 @@ export const SignUp = () => {
               fontSize: '1.8rem',
               gap: '2.9rem',
               width: '100%',
+             
+            
+              fontWeight: '800',
               '@media (max-width: 800px)': {
                 fontSize: '1.4rem',
                 transition: 'all 200ms',
               },
             }}
           >
-            <h4>Inscreva-se no Delicacy</h4>
+            <h3>Inscreva-se no Delicacy</h3>
           </Stack>
           <StyleClientNweLib.containerChild>
             <StyleClientNweLib.wrapperCardBox>

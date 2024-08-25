@@ -16,7 +16,28 @@
 
 
 
-
+#profileEditForm {
+  display: none;
+  background-color: var(--orange-color);
+  height: 200px;
+  width: 190px;
+  position: absolute;
+  position: fixed;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  right: 25%;
+  top: 9.6%;
+  border-radius: 8px;
+  color: #eeeef9;
+  box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transform: translateY(-200px);
+  animation-name: animarEdeeFor;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease;
+}
 
 
 .header-button {
@@ -237,3 +258,54 @@ body {
 
 
 
+/* 
+
+sx={{
+  display: 'none',
+  backgroundColor: '#ff7e00',
+  height: '200px',
+  width: '190px',
+  position: 'fixed', // 'absolute' não pode coexistir com 'fixed'
+  justifyContent: 'space-around',
+  flexDirection: 'column',
+  alignItems: 'center',
+  right: '25%',
+  top: '9.6%',
+  borderRadius: '8px',
+  color: '#eeeef9',
+  boxShadow: '0 0 50px 0 rgba(0, 0, 0, 0.7)',
+  opacity: 0,
+  transform: 'translateY(-200px)',
+  animationName: 'animarEdeeFor',
+  animationDuration: '0.3s',
+  animationFillMode: 'forwards',
+  animationTimingFunction: 'ease',
+}}
+
+
+  sx={{
+    display: 'none',
+    backgroundColor: '#ff7e00',
+    height: '200px',
+    width: '190px',
+    position: 'fixed', // 'absolute' não pode coexistir com 'fixed'
+    justifyContent: 'space-around',
+    flexDirection: 'column',
+    alignItems: 'center',
+    right: '25%',
+    top: '9.6%',
+    borderRadius: '8px',
+    color: '#eeeef9',
+    boxShadow: '0 0 50px 0 rgba(0, 0, 0, 0.7)',
+    opacity: 0,
+    transform: 'translateY(-200px)',
+    animationName: 'animarEdeeFor',
+    animationDuration: '0.3s',
+    animationFillMode: 'forwards',
+    animationTimingFunction: 'ease',
+  }}
+>
+  <p>Editar Avata</p>
+  <Button>Salvar</Button>
+</Box>
+</Box> */

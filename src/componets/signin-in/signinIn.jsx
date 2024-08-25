@@ -14,7 +14,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { Link, useNavigate } from 'react-router-dom'
 import { get_users } from '../../api/users'
 import { AuthContext } from '../../authcontext'
-import './signinIn.css'
+import './EstiloDeLogin.css'
 
 // Estilização para a tela de carregamento
 const ContainerCardLaoder = styled(Stack)(({ theme }) => ({
@@ -70,7 +70,7 @@ const globalStyles = `
 `
 
 export const SignIn = () => {
-  const navigate = useNavigate()
+  const myNewnavigate = useNavigate()
   const { loginWithEmailAndPassword } = useContext(AuthContext)
   const [users, setUsers] = useState([])
   const [email, setEmail] = useState('')
@@ -134,7 +134,7 @@ export const SignIn = () => {
       )
       console.log(userCredential)
       // Usuario autenticado com sucesso
-      navigate('/MyHome')
+      myNewnavigate('/MyHome')
     } catch (error) {
       console.error('Erro ao fazer login', error)
       setEmailError('Credenciais inválidas ou erro ao fazer login')
@@ -263,20 +263,19 @@ export const SignIn = () => {
                 Logar
               </Button>
 
-              <Typography
-                variant="body1"
-                component={Link}
-                to="/recuperar-senha"
+              <Button
+                onClick={() => myNewnavigate('/ForgotPassword')} 
                 sx={{
                   color: 'var(--green-color)',
                   textDecoration: 'none',
                   fontWeight: 'bold',
                   fontSize: '1.85rem',
                   '&:hover': { textDecoration: 'underline' },
+                  '@media (max-width: 750px)': { fontsize: '1,1rem ' },
                 }}
               >
                 Esqueci minha senha
-              </Typography>
+              </Button>
             </Stack>
           </form>
         </Stack>
