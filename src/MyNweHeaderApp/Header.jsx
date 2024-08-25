@@ -19,8 +19,8 @@ import { Link, useLocation } from 'react-router-dom'
 import { BagMarket } from '../componet/marketBag/marketbag'
 import { SearchItem } from '../componet/util/CardBodySearc'
 import { AuthContext } from '../authcontext'
-import {getFirestore, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebaseconfig/firebaseconfig';
+import { getFirestore, doc, updateDoc } from 'firebase/firestore'
+import { db } from '../../firebaseconfig/firebaseconfig'
 
 const myLink = [
   { label: 'Home', link: '/MyHome' },
@@ -50,42 +50,41 @@ export const Header = () => {
 
   const handleCloseMenu = () => setAnchorEl(null)
 
+
+  const getInitials = (name) => {
+    const names = name.split(' ');
+    return names.length > 1
+      ? `${names[0][0]}${names[1][0]}`.toUpperCase()
+      : names[0][0].toUpperCase();
+  };
+
   const handleAvatarChange = (event) => {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        const image = reader.result
-        console.log('Imagem selecionada:', image) // Verifique a URL da imagem
-        localStorage.setItem('avatarImage', image)
-        setAvatarImage(image)
-      }
-      reader.readAsDataURL(file)
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const image = reader.result;
+        localStorage.setItem('avatarImage', image);
+        setAvatarImage(image);
+
+        // Atualize a imagem no Firebase
+        if (user?.uid) {
+          await handleSaveAvatar(user.uid, image);
+        }
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   async function handleSaveAvatar(userId, imageDataUrl) {
     try {
-      // Verifique o tipo e valor de userId
-      if (typeof userId !== 'string' || !userId.trim()) {
-        throw new Error('O ID do usuário deve ser uma string não vazia.');
-      }
-      console.log(`ID do usuário: ${userId}`); // Verifique o valor do ID
-  
-      // Crie uma referência para o documento do usuário
       const userDocRef = doc(db, 'users', userId);
-  
-      // Atualize o campo imgUser com a URL da imagem
-      await updateDoc(userDocRef, {
-        imgUser: imageDataUrl
-      });
-  
+      await updateDoc(userDocRef, { imgUser: imageDataUrl });
       console.log('Avatar atualizado com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar o avatar:', error);
     }
   }
-  
 
 
 
@@ -411,6 +410,7 @@ export const Header = () => {
                     }}
                     to={item.link}
                     key={index}
+                    onClick={fecharMenu} // Adicione esta linha
                   >
                     <p>{item.label}</p>
                   </Link>
