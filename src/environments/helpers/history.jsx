@@ -1,15 +1,14 @@
 import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Carousel } from 'react-bootstrap' ;
-import { Stack, Typography, Box } from '@mui/material';
-import { ContainerCarousel } from './sagas';
-import { MyFooter } from '../../componets/footer/Footer';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Carousel } from 'react-bootstrap'
+import { Stack, Typography, Box } from '@mui/material'
+import { ContainerCarousel } from './sagas'
+import { MyFooter } from '../../componets/footer/Footer'
 
-import Azeitona from '../../images/Azeitona.png';
-import morangos from '../../images/morangos.png';
-import Ervilha from '../../img/Ervilha.png';
-import abacate from '../../images/Ameixa.png';
-
+import Azeitona from '../../images/Azeitona.png'
+import morangos from '../../images/morangos.png'
+import Ervilha from '../../img/Ervilha.png'
+import abacate from '../../images/Ameixa.png'
 
 const ArryHistory = [
   {
@@ -87,13 +86,11 @@ export const HomePage = () => {
             justifyContent: 'center',
             alignItems: 'center',
             overflow: 'hidden',
-        
 
             '@media (min-width:800px)': {
               height: '390px',
               width: '100%',
-        
-            }
+            },
           }}
           controls
         >
@@ -120,14 +117,12 @@ export const HomePage = () => {
               width: '100%',
               height: '100%',
               background: '#fff',
-             
             }}
           >
             <img
               style={{
                 width: '100%',
                 height: '100%',
-              
               }}
               className="d-block w-100"
               src={Azeitona}
@@ -145,7 +140,6 @@ export const HomePage = () => {
               width: '100%',
               height: '100%',
               background: '#fff',
-              
             }}
           >
             <img
@@ -177,32 +171,29 @@ export const HomePage = () => {
               '@media only screen and (max-width: 800px)': {
                 width: '97%',
                 height: '290px',
+                background: 'red',
               },
             }}
           >
             <img
-              style={{
-                width: '80%',
-                height: '80%',
-              }}
-              className="d-block w-100"
-              src={morangos}
-              alt="Third slide"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '390px',
+              objectFit: 'cover',
+            }}
+            className="d-block w-100"
+            src={abacate}
+            alt="Abacate"
             />
 
-            {/* <Carousel.Caption>
-              <h3>Third slide label</h3>
-              <p>
-                Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-              </p>
-            </Carousel.Caption> */}
+            
           </Carousel.Item>
         </Carousel>
 
         <ContainerCarousel.content>
           <Box
             sx={{
-             
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -223,7 +214,6 @@ export const HomePage = () => {
               alignItems: 'center',
               justifyContent: 'center',
               flexDirection: 'column',
-             
             }}
           >
             {controlsMyArray}

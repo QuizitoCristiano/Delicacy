@@ -156,7 +156,7 @@ export const SignIn = () => {
       <Stack className="container_form">
         <Stack className="conatiner-login">
           <Typography variant="h4">
-            Faça login para garantir a sua segurança
+          O Delicacy Aguarda por Você!!
           </Typography>
           <form id="loginForm">
             <Box
@@ -269,7 +269,7 @@ export const SignIn = () => {
                   color: 'var(--green-color)',
                   textDecoration: 'none',
                   fontWeight: 'bold',
-                  fontSize: '1.85rem',
+                  fontSize: '1.3rem',
                   '&:hover': { textDecoration: 'underline' },
                   '@media (max-width: 750px)': { fontsize: '1,1rem ' },
                 }}

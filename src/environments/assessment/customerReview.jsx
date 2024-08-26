@@ -193,6 +193,7 @@ export const CustomerEvaluation = () => {
                       }}
                       error={!!nameError}
                       helperText={nameError}
+                      FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
                     />
                   </Box>
 
@@ -212,6 +213,7 @@ export const CustomerEvaluation = () => {
                       onChange={handleFileChange}
                       style={{ display: 'none' }}
                       id="upload-image"
+                      FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
                     />
                     <label htmlFor="upload-image">
                       <Button
@@ -278,12 +280,14 @@ export const CustomerEvaluation = () => {
                       rowsMin={3}
                       placeholder="Mensagem"
                       name="mensagem"
+                      FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
                       value={message}
                       onChange={(e) => {
                         setMessage(e.target.value)
                         setMessageError('')
                       }}
                       error={!!messageError}
+                     
                     />
                     {messageError && (
                       <Typography variant="caption" color="error">

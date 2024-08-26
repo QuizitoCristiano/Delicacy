@@ -1,37 +1,59 @@
+import { Box, Stack, Button, styled, Input } from '@mui/material'
 
 
-const { user, carinho } = useContext(AuthContext)
-const location = useLocation()
-const [avatarImage, setAvatarImage] = useState(
-  localStorage.getItem('avatarImage') || null
-)
+const avatarInput = document.getElementById("avatar");
+avatarInput.addEventListener("change", handleAvatarChange);
 
-const handleAvatarChange = (event) => {
-    const file = event.target.files[0]
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        localStorage.setItem('avatarImage', reader.result)
-        setAvatarImage(reader.result)
-      }
-      reader.readAsDataURL(file)
-    }
+function handleAvatarChange() {
+  const file = avatarInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const imageSrc = e.target.result;
+      myAvatar.innerHTML = `<img class="profileIgmAvatar" src="${imageSrc}" alt="Avatar">`;
+      myAvatar.style.display = "flex";
+      profile.style.display = "none";
+      photoURL = imageSrc;
+    };
+    reader.readAsDataURL(file);
   }
+}
 
-  const handleSaveAvatar = async () => {
-    if (avatarImage && user) {
-      const db = getFirestore()
-      const userRef = doc(db, 'users', user.uid)
-      await updateDoc(userRef, { avatar: avatarImage })
-    }
-    handleCloseMenu()
-  }
 
-  const getInitials = (name) => {
-    if (!name) return ''
-    const nameParts = name.split(' ')
-    return nameParts[0][0] + (nameParts[1] ? nameParts[1][0] : '')
-  }
+
+
+export const Ubtada = () => {
+
+  return(
+    <div>
+      
+      <div class="profile">
+         {/* <img src="./image/Quizito.jpeg" alt="" />  */}
+      </div>
+      <div class="isNoAvatar"></div>
+
+      <form id="profileEditForm">
+        <label for="avatar">Editar Avatar:</label>
+        <input
+          type="file"
+          id="avatar"
+          name="avatar"
+          accept="image/*"
+          onchange="handleAvatarChange()"
+        />
+        <button
+          type="button"
+          class="mybuttonAvatar"
+          onclick="saveProfileChanges()"
+        >
+          Salvar
+        </button>
+      </form>
+    </div>
+  )
+}
+
 
 
 
