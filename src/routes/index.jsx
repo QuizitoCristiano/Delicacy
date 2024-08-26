@@ -15,14 +15,14 @@ import { ForgotPassword } from '../recovery/recoverySenha';
 // Definindo a rota protegida
 const ProtectedRoute = ({ children }) => {
   const { isLoggedIn } = useContext(AuthContext);
-  return isLoggedIn ? children : <Navigate to="/login" />;
+  return isLoggedIn ? children : <Navigate to="/SignIn" />;
 };
 
 // Configuração das rotas principais
 export const MainRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<SignIn />} />
+      <Route path="/SignIn" element={<SignIn />} />
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="/ForgotPassword" element={<ForgotPassword />} />
 

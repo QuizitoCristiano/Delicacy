@@ -671,7 +671,7 @@ export const SignUp = () => {
               <Typography
                 variant="body1"
                 component={Link}
-                to="/"
+                to="/SignIn"
                 sx={{
                   color: 'var(--green-color)',
                   textDecoration: 'none',

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { TextField, Typography, Stack, Box, Button, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -45,23 +46,12 @@ const LoaderAfter = styled(Box)(({ theme }) => ({
   borderLeft: '4px solid transparent',
 }));
 
-const globalStyles = `
-  @keyframes rotation {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-`;
-
 export const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigateForSignIn = useNavigate();
+  const navegarPraLogin = useNavigate();
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,6 +60,8 @@ export const ForgotPassword = () => {
 
   const handleResetPassword = async () => {
     setLoading(true);
+    setError('');
+    setSuccessMessage('');
 
     if (email.trim() === '' || !isValidEmail(email)) {
       setError('Por favor, insira um e-mail válido.');
@@ -86,8 +78,8 @@ export const ForgotPassword = () => {
       // Exibir loader por até 3 segundos
       setTimeout(() => {
         setLoading(false);
-        navigateForSignIn('/SignIn');
-      }, 2000); // 3000 milissegundos = 3 segundos
+        navegarPraLogin('/SignIn');
+      }, 2000);
     } catch (error) {
       setLoading(false);
       setError('Erro ao enviar o e-mail de recuperação. Verifique o e-mail inserido.');
@@ -169,6 +161,7 @@ export const ForgotPassword = () => {
             error={!!error}
             helperText={error}
           />
+
           <Box
             sx={{
               marginTop: '2rem',
@@ -181,8 +174,7 @@ export const ForgotPassword = () => {
             }}
           >
             <Button
-              onClick={() => navigateForSignIn('/SignIn')}
-              disabled={loading}
+              onClick={() => navegarPraLogin('/SignIn')}
               sx={{
                 fontSize: '1.3rem',
                 color: '#fff',
