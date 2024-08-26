@@ -56,9 +56,11 @@ body {
 }
 
 
+
+
 .conatiner-login {
  padding: 20px;
-  box-shadow: 1px 2px 11px 4px rgb(14 55 54 / 25%);
+  box-shadow: 1px 2px 11px 4px rgb(14 55 54 / 35%);
   border-radius: 7px solid var(--green-color);
   border-radius: 0.5rem;
   gap: 2rem;
@@ -141,10 +143,19 @@ label {
 }
 
 
-@media (max-width: 800px) {
+@media (min-width: 800px) {
   body {
     overflow-x: hidden;
   }
+
+  .conatiner-login {
+    padding: 15px;
+     box-shadow: 1px 2px 11px 4px rgb(14 55 54 / 35%);
+     border-radius: 7px solid var(--green-color);
+     border-radius: 0.5rem;
+     gap: 2rem;
+    
+   }
 
   .conatiner-login h4 {
     display: flex;
@@ -153,4 +164,6 @@ label {
     align-items: center;
     font-size: 1.6rem;
   }
+
+ 
 }
