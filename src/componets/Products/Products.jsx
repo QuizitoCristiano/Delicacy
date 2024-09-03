@@ -15,7 +15,8 @@ import { AuthContext } from '../../authcontext/index.jsx'
 export const Products = () => {
 
 
-  const {adicionaItemAoCarinho, carinho, setCarinho} = useContext(AuthContext)
+  const {adicionarNovoItem, carinho ,setCarinho } = useContext(AuthContext);
+
   
 
   const newProductsItem = ProductItem.map((item, index) => (
@@ -119,7 +120,7 @@ export const Products = () => {
                     transition: '0.2s',
                   },
                 }}
-                onClick={() => adicionaItemAoCarinho(item)}
+                onClick={() => adicionarNovoItem(item)}
               >
                 <ShoppingCartIcon
                   sx={{

@@ -12,7 +12,7 @@ import { AuthContext } from '../../authcontext/index.jsx';
 export const ProductsLegumes = () => {
   
 
-  const {  adicionaItemAoCarinho, carinho ,setCarinho } = useContext(AuthContext);
+  const {adicionarNovoItem, carinho ,setCarinho } = useContext(AuthContext);
 
 
   const newProductsItem = ProductItemLegume.map((item, index) => (
@@ -108,7 +108,7 @@ export const ProductsLegumes = () => {
                   ...Root.hover
                  
                 }}
-                onClick={() => adicionaItemAoCarinho(item)}
+                onClick={() => adicionarNovoItem(item)}
               >
                 <ShoppingCartIcon
                   sx={{

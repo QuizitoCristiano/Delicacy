@@ -1,71 +1,65 @@
-import React, { useContext, useState } from 'react';
-import { Box, Button, Stack, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import './newStyle.css';
-import { AuthContext } from '../../authcontext';
-import { SearchItem } from '../util/CardBodySearc';
+import React, { useContext, useState } from 'react'
+import {
+  Box,
+  Button,
+  Stack,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Alert
+} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import './newStyle.css'
+import { AuthContext } from '../../authcontext'
+import { SearchItem } from '../util/CardBodySearc'
 
-export const BagMarket = ({ sacola, setSacola }) => {
-  const { carinho, setCarinho } = useContext(AuthContext);
-  const [sacolaAberta, setSacolaAberta] = useState(false);
-  const [itemsCarrinho, setItemsCarrinho] = useState(carinho);
-  const [removItemArray, setRemoveItemArray] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
+export const BagMarket = () => {
+  const { carinho, incrementarQuantidade, removerItem, totalItensCarrinho } =
+    useContext(AuthContext)
+  const [openModal, setOpenModal] = useState(false)
+  const [removItemArray, setRemoveItemArray] = useState(null)
+  const [openConfirm, setOpenConfirm] = useState(false)
+  const [itemToRemove, setItemToRemove] = useState(null)
+  const [openAlert, setOpenAlert] = useState(false) // Adicionado para controle de alerta
 
   const handleOpenModal = () => {
-    setOpenModal(true);
-  };
+    if (carinho.length === 0) {
+      setOpenAlert(true) // Exibe o alerta se o carrinho estiver vazio
+    } else {
+      setOpenModal(true) // Abre o modal se houver itens no carrinho
+    }
+  }
 
   const handleCloseModal = () => {
-    setOpenModal(false);
-  };
+    setOpenModal(false)
+  }
 
-  const toggleSacola = () => {
-    setSacolaAberta(!sacolaAberta);
-    if (setSacola) {
-      setSacola(!sacolaAberta);
-    }
-  };
-
-  const adicionarItem = (index) => {
-    const novoCarrinho = [...itemsCarrinho];
-    novoCarrinho[index].quantidade++;
-    setItemsCarrinho(novoCarrinho);
-    setCarinho(novoCarrinho);
-  };
-
-  const removerItem = (index) => {
-    const novoCarrinho = [...itemsCarrinho];
-    if (novoCarrinho[index].quantidade > 1) {
-      novoCarrinho[index].quantidade--;
-    } else {
-      if (window.confirm('Tem certeza que deseja remover este item?')) {
-        novoCarrinho.splice(index, 1);
-      }
-    }
-    setItemsCarrinho(novoCarrinho);
-    setCarinho(novoCarrinho);
-  };
-
-  const adicionarNovoItem = (produto) => {
-    // Adicionar o mesmo produto como um novo item no carrinho sem somar à quantidade
-    const novoItem = { ...produto, quantidade: 1 };
-    setItemsCarrinho([...itemsCarrinho, novoItem]);
-    setCarinho([...itemsCarrinho, novoItem]);
-  };
+  const handleCloseAlert = () => {
+    setOpenAlert(false)
+  }
 
   const removerItemIcon = (index) => {
-    setRemoveItemArray(index);
-    setTimeout(() => {
-      const novoCarrinho = itemsCarrinho.filter((_, i) => i !== index);
-      setItemsCarrinho(novoCarrinho);
-      setCarinho(novoCarrinho);
-      setRemoveItemArray(null);
-    }, 500);
-  };
+    removerItem(index) // Remove o item diretamente ao clicar no ícone de deletar
+  }
+
+  const handleDecrementClick = (index) => {
+    setItemToRemove(index)
+    setOpenConfirm(true) // Abre o diálogo de confirmação ao clicar no botão de decrementar
+  }
+
+  const handleConfirmRemove = () => {
+    removerItem(itemToRemove)
+    setOpenConfirm(false) // Fecha o diálogo após a confirmação
+  }
+
+  const handleCancelRemove = () => {
+    setOpenConfirm(false) // Fecha o diálogo se o usuário cancelar a remoção
+  }
 
   const renderizarItensCarrinho = () => {
-    return itemsCarrinho.map((produto, index) => (
+    return carinho.map((produto, index) => (
       <Stack
         key={index}
         sx={{
@@ -97,12 +91,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
               margin: '5px',
             }}
           >
-            <Typography
-              sx={{
-                fontWeight: '700',
-                fontSize: '1.8rem',
-              }}
-            >
+            <Typography sx={{ fontWeight: '700', fontSize: '1.8rem' }}>
               {produto.nome}
             </Typography>
             <Typography
@@ -157,13 +146,13 @@ export const BagMarket = ({ sacola, setSacola }) => {
             >
               <button
                 className="buttonQuntidade"
-                onClick={() => adicionarItem(index)}
+                onClick={() => incrementarQuantidade(index)}
               >
                 +
               </button>
               <button
                 className="buttonQuntidade"
-                onClick={() => removerItem(index)}
+                onClick={() => handleDecrementClick(index)}
               >
                 -
               </button>
@@ -171,8 +160,8 @@ export const BagMarket = ({ sacola, setSacola }) => {
           </Stack>
         </Box>
       </Stack>
-    ));
-  };
+    ))
+  }
 
   return (
     <Stack
@@ -207,22 +196,29 @@ export const BagMarket = ({ sacola, setSacola }) => {
       <Box
         sx={{
           width: '100%',
+          position: 'sticky',
+          bottom: '0',
           margin: '10px',
           display: 'flex',
           gap: '1rem',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexDirection: 'row',
+          bgcolor: '#fff',
+          padding: '10px',
+          zIndex: 10,
+          boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
         }}
       >
         <Typography
           sx={{
             fontWeight: '700',
+            fontSize: '1.4rem',
             color: 'var(--light-orange-color)',
           }}
         >
           Total: R${' '}
-          {itemsCarrinho
+          {carinho
             .reduce((total, item) => total + item.price * item.quantidade, 0)
             .toFixed(2)
             .toLocaleString()}
@@ -242,10 +238,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
               backgroundColor: 'var(--orange-color)',
             },
           }}
-          onClick={() => {
-            toggleSacola(); // Fechar a sacola
-            handleOpenModal(); // Abrir o modal
-          }}
+          onClick={handleOpenModal}
         >
           Finalizar Compra
         </Button>
@@ -272,6 +265,35 @@ export const BagMarket = ({ sacola, setSacola }) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Alerta de Carrinho Vazio */}
+      <Dialog open={openAlert} onClose={handleCloseAlert}>
+        <DialogTitle>Aviso</DialogTitle>
+        <DialogContent>
+          <Alert severity="info">Adicione itens ao carrinho para continuar com o processo.</Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAlert} color="primary">
+            Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Diálogo de Confirmação */}
+      <Dialog open={openConfirm} onClose={handleCancelRemove}>
+        <DialogTitle>Remover Item</DialogTitle>
+        <DialogContent>
+          Tem certeza que deseja remover este item do carrinho?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelRemove} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleConfirmRemove} color="error">
+            Remover
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
-  );
-};
+  )
+}

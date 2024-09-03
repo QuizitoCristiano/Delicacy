@@ -27,20 +27,60 @@ export const AuthProvider = ({ children }) => {
   const firestore = getFirestore();
   const provider = new GoogleAuthProvider();
 
+  // Estados principais
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);  // Inicializar com null
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState(null);
+  const [user, setUser] = useState(null);
   const [carinho, setCarinho] = useState([]);
   const [termoPesquisa, setTermoPesquisa] = useState('');
   const [resultados, setResultados] = useState([]);
 
-  const adicionaItemAoCarinho = (item) => {
-    setCarinho([...carinho, item]);
+  // Função para adicionar ou incrementar um item no carinho
+  const adicionarNovoItem = (produto) => {
+    const itemExistenteIndex = carinho.findIndex(
+      (item) => item.nome === produto.nome && item.price === produto.price
+    );
+
+    if (itemExistenteIndex !== -1) {
+      // Incrementa a quantidade do item existente
+      const novoCarrinho = [...carinho];
+      novoCarrinho[itemExistenteIndex].quantidade++;
+      setCarinho(novoCarrinho);
+    } else {
+      // Adiciona um novo item ao carinho
+      const novoItem = { ...produto, quantidade: 1 };
+      setCarinho([...carinho, novoItem]);
+    }
   };
 
+  // Função para incrementar a quantidade de um item no carinho
+  const incrementarQuantidade = (index) => {
+    const novoCarrinho = [...carinho];
+    novoCarrinho[index].quantidade++;
+    setCarinho(novoCarrinho);
+  };
+
+  // Função para remover ou decrementar um item no carinho sem confirmação
+  // const removerItem = (index) => {
+  //   const novoCarrinho = [...carinho];
+  //   if (novoCarrinho[index].quantidade > 1) {
+  //     novoCarrinho[index].quantidade--;
+  //   } else {
+  //     const novoArray = novoCarrinho.filter((_, i) => i !== index);
+  //     setCarinho(novoArray);
+  //   }
+  //   setCarinho(novoCarrinho);
+  // };
+
+  const removerItem = (index) => {
+    const novoArray = carinho.filter((_, i) => i !== index);
+    setCarinho(novoArray);
+  };
+  
+
+  // Total de itens no carinho
   const totalItensCarrinho = carinho.length;
 
+  // Função de pesquisa
   const handlePesquisar = () => {
     const produtos = [...ProductItem, ...ProductItemLegume];
     const resultadosFiltrados = produtos.filter((produto) =>
@@ -54,14 +94,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Verificação de autenticação (usuário logado)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
-        console.log('User is logged in:', authUser);
+        console.log("User is logged in:", authUser);
         setUser(authUser);
         setIsLoggedIn(true);
       } else {
-        console.log('No user is logged in');
+        console.log("No user is logged in");
         setUser(null);
         setIsLoggedIn(false);
       }
@@ -70,18 +111,19 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, [auth]);
 
-
- const loginWithEmailAndPassword = async (email, password) => {
+  // Login com email e senha
+  const loginWithEmailAndPassword = async (email, password) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('User logged in:', userCredential.user);
+      console.log("User logged in:", userCredential.user);
       setUser(userCredential.user);
       setIsLoggedIn(true);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
     }
   };
 
+  // Logout
   const logout = async () => {
     await auth.signOut();
     setIsLoggedIn(false);
@@ -93,12 +135,12 @@ export const AuthProvider = ({ children }) => {
       value={{
         isLoggedIn,
         loginWithEmailAndPassword,
-      
         logout,
         user,
         carinho,
-        setCarinho,
-        adicionaItemAoCarinho,
+        adicionarNovoItem,
+        incrementarQuantidade,
+        removerItem,
         totalItensCarrinho,
         termoPesquisa,
         setTermoPesquisa,
@@ -111,3 +153,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+// Hook para usar o contexto
+export const useAuth = () => useContext(AuthContext);
