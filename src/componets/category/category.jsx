@@ -73,6 +73,7 @@ export const Category = () => {
             width: '100%',
             backgroundColor: item.backgroundColor,
             display: 'flex',
+         
             flexDirection: 'column',
             alignItems: 'center',
         

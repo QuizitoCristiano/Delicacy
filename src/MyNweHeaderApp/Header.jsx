@@ -21,13 +21,39 @@ import { SearchItem } from '../componet/util/CardBodySearc'
 import { AuthContext } from '../authcontext'
 import { getFirestore, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseconfig/firebaseconfig'
-
+import Dellicacy from '../imgLogomarca/priclogo1.png'
 const myLink = [
   { label: 'Home', link: '/MyHome' },
   { label: 'Quem_Somos', link: '/HomePage' },
   { label: 'Clientes', link: '/CustomerEvaluation' },
   { label: 'Contato', link: '/NewHelpeContato' },
 ]
+
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Algo deu errado.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+
+
 
 export const Header = () => {
   const { user, carinho } = useContext(AuthContext)
@@ -50,43 +76,40 @@ export const Header = () => {
 
   const handleCloseMenu = () => setAnchorEl(null)
 
-
   const getInitials = (name) => {
-    const names = name.split(' ');
+    const names = name.split(' ')
     return names.length > 1
       ? `${names[0][0]}${names[1][0]}`.toUpperCase()
-      : names[0][0].toUpperCase();
-  };
+      : names[0][0].toUpperCase()
+  }
 
   const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]
     if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = async () => {
-        const image = reader.result;
-        localStorage.setItem('avatarImage', image);
-        setAvatarImage(image);
+        const image = reader.result
+        localStorage.setItem('avatarImage', image)
+        setAvatarImage(image)
 
         // Atualize a imagem no Firebase
         if (user?.uid) {
-          await handleSaveAvatar(user.uid, image);
+          await handleSaveAvatar(user.uid, image)
         }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  async function handleSaveAvatar(userId, imageDataUrl) {
-    try {
-      const userDocRef = doc(db, 'users', userId);
-      await updateDoc(userDocRef, { imgUser: imageDataUrl });
-      console.log('Avatar atualizado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao atualizar o avatar:', error);
+      }
+      reader.readAsDataURL(file)
     }
   }
 
-
+  async function handleSaveAvatar(userId, imageDataUrl) {
+    try {
+      const userDocRef = doc(db, 'users', userId)
+      await updateDoc(userDocRef, { imgUser: imageDataUrl })
+      console.log('Avatar atualizado com sucesso!')
+    } catch (error) {
+      console.error('Erro ao atualizar o avatar:', error)
+    }
+  }
 
   return (
     <Stack
@@ -122,14 +145,37 @@ export const Header = () => {
           width: '30%',
         }}
       >
-        <StoreIcon
-          sx={{ color: 'var(--light-orange-color)', fontSize: '3rem' }}
-        />
-        <Typography>
-          <Link className="logoDelicacy" to="/MyHome">
-            Delicacy
-          </Link>
-        </Typography>
+       
+          
+          <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+
+            height: '100%',
+            width: '100%',
+            cursor: 'pointer',
+           
+            transition: 'all 0.3s ease',
+
+            '@media (max-width: 600px)': {
+              
+              cursor: 'pointer',
+              height: '100%',
+              width: '100%',
+            },
+          }}
+        >
+          <img src={Dellicacy} className="logoImageDl" alt="Dellicacy Logo" />
+        </Box>
+          
+
+
+        
+        
+
+      
       </Box>
 
       <Stack

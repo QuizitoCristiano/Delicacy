@@ -184,6 +184,16 @@ body {
 
 
 
+.logoImageDl {
+ 
+    height: 150px !important;
+    width: 500px !important;
+ 
+  
+}
+
+
+
 .menu-celular {
   display: flex;
   justify-content: center;
@@ -252,6 +262,15 @@ body {
       height: 60px;
  
   }
+
+  
+.logoImageDl {
+ 
+  height: 100px !important;
+  width: 400px !important;
+  
+
+}
 }
 
 

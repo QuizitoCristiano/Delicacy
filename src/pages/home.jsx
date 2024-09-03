@@ -21,6 +21,7 @@ import { NewCategorys } from '../componets/screens/newCategorys'
 import { useNavigate } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import { SearchItem } from '../componet/util/CardBodySearc'
 export const MyHome = () => {
   const { user, logout } = useContext(AuthContext)
   const [open, setOpen] = useState(false)
@@ -143,6 +144,8 @@ export const MyHome = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+       
 
         <Category />
         <Products />

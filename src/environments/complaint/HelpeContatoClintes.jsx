@@ -178,6 +178,7 @@ const StepCardsclient = () => {
           width: '100%',
           fontWeight: '7000',
           padding: '10px 20px',
+        
           color: 'green',
         }}
       >

@@ -1,14 +1,25 @@
 import React, { useContext, useState } from 'react';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import './newStyle.css';
 import { AuthContext } from '../../authcontext';
+import { SearchItem } from '../util/CardBodySearc';
 
 export const BagMarket = ({ sacola, setSacola }) => {
   const { carinho, setCarinho } = useContext(AuthContext);
   const [sacolaAberta, setSacolaAberta] = useState(false);
   const [itemsCarrinho, setItemsCarrinho] = useState(carinho);
   const [removItemArray, setRemoveItemArray] = useState(null); 
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   const toggleSacola = () => {
     setSacolaAberta(!sacolaAberta);
     if (setSacola) {
@@ -42,8 +53,6 @@ export const BagMarket = ({ sacola, setSacola }) => {
     }
     setItemsCarrinho(novoCarrinho);
   };
-
-
 
   const renderizarItensCarrinho = () => {
     return carinho.map((produto, index) => (
@@ -229,12 +238,35 @@ export const BagMarket = ({ sacola, setSacola }) => {
             },
           }}
           onClick={() => {
-            toggleSacola(true);
+            toggleSacola(); // Fechar a sacola
+            handleOpenModal(); // Abrir o modal
           }}
         >
           Finalizar Compra
         </Button>
       </Box>
+
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="md"
+        PaperProps={{
+          sx: {
+            zIndex: 1300, // Garante que o modal fique sobre outros conteúdos
+          },
+        }}
+      >
+        <DialogTitle>Confirmar Dados da Entrega</DialogTitle>
+        <DialogContent>
+          <SearchItem />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 };
