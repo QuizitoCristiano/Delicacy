@@ -9,7 +9,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
   const { carinho, setCarinho } = useContext(AuthContext);
   const [sacolaAberta, setSacolaAberta] = useState(false);
   const [itemsCarrinho, setItemsCarrinho] = useState(carinho);
-  const [removItemArray, setRemoveItemArray] = useState(null); 
+  const [removItemArray, setRemoveItemArray] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpenModal = () => {
@@ -31,15 +31,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
     const novoCarrinho = [...itemsCarrinho];
     novoCarrinho[index].quantidade++;
     setItemsCarrinho(novoCarrinho);
-  };
-
-  const removerItemIcon = (index) => {
-    setRemoveItemArray(index);
-    setTimeout(() => {
-      const novoCarrinho = carinho.filter((_, i) => i !== index);
-      setCarinho(novoCarrinho);
-      setRemoveItemArray(null);
-    }, [500]);
+    setCarinho(novoCarrinho);
   };
 
   const removerItem = (index) => {
@@ -52,10 +44,28 @@ export const BagMarket = ({ sacola, setSacola }) => {
       }
     }
     setItemsCarrinho(novoCarrinho);
+    setCarinho(novoCarrinho);
+  };
+
+  const adicionarNovoItem = (produto) => {
+    // Adicionar o mesmo produto como um novo item no carrinho sem somar à quantidade
+    const novoItem = { ...produto, quantidade: 1 };
+    setItemsCarrinho([...itemsCarrinho, novoItem]);
+    setCarinho([...itemsCarrinho, novoItem]);
+  };
+
+  const removerItemIcon = (index) => {
+    setRemoveItemArray(index);
+    setTimeout(() => {
+      const novoCarrinho = itemsCarrinho.filter((_, i) => i !== index);
+      setItemsCarrinho(novoCarrinho);
+      setCarinho(novoCarrinho);
+      setRemoveItemArray(null);
+    }, 500);
   };
 
   const renderizarItensCarrinho = () => {
-    return carinho.map((produto, index) => (
+    return itemsCarrinho.map((produto, index) => (
       <Stack
         key={index}
         sx={{
@@ -99,8 +109,8 @@ export const BagMarket = ({ sacola, setSacola }) => {
               sx={{
                 fontWeight: '700',
                 fontSize: '1.8rem',
-                marginTop: ' 0.5rem',
-                color: ' var(--light-orange-color)',
+                marginTop: '0.5rem',
+                color: 'var(--light-orange-color)',
               }}
             >
               Preço: R$ {produto.price}
@@ -109,7 +119,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
               sx={{
                 fontWeight: '700',
                 fontSize: '1.8rem',
-                marginTop: ' 0.5rem',
+                marginTop: '0.5rem',
               }}
             >
               Quantidade: {produto.quantidade}
@@ -163,7 +173,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
       </Stack>
     ));
   };
-  
+
   return (
     <Stack
       sx={{
@@ -189,7 +199,6 @@ export const BagMarket = ({ sacola, setSacola }) => {
           overflowY: 'auto',
           padding: '10px',
           overflowX: 'hidden',
-          // bgcolor: 'ActiveCaption',
         }}
       >
         {renderizarItensCarrinho()}
@@ -213,11 +222,8 @@ export const BagMarket = ({ sacola, setSacola }) => {
           }}
         >
           Total: R${' '}
-          {carinho
-            .reduce(
-              (total, item) => total + item.price * item.quantidade,
-              0
-            )
+          {itemsCarrinho
+            .reduce((total, item) => total + item.price * item.quantidade, 0)
             .toFixed(2)
             .toLocaleString()}
         </Typography>
@@ -232,7 +238,6 @@ export const BagMarket = ({ sacola, setSacola }) => {
             fontSize: '1rem',
             fontWeight: '600',
             bgcolor: 'var(--green-color)',
-
             ':hover': {
               backgroundColor: 'var(--orange-color)',
             },
@@ -253,7 +258,7 @@ export const BagMarket = ({ sacola, setSacola }) => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            zIndex: 1300, // Garante que o modal fique sobre outros conteúdos
+            zIndex: 1300,
           },
         }}
       >

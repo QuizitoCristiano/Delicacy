@@ -11,8 +11,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
 } from '@mui/material'
 import InputMask from 'react-input-mask'
+import { CardStylSearche } from './CardStyles'
 
 const ContainerCardLoader = styled(Stack)(({ theme }) => ({
   position: 'fixed',
@@ -79,7 +83,11 @@ export const SearchItem = () => {
     apartamento: '',
     endercoDaEntrega: '',
     paymentMethod: '',
+    tipoImovel: '',
   })
+
+  const [formErrors, setFormErrors] = useState({})
+  const [successMessage, setSuccessMessage] = useState('')
 
   const paymentMethods = [
     { label: 'Pix', value: 'pix' },
@@ -90,21 +98,18 @@ export const SearchItem = () => {
     { label: 'Pagamento na Entrega', value: 'cash_on_delivery' },
   ]
 
-  const [formErrors, setFormErrors] = useState({})
-  const [successMessage, setSuccessMessage] = useState('')
-
   const handleInputChange = (field, value) => {
     const newFormData = { ...formData, [field]: value }
-    if (field === 'casa') {
-      newFormData.bloco = ''
-      newFormData.apartamento = ''
-    } else if (field === 'bloco') {
-      newFormData.casa = ''
-      newFormData.apartamento = ''
-    } else if (field === 'apartamento') {
-      newFormData.casa = ''
-      newFormData.bloco = ''
+
+    if (field === 'tipoImovel') {
+      if (value === 'casa') {
+        newFormData.apartamento = ''
+        newFormData.bloco = ''
+      } else if (value === 'apartamento') {
+        newFormData.casa = ''
+      }
     }
+
     setFormData(newFormData)
   }
 
@@ -112,57 +117,41 @@ export const SearchItem = () => {
     e.preventDefault()
     const errors = {}
 
-    // Validação do nome
     if (!formData.nome) {
       errors.nome = 'O nome é obrigatório'
     }
 
-    // Validação do método de pagamento
     if (!formData.paymentMethod) {
       errors.paymentMethod = 'O método de pagamento é obrigatório'
-    } else if (
-      !paymentMethods.find((pm) => pm.value === formData.paymentMethod)
-    ) {
-      errors.paymentMethod = 'Método de pagamento inválido'
     }
 
-    // Validação do telefone
     if (!formData.telefone) {
       errors.telefone = 'O telefone é obrigatório'
     }
 
-    // Validação do CPF
     if (!formData.cpf || !validarCPF(formData.cpf)) {
       errors.cpf = 'CPF inválido'
     }
 
-    // Validação da mensagem
     if (!formData.mensagem) {
       errors.mensagem = 'A mensagem é obrigatória'
     }
 
-    // Validação do endereço de entrega
     if (!formData.endercoDaEntrega) {
       errors.endercoDaEntrega = 'O endereço de entrega é obrigatório'
-    } else if (formData.endercoDaEntrega.length < 10) {
-      errors.endercoDaEntrega =
-        'Endereço de entrega precisa ter no mínimo 10 caracteres'
     }
 
-    // Validação do email
     if (!formData.email) {
       errors.email = 'O email é obrigatório'
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Email inválido'
     }
 
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors)
-    } else {
-      // Se não houver erros, submeta o formulário
-      setFormErrors({})
+    if (formData.tipoImovel === 'apartamento' && !formData.bloco) {
+      errors.bloco = 'O bloco é obrigatório para apartamentos'
+    }
+
+    setFormErrors(errors)
+    if (Object.keys(errors).length === 0) {
       setSuccessMessage('Formulário enviado com sucesso!')
-      setLoading(false)
     }
   }
 
@@ -197,74 +186,31 @@ export const SearchItem = () => {
           <div>Logando...</div>
         </ContainerCardLoader>
       )}
-      <Stack
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          maxWidth: '1200px',
-          width: '100%',
-          fontWeight: '7000',
-          padding: '10px 20px',
-          color: 'green',
-        }}
+      <CardStylSearche.ContainerCard
+        
       >
         <form
           style={{
             width: '100%',
-            gap: '1.2rem',
+            gap: '1.7rem',
           }}
           onSubmit={handleSubmit}
         >
-          <Stack
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              width: '100%',
-            }}
-          >
-            <Box
-              sx={{
-                width: '659px',
-                gap: '2.6rem',
-                display: 'flex',
-                padding: '20px',
-                justifyContent: 'center',
-                alignItems: 'center',
-                boxShadow: '1px 2px 11px 4px rgb(14 55 54 / 25%)',
-                flexDirection: 'column',
-                '@media (max-width: 750px)': {
-                  width: '100%',
-                  padding: '15px',
-                },
-              }}
-            >
+        
+            <CardStylSearche.wrapperfort>
               <Stack
                 sx={{
                   paddingBottom: '1.8rem',
                   color: 'var(--green-color)',
                   fontSize: '1.8rem',
-                  gap: '0.9rem',
+                  gap: '1.9rem',
                   width: '100%',
                 }}
               >
                 <h2>Confirmar dados da entrega</h2>
               </Stack>
 
-              <Stack
-                sx={{
-                  width: '100%',
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(2, 1fr)',
-                  gridGap: '10px',
-                  '@media (max-width: 550px)': {
-                    gridTemplateColumns: '1fr',
-                  },
-                }}
-              >
+              <CardStylSearche.containerBox>
                 <Box
                   sx={{
                     display: 'flex',
@@ -382,19 +328,9 @@ export const SearchItem = () => {
                     )}
                   </InputMask>
                 </Box>
-              </Stack>
+              </CardStylSearche.containerBox>
 
-              <Stack
-                sx={{
-                  width: '100%',
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(2, 1fr)',
-                  gridGap: '10px',
-                  '@media (max-width: 550px)': {
-                    gridTemplateColumns: '1fr',
-                  },
-                }}
-              >
+              <CardStylSearche.containerBox>
                 <Box
                   sx={{
                     display: 'flex',
@@ -434,9 +370,9 @@ export const SearchItem = () => {
                   <FormControl variant="outlined" size="small" fullWidth>
                     <InputLabel>Método de Pagamento</InputLabel>
                     <Select
-                    sx={{
-                      fontSize: '17px',
-                    }}
+                      sx={{
+                        fontSize: '17px',
+                      }}
                       value={formData.paymentMethod}
                       onChange={(e) =>
                         handleInputChange('paymentMethod', e.target.value)
@@ -447,7 +383,7 @@ export const SearchItem = () => {
                         PaperProps: {
                           style: {
                             maxHeight: 200,
-                            fontSize:' 18px'
+                            fontSize: '18px',
                           },
                         },
                       }}
@@ -465,21 +401,31 @@ export const SearchItem = () => {
                     )}
                   </FormControl>
                 </Box>
-              </Stack>
+              </CardStylSearche.containerBox>
 
-           
-           
-                <Stack
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
-                    gridGap: '10px',
-                    width: '100%',
-                    '@media (max-width: 550px)': {
-                      gridTemplateColumns: '1fr',
-                    },
-                  }}
-                >
+              <CardStylSearche.nweWarrpeBox
+              
+              >
+                <FormControl>
+                  <RadioGroup
+                    row
+                    value={formData.tipoImovel}
+                    onChange={(e) => handleInputChange('tipoImovel', e.target.value)}
+                  >
+                    <FormControlLabel
+                      value="casa"
+                      control={<Radio />}
+                      label="Casa"
+                    />
+                    <FormControlLabel
+                      value="apartamento"
+                      control={<Radio />}
+                      label="Apartamento"
+                    />
+                  </RadioGroup>
+                </FormControl>
+
+                {formData.tipoImovel === 'apartamento' && (
                   <TextField
                     sx={{
                       width: '100%',
@@ -491,29 +437,16 @@ export const SearchItem = () => {
                     variant="outlined"
                     size="small"
                     value={formData.bloco}
-                    onChange={(e) => handleInputChange('bloco', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange('bloco', e.target.value)
+                    }
                     error={!!formErrors.bloco}
                     helperText={formErrors.bloco}
                     FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
                   />
+                )}
 
-                  <TextField
-                    sx={{
-                      width: '100%',
-                      fontSize: '1.5rem',
-                      fontWeight: '700',
-                    }}
-                    type="text"
-                    label="Casa"
-                    variant="outlined"
-                    size="small"
-                    value={formData.casa}
-                    onChange={(e) => handleInputChange('casa', e.target.value)}
-                    error={!!formErrors.casa}
-                    helperText={formErrors.casa}
-                    FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-                  />
-
+                {formData.tipoImovel === 'apartamento' && (
                   <TextField
                     sx={{
                       width: '100%',
@@ -532,18 +465,31 @@ export const SearchItem = () => {
                     helperText={formErrors.apartamento}
                     FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
                   />
-                </Stack>
-            
+                )}
+
+                {formData.tipoImovel === 'casa' && (
+                  <TextField
+                    sx={{
+                      width: '100%',
+                      fontSize: '1.5rem',
+                      fontWeight: '700',
+                    }}
+                    type="text"
+                    label="Casa"
+                    variant="outlined"
+                    size="small"
+                    value={formData.casa}
+                    onChange={(e) => handleInputChange('casa', e.target.value)}
+                  />
+                )}
+              </CardStylSearche.nweWarrpeBox>
 
               <Stack
                 sx={{
                   width: '100%',
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gridTemplateColumns: '1fr',
                   gridGap: '10px',
-                  '@media (max-width: 550px)': {
-                    gridTemplateColumns: '1fr',
-                  },
                 }}
               >
                 <Box
@@ -578,21 +524,13 @@ export const SearchItem = () => {
                 </Box>
               </Stack>
 
-              <Button
-                sx={{
-                  width: '100%',
-                  height: '3.5rem',
-                  fontSize: '1.5rem',
-                  color: 'var(--button-background-color)',
-                  backgroundColor: 'var(--green-color)',
-                  '&:hover': {
-                    backgroundColor: 'var(--button-hover-background-color)',
-                  },
-                }}
+              <CardStylSearche.containerButton
+                
                 type="submit"
+                disabled={loading}
               >
                 Enviar
-              </Button>
+              </CardStylSearche.containerButton>
 
               {successMessage && (
                 <Typography
@@ -606,10 +544,10 @@ export const SearchItem = () => {
                   {successMessage}
                 </Typography>
               )}
-            </Box>
-          </Stack>
+            </CardStylSearche.wrapperfort >
+          
         </form>
-      </Stack>
+      </CardStylSearche.ContainerCard>
       <style>{globalStyles}</style>
     </>
   )
