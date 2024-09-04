@@ -71,11 +71,28 @@ export const AuthProvider = ({ children }) => {
   //   setCarinho(novoCarrinho);
   // };
 
-  const removerItem = (index) => {
-    const novoArray = carinho.filter((_, i) => i !== index);
+ // Função para remover um item do carinho
+const removerItem = (index) => {
+  const novoArray = carinho.filter((_, i) => i !== index);
+  setCarinho(novoArray);
+};
+
+ // Função para decrementar a quantidade de um item no carinho ou removê-lo se houver apenas 1 unidade
+ const decrementarQuantidade = (index) => {
+  const novoCarrinho = [...carinho];
+  if (novoCarrinho[index].quantidade > 1) {
+    // Se a quantidade for maior que 1, apenas decrementa
+    novoCarrinho[index].quantidade--;
+  } else {
+    // Se a quantidade for 1, remove o item do carrinho
+    const novoArray = novoCarrinho.filter((_, i) => i !== index);
     setCarinho(novoArray);
-  };
-  
+  }
+  setCarinho(novoCarrinho);
+};
+
+
+
 
   // Total de itens no carinho
   const totalItensCarrinho = carinho.length;
@@ -132,22 +149,24 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{
-        isLoggedIn,
-        loginWithEmailAndPassword,
-        logout,
-        user,
-        carinho,
-        adicionarNovoItem,
-        incrementarQuantidade,
-        removerItem,
-        totalItensCarrinho,
-        termoPesquisa,
-        setTermoPesquisa,
-        resultados,
-        setResultados,
-        handlePesquisar,
-      }}
+    value={{
+      isLoggedIn,
+      loginWithEmailAndPassword,
+      logout,
+      user,
+      carinho,
+      setCarinho,
+      adicionarNovoItem,
+      incrementarQuantidade,
+      decrementarQuantidade, // Mantém decrementarQuantidade
+      removerItem, // Agora removerItem está definido e sendo passado
+      totalItensCarrinho,
+      termoPesquisa,
+      setTermoPesquisa,
+      resultados,
+      setResultados,
+      handlePesquisar,
+    }}
     >
       {children}
     </AuthContext.Provider>

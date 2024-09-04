@@ -8,7 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Alert
+  Alert,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import './newStyle.css'
@@ -16,22 +16,28 @@ import { AuthContext } from '../../authcontext'
 import { SearchItem } from '../util/CardBodySearc'
 
 export const BagMarket = () => {
-  const { carinho, incrementarQuantidade, removerItem, totalItensCarrinho } =
-    useContext(AuthContext)
+  const {
+    carinho,
+    incrementarQuantidade,
+    decrementarQuantidade,
+    removerItem,
+    totalItensCarrinho,
+    setCarinho,
+  } = useContext(AuthContext)
   const [openModal, setOpenModal] = useState(false)
   const [removItemArray, setRemoveItemArray] = useState(null)
   const [openConfirm, setOpenConfirm] = useState(false)
   const [itemToRemove, setItemToRemove] = useState(null)
-  const [openAlert, setOpenAlert] = useState(false) // Adicionado para controle de alerta
-
+  const [openAlert, setOpenAlert] = useState(false)
   const handleOpenModal = () => {
     if (carinho.length === 0) {
-      setOpenAlert(true) // Exibe o alerta se o carrinho estiver vazio
+      setOpenAlert(true); // Exibe alerta se o carrinho estiver vazio
     } else {
-      setOpenModal(true) // Abre o modal se houver itens no carrinho
+      setOpenModal(true); // Abre o modal de confirmação de entrega
+      setSacola(false); // Fecha a sacola
     }
-  }
-
+  };
+  
   const handleCloseModal = () => {
     setOpenModal(false)
   }
@@ -41,21 +47,34 @@ export const BagMarket = () => {
   }
 
   const removerItemIcon = (index) => {
-    removerItem(index) // Remove o item diretamente ao clicar no ícone de deletar
+    removerItem(index)
   }
+
+  // const handleDecrementClick = (index) => {
+  //   decrementarQuantidade(index);
+  // };
 
   const handleDecrementClick = (index) => {
-    setItemToRemove(index)
-    setOpenConfirm(true) // Abre o diálogo de confirmação ao clicar no botão de decrementar
-  }
+    const item = carinho[index]
 
-  const handleConfirmRemove = () => {
-    removerItem(itemToRemove)
-    setOpenConfirm(false) // Fecha o diálogo após a confirmação
+    if (item.quantidade > 1) {
+      const novoCarrinho = [...carinho]
+      novoCarrinho[index].quantidade--
+      setCarinho(novoCarrinho)
+    } else {
+      // Se a quantidade é 1, abre o modal de confirmação para remover o item
+      setItemToRemove(index)
+      setOpenConfirm(true)
+    }
   }
 
   const handleCancelRemove = () => {
-    setOpenConfirm(false) // Fecha o diálogo se o usuário cancelar a remoção
+    setOpenConfirm(false) // Fecha o modal sem remover o item
+  }
+
+  const handleConfirmRemove = () => {
+    removerItem(itemToRemove) // Remove o item quando confirmado
+    setOpenConfirm(false) // Fecha o modal após a confirmação
   }
 
   const renderizarItensCarrinho = () => {
@@ -175,23 +194,25 @@ export const BagMarket = () => {
       }}
     >
       <h2>Minha Sacola de Compras</h2>
-      <Stack
-        sx={{
-          width: '100%',
-          margin: '10px',
-          height: '71%',
-          display: 'flex',
-          gap: '1rem',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          flexDirection: 'column',
-          overflowY: 'auto',
-          padding: '10px',
-          overflowX: 'hidden',
-        }}
-      >
-        {renderizarItensCarrinho()}
-      </Stack>
+      {!openModal && (
+    <Stack
+      sx={{
+        width: '100%',
+        margin: '10px',
+        height: '71%',
+        display: 'flex',
+        gap: '1rem',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        flexDirection: 'column',
+        overflowY: 'auto',
+        padding: '10px',
+        overflowX: 'hidden',
+      }}
+    >
+      {renderizarItensCarrinho()}
+    </Stack>
+  )}
 
       <Box
         sx={{
@@ -245,32 +266,33 @@ export const BagMarket = () => {
       </Box>
 
       <Dialog
-        open={openModal}
-        onClose={handleCloseModal}
-        fullWidth
-        maxWidth="md"
-        PaperProps={{
-          sx: {
-            zIndex: 1300,
-          },
-        }}
-      >
-        <DialogTitle>Confirmar Dados da Entrega</DialogTitle>
-        <DialogContent>
-          <SearchItem />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary">
-            Fechar
-          </Button>
-        </DialogActions>
-      </Dialog>
+    open={openModal}
+    onClose={handleCloseModal}
+    fullWidth
+    maxWidth="md"
+    PaperProps={{
+      sx: {
+        zIndex: 1300,
+      },
+    }}
+  >
+    <DialogTitle>Confirmar Dados da Entrega</DialogTitle>
+    <DialogContent>
+      <SearchItem />
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleCloseModal} color="primary">
+        Fechar
+      </Button>
+    </DialogActions>
+  </Dialog>
 
-      {/* Alerta de Carrinho Vazio */}
       <Dialog open={openAlert} onClose={handleCloseAlert}>
         <DialogTitle>Aviso</DialogTitle>
         <DialogContent>
-          <Alert severity="info">Adicione itens ao carrinho para continuar com o processo.</Alert>
+          <Alert severity="info">
+            Adicione itens ao carrinho para continuar com o processo.
+          </Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAlert} color="primary">
@@ -279,7 +301,6 @@ export const BagMarket = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Diálogo de Confirmação */}
       <Dialog open={openConfirm} onClose={handleCancelRemove}>
         <DialogTitle>Remover Item</DialogTitle>
         <DialogContent>

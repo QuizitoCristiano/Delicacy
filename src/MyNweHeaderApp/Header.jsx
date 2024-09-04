@@ -474,6 +474,7 @@ export const Header = () => {
             position: 'fixed',
             height: '100vh',
             width: '360px',
+           
             bgcolor: '#fff',
             display: 'flex',
             alignItems: 'center',
@@ -489,20 +490,20 @@ export const Header = () => {
           }}
           className={sacola ? 'sacola-ativa' : ''}
         >
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '10px',
-              right: '5px',
-              cursor: 'pointer',
-              color: 'var(--light-orange-color)',
-              fontSize: '30px',
-            }}
-          >
-            <CloseIcon sx={{ fontSize: '20px' }} onClick={handleToggleSacola} />
-          </Box>
+         <Box
+  sx={{
+    position: 'absolute',
+    top: '10px',
+    right: '5px',
+    cursor: 'pointer',
+    color: 'var(--light-orange-color)',
+    fontSize: '30px',
+  }}
+>
+  <CloseIcon sx={{ fontSize: '20px' }} onClick={handleToggleSacola} />
+</Box>
 
-          <BagMarket sacola={sacola} setSacola={setSacola} />
+<BagMarket sacola={sacola} setSacola={setSacola} />
         </Stack>
       )}
     </Stack>
