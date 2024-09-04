@@ -29,31 +29,28 @@ const myLink = [
   { label: 'Contato', link: '/NewHelpeContato' },
 ]
 
-
 class ErrorBoundary extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { hasError: false };
+    super(props)
+    this.state = { hasError: false }
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true }
   }
 
   componentDidCatch(error, errorInfo) {
-    console.log(error, errorInfo);
+    console.log(error, errorInfo)
   }
 
   render() {
     if (this.state.hasError) {
-      return <h1>Algo deu errado.</h1>;
+      return <h1>Algo deu errado.</h1>
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }
-
-
 
 export const Header = () => {
   const { user, carinho } = useContext(AuthContext)
@@ -145,9 +142,7 @@ export const Header = () => {
           width: '30%',
         }}
       >
-       
-          
-          <Box
+        <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
@@ -156,11 +151,10 @@ export const Header = () => {
             height: '100%',
             width: '100%',
             cursor: 'pointer',
-           
+
             transition: 'all 0.3s ease',
 
             '@media (max-width: 600px)': {
-              
               cursor: 'pointer',
               height: '100%',
               width: '100%',
@@ -169,13 +163,6 @@ export const Header = () => {
         >
           <img src={Dellicacy} className="logoImageDl" alt="Dellicacy Logo" />
         </Box>
-          
-
-
-        
-        
-
-      
       </Box>
 
       <Stack
@@ -474,7 +461,7 @@ export const Header = () => {
             position: 'fixed',
             height: '100vh',
             width: '360px',
-           
+
             bgcolor: '#fff',
             display: 'flex',
             alignItems: 'center',
@@ -490,20 +477,20 @@ export const Header = () => {
           }}
           className={sacola ? 'sacola-ativa' : ''}
         >
-         <Box
-  sx={{
-    position: 'absolute',
-    top: '10px',
-    right: '5px',
-    cursor: 'pointer',
-    color: 'var(--light-orange-color)',
-    fontSize: '30px',
-  }}
->
-  <CloseIcon sx={{ fontSize: '20px' }} onClick={handleToggleSacola} />
-</Box>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '10px',
+              right: '5px',
+              cursor: 'pointer',
+              color: 'var(--light-orange-color)',
+              fontSize: '30px',
+            }}
+          >
+            <CloseIcon sx={{ fontSize: '20px' }} onClick={handleToggleSacola} />
+          </Box>
 
-<BagMarket sacola={sacola} setSacola={setSacola} />
+          <BagMarket sacola={sacola} setSacola={setSacola} />
         </Stack>
       )}
     </Stack>
