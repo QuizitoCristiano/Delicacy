@@ -15,6 +15,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { get_users } from '../../api/users'
 import { AuthContext } from '../../authcontext'
 import './EstiloDeLogin.css'
+import { db } from '../../../firebaseconfig/firebaseconfig'
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'; // Importações necessárias
+
 
 // Estilização para a tela de carregamento
 const ContainerCardLaoder = styled(Stack)(({ theme }) => ({
@@ -71,7 +74,7 @@ const globalStyles = `
 
 export const SignIn = () => {
   const myNewnavigate = useNavigate()
-  const { loginWithEmailAndPassword } = useContext(AuthContext)
+  const { loginWithEmailAndPassword, setIsLoggedIn } = useContext(AuthContext)
   const [users, setUsers] = useState([])
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -132,14 +135,33 @@ export const SignIn = () => {
         email,
         password
       )
-      console.log(userCredential)
-      // Usuario autenticado com sucesso
-      myNewnavigate('/MyHome')
+    
+      const user = userCredential.user;
+      const usersCollectionRef = collection(db, 'users');
+      const q = query(usersCollectionRef, where('id', '==', user.uid));
+      const querySnapshot = await getDocs(q);
+      console.log(usersCollectionRef)
+      if (!querySnapshot.empty) {
+        const userDataList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        console.log(usersCollectionRef)
+        const userData = userDataList[0];
+
+        localStorage.setItem('newUser', JSON.stringify(userData));
+        localStorage.setItem('isLoggedIn', true)
+        setIsLoggedIn(true);
+        myNewnavigate('/');
+      } else {
+        console.error('Usuário não encontrado no Firestore');
+        return false;
+      }
     } catch (error) {
-      console.error('Erro ao fazer login', error)
-      setEmailError('Credenciais inválidas ou erro ao fazer login')
+      console.error('Erro ao fazer login', error);
+      setEmailError('Credenciais inválidas ou erro ao fazer login');
     } finally {
-      setLoading(false)
+      setLoading(false); // Para remover o loading, se houver
     }
   }
 
@@ -155,9 +177,7 @@ export const SignIn = () => {
       )}
       <Stack className="container_form">
         <Stack className="conatiner-login">
-          <Typography variant="h4">
-          O Delicacy Aguarda por Você!!
-          </Typography>
+          <Typography variant="h4">O Delicacy Aguarda por Você!!</Typography>
           <form id="loginForm">
             <Box
               sx={{
@@ -264,7 +284,7 @@ export const SignIn = () => {
               </Button>
 
               <Button
-                onClick={() => myNewnavigate('/ForgotPassword')} 
+                onClick={() => myNewnavigate('/ForgotPassword')}
                 sx={{
                   color: 'var(--green-color)',
                   textDecoration: 'none',

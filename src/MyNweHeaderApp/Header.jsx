@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import './StileHeader.css'
 import {
   Avatar,
+  Button,
   IconButton,
   Menu,
   MenuItem,
@@ -10,18 +11,32 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
+import Lottie from 'lottie-react'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import StoreIcon from '@mui/icons-material/Store'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { Link, useLocation } from 'react-router-dom'
+
 import { BagMarket } from '../componet/marketBag/marketbag'
 import { SearchItem } from '../componet/util/CardBodySearc'
 import { AuthContext } from '../authcontext'
-import { getFirestore, doc, updateDoc } from 'firebase/firestore'
+import {
+  getFirestore,
+  doc,
+  updateDoc,
+  query,
+  where,
+  getDocs,
+  collection,
+} from 'firebase/firestore'
 import { db } from '../../firebaseconfig/firebaseconfig'
+import AddTaskIcon from '@mui/icons-material/AddTask'
 import Dellicacy from '../imgLogomarca/priclogo1.png'
+import animationData from './animatino/islikeIcon.json'
+import { PoupNewItem } from '../componet/bbitem/poupItem'
+
 const myLink = [
   { label: 'Home', link: '/MyHome' },
   { label: 'Quem_Somos', link: '/HomePage' },
@@ -54,30 +69,69 @@ class ErrorBoundary extends React.Component {
 
 export const Header = () => {
   const { user, carinho } = useContext(AuthContext)
+  const [notifications, setNotifications] = useState([])
+  const [lastAddedItem, setLastAddedItem] = useState(null)
+  const [animationState, setAnimationState] = useState({
+    isStopped: true,
+    isPaused: false,
+  })
+  const { fullName, id, imgUser } = user
+  const defaultOptions = {
+    loop: true, // Defina como true se desejar que a animação repita
+    autoplay: false, // Controle manual
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  }
   const location = useLocation()
   const [abreMeno, setAbreMeno] = useState(false)
   const [sacola, setSacola] = useState(false)
   const [SearchItemVisible, setSearchItemVisible] = useState(false)
-  const [avatarImage, setAvatarImage] = useState(
-    localStorage.getItem('avatarImage') || ''
-  )
+  const [imgUrl, setImageUrl] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
-
   const abrirMenu = () => setAbreMeno(true)
   const fecharMenu = () => setAbreMeno(false)
   const handleSearchIconClick = () => setSearchItemVisible(!SearchItemVisible)
   const handleToggleSacola = () => setSacola(!sacola)
 
-  const handleAvatarClick = (event) => setAnchorEl(event.currentTarget)
-  const handleFecharAvatar = () => setAnchorEl(null)
+  useEffect(() => {
+    if (carinho.length > 0) {
+      const lastItem = carinho[carinho.length - 1]
+      setLastAddedItem(lastItem.nome)
+      // Adicione o item às notificações e inicie a animação
+      setNotifications((prevNotifications) => [...prevNotifications, lastItem])
+      setAnimationState({ isStopped: false, isPaused: false })
+      // Defina o tempo para parar a animação e remover a notificação
+      const timer = setTimeout(() => {
+        setNotifications((prevNotifications) =>
+          prevNotifications.filter((item) => item !== lastItem)
+        )
+        setAnimationState({ isStopped: true, isPaused: false }) // Pare a animação
+      }, 2000) // Ajuste o tempo conforme a duração da animação
 
-  const handleCloseMenu = () => setAnchorEl(null)
+      return () => clearTimeout(timer)
+    }
+  }, [carinho])
+
+  useEffect(() => {
+    setImageUrl(imgUser)
+    console.log('Animation State:', animationState)
+  }, [animationState])
 
   const getInitials = (name) => {
     const names = name.split(' ')
     return names.length > 1
-      ? `${names[0][0]}${names[1][0]}`.toUpperCase()
-      : names[0][0].toUpperCase()
+      ? `${names[0][0]}${names[1][0]}`?.toUpperCase()
+      : names[0][0]?.toUpperCase()
+  }
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
   }
 
   const handleAvatarChange = (event) => {
@@ -86,26 +140,38 @@ export const Header = () => {
       const reader = new FileReader()
       reader.onload = async () => {
         const image = reader.result
-        localStorage.setItem('avatarImage', image)
-        setAvatarImage(image)
-
-        // Atualize a imagem no Firebase
-        if (user?.uid) {
-          await handleSaveAvatar(user.uid, image)
-        }
+        await handleSaveAvatar(id, image)
       }
       reader.readAsDataURL(file)
     }
   }
 
-  async function handleSaveAvatar(userId, imageDataUrl) {
+  async function handleSaveAvatar(userInternalId, imageDataUrl) {
     try {
-      const userDocRef = doc(db, 'users', userId)
-      await updateDoc(userDocRef, { imgUser: imageDataUrl })
-      console.log('Avatar atualizado com sucesso!')
+      const usersCollection = collection(db, 'users')
+      const q = query(usersCollection, where('id', '==', userInternalId))
+      const querySnapshot = await getDocs(q)
+
+      if (!querySnapshot.empty) {
+        // Assume que há apenas um documento correspondente
+        const userDoc = querySnapshot.docs[0]
+        const userDocRef = userDoc.ref
+
+        // Atualiza o campo imgUrl com o novo valor
+        await updateDoc(userDocRef, {
+          imgUser: imageDataUrl,
+        })
+
+        console.log('Campo imgUrl atualizado com sucesso.')
+      } else {
+        console.log('Nenhum documento encontrado com o id interno fornecido.')
+      }
     } catch (error) {
       console.error('Erro ao atualizar o avatar:', error)
     }
+  }
+  const handleFecharAvatar = () => {
+    setAnchorEl(null)
   }
 
   return (
@@ -164,7 +230,6 @@ export const Header = () => {
           <img src={Dellicacy} className="logoImageDl" alt="Dellicacy Logo" />
         </Box>
       </Box>
-
       <Stack
         sx={{
           display: 'flex',
@@ -176,6 +241,7 @@ export const Header = () => {
         }}
       >
         {/* Links de Navegação */}
+
         <Stack
           sx={{
             display: 'flex',
@@ -226,14 +292,10 @@ export const Header = () => {
                 border: '1px solid #3cb815',
               }}
             >
-              <Tooltip title="Editar Avatar">
-                <IconButton onClick={handleAvatarClick}>
-                  <Avatar src={avatarImage}>
-                    {!avatarImage && getInitials(user?.displayName || '')}
-                  </Avatar>
-                </IconButton>
+              <Tooltip title="Editar Avatar" onClick={handleAvatarClick}>
+                <Avatar alt={getInitials(fullName)} src={imgUrl} />
               </Tooltip>
-
+            </Box>
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -288,12 +350,10 @@ export const Header = () => {
                     fontSize: '1.5rem',
                     fontWeight: 'bold',
                   }}
-                  onClick={handleSaveAvatar}
                 >
                   Salvar Avatar
                 </MenuItem>
               </Menu>
-            </Box>
 
             <Box
               sx={{
@@ -453,7 +513,6 @@ export const Header = () => {
           </div>
         )}
       </Stack>
-
       {/* Componente da Sacola de Compras */}
       {sacola && (
         <Stack
@@ -493,6 +552,40 @@ export const Header = () => {
           <BagMarket sacola={sacola} setSacola={setSacola} />
         </Stack>
       )}
+
+      {/* Animação */}
+      {/* <Box
+            sx={{
+              borderRadius: '1.8rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '45px',
+              height: '45px',
+            }}
+            onClick={() => setIsLiked(!isLiked)}
+          >
+            <Lottie
+              animationData={animationData}
+              loop={true}
+              autoplay={!animatioState.isStopped}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </Box>
+          <Typography sx={{ fontSize: '1.6rem', fontWeight: 'bold' }}>
+            {lastAddedItem}
+          </Typography> */}
+
+      {notifications.map((item, index) => (
+        <PoupNewItem
+          item={item}
+          index={index}
+          lastAddedItem={lastAddedItem}
+          animationState={animationState}
+          defaultOptions={defaultOptions}
+        />
+      ))}
     </Stack>
   )
 }

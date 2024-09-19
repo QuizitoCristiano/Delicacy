@@ -10,18 +10,10 @@ import './Products.css'
 import ProductItem from './frutas.jsx'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../authcontext/index.jsx'
-
-
 export const Products = () => {
-
-
   const {adicionarNovoItem, carinho ,setCarinho } = useContext(AuthContext);
-
-  
-
   const newProductsItem = ProductItem.map((item, index) => (
     <Grid item key={index}>
-  
       <Box
         sx={{
           padding: '10px',

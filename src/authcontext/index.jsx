@@ -19,6 +19,7 @@ import {
 
 import ProductItemLegume from "../componets/ProductsLegumes/legunes";
 import ProductItem from "../componets/Products/frutas";
+import { db } from "../../firebaseconfig/firebaseconfig";
 
 export const AuthContext = createContext();
 
@@ -29,6 +30,8 @@ export const AuthProvider = ({ children }) => {
 
   // Estados principais
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [newUser, setNewUser] = useState(null);
+
   const [user, setUser] = useState(null);
   const [carinho, setCarinho] = useState([]);
   const [termoPesquisa, setTermoPesquisa] = useState('');
@@ -59,17 +62,7 @@ export const AuthProvider = ({ children }) => {
     setCarinho(novoCarrinho);
   };
 
-  // Função para remover ou decrementar um item no carinho sem confirmação
-  // const removerItem = (index) => {
-  //   const novoCarrinho = [...carinho];
-  //   if (novoCarrinho[index].quantidade > 1) {
-  //     novoCarrinho[index].quantidade--;
-  //   } else {
-  //     const novoArray = novoCarrinho.filter((_, i) => i !== index);
-  //     setCarinho(novoArray);
-  //   }
-  //   setCarinho(novoCarrinho);
-  // };
+
 
  // Função para remover um item do carinho
 const removerItem = (index) => {
@@ -90,10 +83,6 @@ const removerItem = (index) => {
   }
   setCarinho(novoCarrinho);
 };
-
-
-
-
   // Total de itens no carinho
   const totalItensCarrinho = carinho.length;
 
@@ -113,28 +102,51 @@ const removerItem = (index) => {
 
   // Verificação de autenticação (usuário logado)
   useEffect(() => {
+    const getUser = localStorage.getItem('newUser'|| null) ;
+    const getIsLoged = localStorage.getItem('isLoggedIn')
+    if (getIsLoged) {
+      setIsLoggedIn(getIsLoged);
+    }
+    if (getUser) {
+      setNewUser(JSON.parse(getUser));
+      setUser(JSON.parse(getUser));
+    }
+    const fetchUserData = async (authUser) => {
+      try {
+        const usersCollectionRef = collection(db, 'users');
+        const q = query(usersCollectionRef, where('id', '==', authUser.uid)); // Consulta Firestore
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const userDataList = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          const userData = userDataList[0];
+          console.log(userData)
+          return userData;
+        } else {
+          console.error('Usuário não encontrado no Firestore');
+          return null;
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados do Firestore:', error);
+      }
+    };
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
-        console.log("User is logged in:", authUser);
-        setUser(authUser);
-        setIsLoggedIn(true);
+        fetchUserData(authUser);
       } else {
-        console.log("No user is logged in");
-        setUser(null);
-        setIsLoggedIn(false);
+        console.log('Usuário não autenticado');
       }
     });
-
     return () => unsubscribe();
   }, [auth]);
-
-  // Login com email e senha
   const loginWithEmailAndPassword = async (email, password) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in:", userCredential.user);
       setUser(userCredential.user);
-      setIsLoggedIn(true);
+      
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -151,6 +163,7 @@ const removerItem = (index) => {
     <AuthContext.Provider
     value={{
       isLoggedIn,
+      setIsLoggedIn,
       loginWithEmailAndPassword,
       logout,
       user,
@@ -166,6 +179,7 @@ const removerItem = (index) => {
       resultados,
       setResultados,
       handlePesquisar,
+      newUser
     }}
     >
       {children}

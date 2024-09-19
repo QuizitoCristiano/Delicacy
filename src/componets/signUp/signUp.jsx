@@ -262,29 +262,21 @@ export const SignUp = () => {
       const auth = getAuth();
       const firestore = getFirestore();
       const usersCollection = collection(firestore, "users");
-  
       try {
-
         setMyNewloading(true)
-        // Criação do usuário
         const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
         const user = userCredential.user;
-  
-        // Atualização do perfil com nome completo
         await updateProfile(user, { displayName: formData.fullName });
-  
-        // Verificação de e-mail já cadastrado
         const emailQuery = query(usersCollection, where("email", "==", formData.email));
         const emailQuerySnapshot = await getDocs(emailQuery);
         if (!emailQuerySnapshot.empty) {
           throw new Error("O email já está sendo usado por outro usuário.");
         }
-  
-        // Adição dos dados do usuário à coleção Firestore
         await addDoc(usersCollection, {
           id: user.uid,
           email: formData.email,
           fullName: formData.fullName,
+          imgUser: formData.imgUser,
           cpf: formData.cpf,
           telefone: formData.telefone,
           cep: formData.cep,
@@ -292,7 +284,6 @@ export const SignUp = () => {
           bairro: formData.bairro,
           cidade: formData.cidade,
           estado: formData.estado,
-          imgUser: formData.imgUser,
           numeroDoEdificios: formData.numeroDoEdificios,
         });
   
@@ -312,7 +303,7 @@ export const SignUp = () => {
           email: '',
           telefone: '',
         });
-        navigate("/SignIn");
+        navigate("/");
       } catch (error) {
         alert("Erro ao criar usuário: " + error.message);
       }

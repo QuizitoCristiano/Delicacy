@@ -28,8 +28,10 @@ export const MyHome = () => {
   const navigate = useNavigate()
 
   const handleLogout = () => {
+    localStorage.removeItem('newUser');
+    localStorage.removeItem('isLogged');
     logout()
-    navigate('/login')
+    navigate('/');
   }
 
   const handleClickOpen = () => {

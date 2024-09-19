@@ -67,6 +67,20 @@ import {
           alert("Erro ao criar usuário e vincular perfil:", error);
         }
       },
+      editPhoto: async (id, newUrl) => {
+        if (!id || !newUrl) {
+          console.log("ID ou nova URL não fornecidos.");
+          return;
+        }
+        try {
+          const userDocRef = doc(db, "users", id);
+          await updateDoc(userDocRef, { photoUrl: newUrl });
+          console.log("Foto atualizada com sucesso");
+        } catch (error) {
+          console.error("Erro ao atualizar a foto:", error);
+          alert("Erro ao atualizar a foto.");
+        }
+      }
     }
   };
   
