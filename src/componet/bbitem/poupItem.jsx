@@ -54,7 +54,7 @@ export const PoupNewItem = ({
             options={defaultOptions}
             isStopped={animationState.isStopped}
             isPaused={animationState.isPaused}
-            key={Date.now()} // Forçar re-renderização com uma chave única
+            key={Date.now()} 
             style={{ width: '100%', height: '100%' }}
           />
         </Box>

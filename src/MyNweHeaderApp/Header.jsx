@@ -10,6 +10,11 @@ import {
   Box,
   Stack,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Alert,
 } from '@mui/material'
 import Lottie from 'lottie-react'
 import DehazeIcon from '@mui/icons-material/Dehaze'
@@ -38,7 +43,7 @@ import animationData from './animatino/islikeIcon.json'
 import { PoupNewItem } from '../componet/bbitem/poupItem'
 
 const myLink = [
-  { label: 'Home', link: '/MyHome' },
+  { label: 'Home', link: '' },
   { label: 'Quem_Somos', link: '/HomePage' },
   { label: 'Clientes', link: '/CustomerEvaluation' },
   { label: 'Contato', link: '/NewHelpeContato' },
@@ -69,16 +74,18 @@ class ErrorBoundary extends React.Component {
 
 export const Header = () => {
   const { user, carinho } = useContext(AuthContext)
+  const [openModal, setOpenModal] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [lastAddedItem, setLastAddedItem] = useState(null)
   const [animationState, setAnimationState] = useState({
     isStopped: true,
     isPaused: false,
   })
+
   const { fullName, id, imgUser } = user
   const defaultOptions = {
-    loop: true, // Defina como true se desejar que a animação repita
-    autoplay: false, // Controle manual
+    loop: true,
+    autoplay: false,
     animationData: animationData,
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice',
@@ -87,6 +94,8 @@ export const Header = () => {
   const location = useLocation()
   const [abreMeno, setAbreMeno] = useState(false)
   const [sacola, setSacola] = useState(false)
+  const [openAlert, setOpenAlert] = useState(false)
+
   const [SearchItemVisible, setSearchItemVisible] = useState(false)
   const [imgUrl, setImageUrl] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -118,6 +127,13 @@ export const Header = () => {
     setImageUrl(imgUser)
     console.log('Animation State:', animationState)
   }, [animationState])
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'))
+    if (storedUser && storedUser.imgUser) {
+      setImageUrl(storedUser.imgUser)
+    }
+  }, [])
 
   const getInitials = (name) => {
     const names = name.split(' ')
@@ -153,16 +169,17 @@ export const Header = () => {
       const querySnapshot = await getDocs(q)
 
       if (!querySnapshot.empty) {
-        // Assume que há apenas um documento correspondente
         const userDoc = querySnapshot.docs[0]
         const userDocRef = userDoc.ref
 
-        // Atualiza o campo imgUrl com o novo valor
-        await updateDoc(userDocRef, {
-          imgUser: imageDataUrl,
-        })
+        // Atualiza o campo imgUser no Firestore
+        await updateDoc(userDocRef, { imgUser: imageDataUrl })
 
-        console.log('Campo imgUrl atualizado com sucesso.')
+        // Atualiza o localStorage com a nova imagem
+        const updatedUser = { ...user, imgUser: imageDataUrl }
+        localStorage.setItem('user', JSON.stringify(updatedUser))
+
+        setImageUrl(imageDataUrl) // Atualiza o estado local
       } else {
         console.log('Nenhum documento encontrado com o id interno fornecido.')
       }
@@ -170,8 +187,20 @@ export const Header = () => {
       console.error('Erro ao atualizar o avatar:', error)
     }
   }
+
   const handleFecharAvatar = () => {
     setAnchorEl(null)
+  }
+
+  const handleCloseModal = () => {
+    if (carinho.length === 0) {
+      setOpenModal(false)
+    } else {
+      setSacola(false) // Fecha a sacola
+      setTimeout(() => {
+        setOpenModal(true) // Abre o modal de confirmação de entrega após o atraso
+      }, 500) // Ajuste o tempo de atraso conforme necessário (500ms, por exemplo)
+    }
   }
 
   return (
@@ -293,67 +322,67 @@ export const Header = () => {
               }}
             >
               <Tooltip title="Editar Avatar" onClick={handleAvatarClick}>
-                <Avatar alt={getInitials(fullName)} src={imgUrl} />
+                <Avatar alt={getInitials(fullName)} src={imgUrl || null} />
               </Tooltip>
             </Box>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenu}
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseMenu}
+            >
+              <MenuItem
+                style={{
+                  right: '0',
+                  top: '10%',
+                  gap: '20px',
+                  width: '19rem',
+                  height: '19rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
               >
-                <MenuItem
-                  style={{
-                    right: '0',
-                    top: '10%',
-                    gap: '20px',
-                    width: '19rem',
-                    height: '19rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'left',
-                      alignItems: 'left',
-                      gap: '10px',
-                      padding: '20px',
-                      borderRadius: '5px',
-                      backgroundColor: '#3cb815',
-                      color: '#fff',
-                    }}
-                  >
-                    <CloseIcon
-                      onClick={handleFecharAvatar}
-                      sx={{
-                        color: 'var(--light-orange-color)',
-                        fontSize: '25px',
-                      }}
-                    />
-                  </Box>
-
-                  <label htmlFor="avatarInput" style={{ cursor: 'pointer' }}>
-                    Selecionar Avatar
-                  </label>
-                  <input
-                    id="avatarInput"
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={handleAvatarChange}
-                  />
-                </MenuItem>
-                <MenuItem
+                <Box
                   sx={{
-                    color: 'var(--light-orange-color)',
-                    fontSize: '1.5rem',
-                    fontWeight: 'bold',
+                    display: 'flex',
+                    justifyContent: 'left',
+                    alignItems: 'left',
+                    gap: '10px',
+                    padding: '20px',
+                    borderRadius: '5px',
+                    backgroundColor: '#3cb815',
+                    color: '#fff',
                   }}
                 >
-                  Salvar Avatar
-                </MenuItem>
-              </Menu>
+                  <CloseIcon
+                    onClick={handleFecharAvatar}
+                    sx={{
+                      color: 'var(--light-orange-color)',
+                      fontSize: '25px',
+                    }}
+                  />
+                </Box>
+
+                <label htmlFor="avatarInput" style={{ cursor: 'pointer' }}>
+                  Selecionar Avatar
+                </label>
+                <input
+                  id="avatarInput"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={handleAvatarChange}
+                />
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  color: 'var(--light-orange-color)',
+                  fontSize: '1.5rem',
+                  fontWeight: 'bold',
+                }}
+              >
+                Salvar Avatar
+              </MenuItem>
+            </Menu>
 
             <Box
               sx={{
@@ -514,7 +543,7 @@ export const Header = () => {
         )}
       </Stack>
       {/* Componente da Sacola de Compras */}
-      {sacola && (
+      {/* {sacola && (
         <Stack
           sx={{
             position: 'fixed',
@@ -549,34 +578,107 @@ export const Header = () => {
             <CloseIcon sx={{ fontSize: '20px' }} onClick={handleToggleSacola} />
           </Box>
 
-          <BagMarket sacola={sacola} setSacola={setSacola} />
+          <BagMarket
+            handleToggleSacola={handleToggleSacola}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+            sacola={sacola}
+            setSacola={setSacola}
+          />
         </Stack>
-      )}
-
-      {/* Animação */}
-      {/* <Box
+      )} */}{' '}
+      {sacola && (
+        <Stack
+          sx={{
+            position: 'fixed',
+            height: '100vh',
+            width: '360px',
+            bgcolor: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            zIndex: '1000',
+            top: '82px',
+            right: '0',
+            padding: '20px',
+            boxShadow: '0 8px 11px rgb(14 55 54 / 55%)',
+            '@media only screen and (max-width: 805px)': {
+              width: '97%',
+            },
+          }}
+          className={sacola ? 'sacola-ativa' : ''}
+        >
+          <Box
             sx={{
-              borderRadius: '1.8rem',
+              position: 'absolute',
+              top: '10px',
+              right: '5px',
               cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '45px',
-              height: '45px',
+              color: 'var(--light-orange-color)',
+              fontSize: '30px',
             }}
-            onClick={() => setIsLiked(!isLiked)}
           >
-            <Lottie
-              animationData={animationData}
-              loop={true}
-              autoplay={!animatioState.isStopped}
-              style={{ width: '100%', height: '100%' }}
+            <CloseIcon
+              sx={{ fontSize: '20px' }}
+              onClick={() => setSacola(false)}
             />
           </Box>
-          <Typography sx={{ fontSize: '1.6rem', fontWeight: 'bold' }}>
-            {lastAddedItem}
-          </Typography> */}
 
+          <BagMarket
+            handleToggleSacola={() => setSacola(!sacola)}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+            sacola={sacola}
+            setSacola={setSacola}
+            openAlert={openAlert}
+            setOpenAlert={setOpenAlert}
+          />
+        </Stack>
+      )}
+      {/* Modal fora da sacola, gerenciado pelo estado geral */}
+      <Dialog
+  open={openModal}
+  onClose={handleCloseModal}
+  fullWidth
+  maxWidth="md"
+  PaperProps={{
+    sx: {
+      zIndex: 1300,
+      width: '100%',
+
+      '@media (max-width: 600px)': {
+        maxWidth: '100vw',
+        margin: 0,
+        borderRadius: 0,
+      },
+    },
+  }}
+>
+  <DialogTitle 
+    sx={{
+      width: '100%',
+      '@media (max-width: 600px)': {
+        padding: '16px',  
+      },
+    }}
+  >
+    Confirmar Dados da Entrega
+  </DialogTitle>
+  
+  <DialogContent 
+    sx={{
+      width: '100%',
+      height: 'auto',
+      '@media (max-width: 600px)': {
+        padding: '16px', 
+      },
+    }}
+  >
+    <SearchItem />
+  </DialogContent>
+</Dialog>
+
+      {/* Animação */}
       {notifications.map((item, index) => (
         <PoupNewItem
           item={item}

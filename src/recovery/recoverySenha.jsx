@@ -174,7 +174,7 @@ export const ForgotPassword = () => {
             }}
           >
             <Button
-              onClick={() => navegarPraLogin('/SignIn')}
+              onClick={() => navegarPraLogin('/')}
               sx={{
                 fontSize: '1.3rem',
                 color: '#fff',

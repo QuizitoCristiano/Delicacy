@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect  } from 'react'
 import {
   Box,
   Stack,
@@ -15,8 +15,21 @@ import {
   RadioGroup,
   Radio,
 } from '@mui/material'
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  getDoc,
+  doc,
+  getFirestore
+} from "firebase/firestore";
+
 import InputMask from 'react-input-mask'
 import { CardStylSearche } from './CardStyles'
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { db} from "../../../firebaseconfig/firebaseconfig";
 
 const ContainerCardLoader = styled(Stack)(({ theme }) => ({
   position: 'fixed',
@@ -71,6 +84,36 @@ const globalStyles = `
 `
 
 export const SearchItem = () => {
+  const auth = getAuth()
+
+  useEffect(() => {
+    // Verificar se o usuário está logado e buscar seus dados
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          // Obtenha os dados do usuário na coleção 'users'
+          const userDocRef = doc(db, 'users', user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setFormData((prev) => ({
+              ...prev,
+              nome: userData.nome || '',
+              telefone: userData.telefone || '',
+              cpf: userData.cpf || '',
+              email: userData.email || '',
+              endercoDaEntrega: userData.endereco || ''
+            }));
+          }
+        } catch (error) {
+          console.error('Erro ao buscar dados do Firestore:', error);
+        }
+      }
+    });
+
+    return () => unsubscribe(); // Limpar o listener ao desmontar o componente
+  }, []);
+
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     nome: '',
@@ -187,7 +230,7 @@ export const SearchItem = () => {
         </ContainerCardLoader>
       )}
       <CardStylSearche.ContainerCard
-        
+
       >
         <form
           style={{
@@ -196,7 +239,7 @@ export const SearchItem = () => {
           }}
           onSubmit={handleSubmit}
         >
-        
+
             <CardStylSearche.wrapperfort>
               <Stack
                 sx={{
@@ -404,7 +447,7 @@ export const SearchItem = () => {
               </CardStylSearche.containerBox>
 
               <CardStylSearche.nweWarrpeBox
-              
+
               >
                 <FormControl>
                   <RadioGroup
@@ -525,7 +568,7 @@ export const SearchItem = () => {
               </Stack>
 
               <CardStylSearche.containerButton
-                
+
                 type="submit"
                 disabled={loading}
               >
@@ -545,10 +588,11 @@ export const SearchItem = () => {
                 </Typography>
               )}
             </CardStylSearche.wrapperfort >
-          
+
         </form>
       </CardStylSearche.ContainerCard>
       <style>{globalStyles}</style>
     </>
   )
 }
+

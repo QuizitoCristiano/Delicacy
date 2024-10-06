@@ -15,7 +15,7 @@ import './newStyle.css'
 import { AuthContext } from '../../authcontext'
 import { SearchItem } from '../util/CardBodySearc'
 
-export const BagMarket = () => {
+export const BagMarket = ({ handleToggleSacola, openModal, setOpenModal, setSacola, openAlert, setOpenAlert }) => {
   const {
     carinho,
     incrementarQuantidade,
@@ -24,32 +24,30 @@ export const BagMarket = () => {
     totalItensCarrinho,
     setCarinho,
   } = useContext(AuthContext)
-  const [openModal, setOpenModal] = useState(false)
+ 
   const [removItemArray, setRemoveItemArray] = useState(null)
   const [openConfirm, setOpenConfirm] = useState(false)
   const [itemToRemove, setItemToRemove] = useState(null)
-  const [openAlert, setOpenAlert] = useState(false)
+
+  
   const handleOpenModal = () => {
     if (carinho.length === 0) {
       setOpenAlert(true); // Exibe alerta se o carrinho estiver vazio
     } else {
-      setOpenModal(true); // Abre o modal de confirmação de entrega
       setSacola(false); // Fecha a sacola
+      setTimeout(() => {
+        setOpenModal(true); // Abre o modal de confirmação de entrega
+      }, 500); // Ajuste o tempo de atraso conforme necessário (500ms, por exemplo)
     }
   };
-  
-  const handleCloseModal = () => {
-    setOpenModal(false)
-  }
 
   const handleCloseAlert = () => {
-    setOpenAlert(false)
-  }
+    setOpenAlert(false);
+  };
 
   const removerItemIcon = (index) => {
-    removerItem(index)
-  }
-
+    removerItem(index);
+  };
   // const handleDecrementClick = (index) => {
   //   decrementarQuantidade(index);
   // };
@@ -195,24 +193,24 @@ export const BagMarket = () => {
     >
       <h2>Minha Sacola de Compras</h2>
       {!openModal && (
-    <Stack
-      sx={{
-        width: '100%',
-        margin: '10px',
-        height: '71%',
-        display: 'flex',
-        gap: '1rem',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        flexDirection: 'column',
-        overflowY: 'auto',
-        padding: '10px',
-        overflowX: 'hidden',
-      }}
-    >
-      {renderizarItensCarrinho()}
-    </Stack>
-  )}
+        <Stack
+          sx={{
+            width: '100%',
+            margin: '10px',
+            height: '71%',
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            flexDirection: 'column',
+            overflowY: 'auto',
+            padding: '10px',
+            overflowX: 'hidden',
+          }}
+        >
+          {renderizarItensCarrinho()}
+        </Stack>
+      )}
 
       <Box
         sx={{
@@ -260,33 +258,14 @@ export const BagMarket = () => {
             },
           }}
           onClick={handleOpenModal}
+          // onClick={handleToggleSacola} 
+        
         >
           Finalizar Compra
         </Button>
       </Box>
 
-      <Dialog
-    open={openModal}
-    onClose={handleCloseModal}
-    fullWidth
-    maxWidth="md"
-    PaperProps={{
-      sx: {
-        zIndex: 1300,
-      },
-    }}
-  >
-    <DialogTitle>Confirmar Dados da Entrega</DialogTitle>
-    <DialogContent>
-      <SearchItem />
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={handleCloseModal} color="primary">
-        Fechar
-      </Button>
-    </DialogActions>
-  </Dialog>
-
+      
       <Dialog open={openAlert} onClose={handleCloseAlert}>
         <DialogTitle>Aviso</DialogTitle>
         <DialogContent>
