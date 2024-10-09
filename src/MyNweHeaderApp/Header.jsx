@@ -41,6 +41,8 @@ import AddTaskIcon from '@mui/icons-material/AddTask'
 import Dellicacy from '../imgLogomarca/priclogo1.png'
 import animationData from './animatino/islikeIcon.json'
 import { PoupNewItem } from '../componet/bbitem/poupItem'
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
 
 const myLink = [
   { label: 'Home', link: '' },
@@ -636,48 +638,184 @@ export const Header = () => {
         </Stack>
       )}
       {/* Modal fora da sacola, gerenciado pelo estado geral */}
-      <Dialog
+      {/* <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        fullWidth
+       
+        maxWidth="md"
+        PaperProps={{
+          sx: {
+            zIndex: 1300,
+            width: '100%',
+            height: '100%',
+
+            '@media (max-width: 600px)': {
+              maxWidth: '100vw',
+              
+              margin: 0,
+              borderRadius: 0,
+            },
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            width: '100%',
+            '@media (max-width: 600px)': {
+              padding: '16px',
+            },
+          }}
+        >
+          Confirmar Dados da Entrega
+        </DialogTitle>
+
+        <DialogContent
+          sx={{
+            width: '100%',
+            height: 'auto',
+            '@media (max-width: 600px)': {
+              padding: '16px',
+            },
+          }}
+        >
+          <SearchItem />
+        </DialogContent>
+      </Dialog> */}
+      {/* <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="md"
+        PaperProps={{
+          sx: {
+            zIndex: 1300,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'transparent', // Remover fundo do Dialog
+            boxShadow: 'none', // Remover sombra
+
+            '@media (max-width: 600px)': {
+              maxWidth: '100vw',
+              maxHeight: '100vh',
+              margin: 0,
+              borderRadius: 0,
+            },
+          },
+        }}
+      >
+       
+
+        <DialogContent
+          sx={{
+            width: '100%',
+            marginTop: '8%',
+            transition: 'all 0.3',
+            bgcolor: '#FFFFFF',
+            height: '100vh',
+          
+            '@media (max-width: 600px)': {
+              padding: '5px',
+              height: '100%',
+            },
+          }}
+        >
+          <SearchItem />
+        </DialogContent>
+      </Dialog> */}
+     
+      {/* <Modal
+       aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+ 
+        
+      
+     
+        sx={{
+
+            zIndex: 1300,
+            width: '100%',
+            marginTop: '10rem',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          
+           
+
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
+
+            '@media (max-width: 600px)': {
+              maxWidth: '100vw',
+              maxHeight: '100vh', 
+              margin: 0,
+              borderRadius: 0,
+            },
+          
+        }}
+      >
+        <DialogContent
+          sx={{
+            width: '100%',
+            marginTop: '2%',
+            transition: 'all 0.3s', 
+            background: 'transparent',
+            height: '100vh', 
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+           
+
+            '@media (max-width: 600px)': {
+              padding: '5px',
+              height: '100%',
+            },
+          }}
+        >
+          <SearchItem />
+        </DialogContent>
+      </Modal> */}
+
+
+<Modal
+  aria-labelledby="transition-modal-title"
+  aria-describedby="transition-modal-description"
   open={openModal}
   onClose={handleCloseModal}
-  fullWidth
-  maxWidth="md"
-  PaperProps={{
-    sx: {
-      zIndex: 1300,
-      width: '100%',
-
-      '@media (max-width: 600px)': {
-        maxWidth: '100vw',
-        margin: 0,
-        borderRadius: 0,
-      },
+  closeAfterTransition
+  sx={{
+    zIndex: 1300,
+    width: '100%',
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+    '@media (max-width: 600px)': {
+      margin: 0,
+      borderRadius: 0,
     },
   }}
 >
-  <DialogTitle 
+  <DialogContent
     sx={{
       width: '100%',
-      '@media (max-width: 600px)': {
-        padding: '16px',  
-      },
-    }}
-  >
-    Confirmar Dados da Entrega
-  </DialogTitle>
-  
-  <DialogContent 
-    sx={{
-      width: '100%',
-      height: 'auto',
-      '@media (max-width: 600px)': {
-        padding: '16px', 
-      },
+      background: 'transparent',
+      height: '100vh', 
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '5px',
     }}
   >
     <SearchItem />
   </DialogContent>
-</Dialog>
-
+</Modal>
       {/* Animação */}
       {notifications.map((item, index) => (
         <PoupNewItem

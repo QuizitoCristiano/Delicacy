@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   Stack,
@@ -23,13 +23,13 @@ import {
   where,
   getDoc,
   doc,
-  getFirestore
-} from "firebase/firestore";
+  getFirestore,
+} from 'firebase/firestore'
 
 import InputMask from 'react-input-mask'
 import { CardStylSearche } from './CardStyles'
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { db} from "../../../firebaseconfig/firebaseconfig";
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { db } from '../../../firebaseconfig/firebaseconfig'
 
 const ContainerCardLoader = styled(Stack)(({ theme }) => ({
   position: 'fixed',
@@ -92,27 +92,27 @@ export const SearchItem = () => {
       if (user) {
         try {
           // Obtenha os dados do usuário na coleção 'users'
-          const userDocRef = doc(db, 'users', user.uid);
-          const userDoc = await getDoc(userDocRef);
+          const userDocRef = doc(db, 'users', user.uid)
+          const userDoc = await getDoc(userDocRef)
           if (userDoc.exists()) {
-            const userData = userDoc.data();
+            const userData = userDoc.data()
             setFormData((prev) => ({
               ...prev,
               nome: userData.nome || '',
               telefone: userData.telefone || '',
               cpf: userData.cpf || '',
               email: userData.email || '',
-              endercoDaEntrega: userData.endereco || ''
-            }));
+              endercoDaEntrega: userData.endereco || '',
+            }))
           }
         } catch (error) {
-          console.error('Erro ao buscar dados do Firestore:', error);
+          console.error('Erro ao buscar dados do Firestore:', error)
         }
       }
-    });
+    })
 
-    return () => unsubscribe(); // Limpar o listener ao desmontar o componente
-  }, []);
+    return () => unsubscribe() // Limpar o listener ao desmontar o componente
+  }, [])
 
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -229,370 +229,366 @@ export const SearchItem = () => {
           <div>Logando...</div>
         </ContainerCardLoader>
       )}
-      <CardStylSearche.ContainerCard
 
-      >
-        <form
-          style={{
+      <form
+        style={{
+          width: '100%',
+          maxWidth: '700px',
+
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem',
+          background: 'white',
+          borderRadius: '10px',
+          boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.1)',
+          '@media (max-width: 750px)': {
             width: '100%',
-            gap: '1.7rem',
-          }}
-          onSubmit={handleSubmit}
-        >
+            height: '100vh',
+          },
+        }}
+        onSubmit={handleSubmit}
+      >
+        <CardStylSearche.wrapperfort>
+          <Stack
+            sx={{
+              paddingBottom: '1.8rem',
+              color: 'var(--green-color)',
+              fontSize: '1.8rem',
+              gap: '1.9rem',
+              width: '100%',
+            }}
+          >
+            <h2>Confirmar dados da entrega</h2>
+          </Stack>
 
-            <CardStylSearche.wrapperfort>
-              <Stack
-                sx={{
-                  paddingBottom: '1.8rem',
-                  color: 'var(--green-color)',
-                  fontSize: '1.8rem',
-                  gap: '1.9rem',
-                  width: '100%',
-                }}
-              >
-                <h2>Confirmar dados da entrega</h2>
-              </Stack>
-
-              <CardStylSearche.containerBox>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.3rem',
-                    width: '100%',
-                  }}
-                >
-                  <TextField
-                    sx={{
-                      width: '100%',
-                      fontSize: '1.5rem',
-                      fontWeight: '700',
-                    }}
-                    type="text"
-                    label="Nome Completo"
-                    variant="outlined"
-                    size="small"
-                    value={formData.nome}
-                    onChange={(e) => handleInputChange('nome', e.target.value)}
-                    error={!!formErrors.nome}
-                    helperText={formErrors.nome}
-                    FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-                  />
-                </Box>
-
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.3rem',
-                    width: '100%',
-                  }}
-                >
-                  <TextField
-                    sx={{
-                      width: '100%',
-                      fontSize: '1.5rem',
-                      fontWeight: '700',
-                    }}
-                    type="email"
-                    label="Email"
-                    variant="outlined"
-                    size="small"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    error={!!formErrors.email}
-                    helperText={formErrors.email}
-                    FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-                  />
-                </Box>
-
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.3rem',
-                    width: '100%',
-                  }}
-                >
-                  <InputMask
-                    mask="(99) 99999-9999"
-                    value={formData.telefone}
-                    onChange={(e) =>
-                      handleInputChange('telefone', e.target.value)
-                    }
-                  >
-                    {() => (
-                      <TextField
-                        sx={{
-                          width: '100%',
-                          fontSize: '1.5rem',
-                          fontWeight: '700',
-                        }}
-                        type="text"
-                        label="Telefone"
-                        variant="outlined"
-                        size="small"
-                        error={!!formErrors.telefone}
-                        helperText={formErrors.telefone}
-                        FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-                      />
-                    )}
-                  </InputMask>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.3rem',
-                    width: '100%',
-                  }}
-                >
-                  <InputMask
-                    mask="999.999.999-99"
-                    value={formData.cpf}
-                    onChange={(e) => handleInputChange('cpf', e.target.value)}
-                  >
-                    {() => (
-                      <TextField
-                        sx={{
-                          width: '100%',
-                          fontSize: '1.5rem',
-                          fontWeight: '700',
-                        }}
-                        type="text"
-                        label="CPF"
-                        variant="outlined"
-                        size="small"
-                        error={!!formErrors.cpf}
-                        helperText={formErrors.cpf}
-                        FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-                      />
-                    )}
-                  </InputMask>
-                </Box>
-              </CardStylSearche.containerBox>
-
-              <CardStylSearche.containerBox>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.3rem',
-                    width: '100%',
-                  }}
-                >
-                  <TextField
-                    sx={{
-                      width: '100%',
-                      fontSize: '1.7rem',
-                      fontWeight: '700',
-                    }}
-                    type="text"
-                    label="Endereço de Entrega"
-                    variant="outlined"
-                    size="small"
-                    value={formData.endercoDaEntrega}
-                    onChange={(e) =>
-                      handleInputChange('endercoDaEntrega', e.target.value)
-                    }
-                    error={!!formErrors.endercoDaEntrega}
-                    helperText={formErrors.endercoDaEntrega}
-                    FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-                  />
-                </Box>
-
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.7rem',
-                    width: '100%',
-                  }}
-                >
-                  <FormControl variant="outlined" size="small" fullWidth>
-                    <InputLabel>Método de Pagamento</InputLabel>
-                    <Select
-                      sx={{
-                        fontSize: '17px',
-                      }}
-                      value={formData.paymentMethod}
-                      onChange={(e) =>
-                        handleInputChange('paymentMethod', e.target.value)
-                      }
-                      label="Método de Pagamento"
-                      error={!!formErrors.paymentMethod}
-                      MenuProps={{
-                        PaperProps: {
-                          style: {
-                            maxHeight: 200,
-                            fontSize: '18px',
-                          },
-                        },
-                      }}
-                    >
-                      {paymentMethods.map((method) => (
-                        <MenuItem key={method.value} value={method.value}>
-                          {method.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {formErrors.paymentMethod && (
-                      <Typography color="red" sx={{ fontSize: '1.4rem' }}>
-                        {formErrors.paymentMethod}
-                      </Typography>
-                    )}
-                  </FormControl>
-                </Box>
-              </CardStylSearche.containerBox>
-
-              <CardStylSearche.nweWarrpeBox
-
-              >
-                <FormControl>
-                  <RadioGroup
-                    row
-                    value={formData.tipoImovel}
-                    onChange={(e) => handleInputChange('tipoImovel', e.target.value)}
-                  >
-                    <FormControlLabel
-                      value="casa"
-                      control={<Radio />}
-                      label="Casa"
-                    />
-                    <FormControlLabel
-                      value="apartamento"
-                      control={<Radio />}
-                      label="Apartamento"
-                    />
-                  </RadioGroup>
-                </FormControl>
-
-                {formData.tipoImovel === 'apartamento' && (
-                  <TextField
-                    sx={{
-                      width: '100%',
-                      fontSize: '1.5rem',
-                      fontWeight: '700',
-                    }}
-                    type="text"
-                    label="Bloco"
-                    variant="outlined"
-                    size="small"
-                    value={formData.bloco}
-                    onChange={(e) =>
-                      handleInputChange('bloco', e.target.value)
-                    }
-                    error={!!formErrors.bloco}
-                    helperText={formErrors.bloco}
-                    FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-                  />
-                )}
-
-                {formData.tipoImovel === 'apartamento' && (
-                  <TextField
-                    sx={{
-                      width: '100%',
-                      fontSize: '1.5rem',
-                      fontWeight: '700',
-                    }}
-                    type="text"
-                    label="Apartamento"
-                    variant="outlined"
-                    size="small"
-                    value={formData.apartamento}
-                    onChange={(e) =>
-                      handleInputChange('apartamento', e.target.value)
-                    }
-                    error={!!formErrors.apartamento}
-                    helperText={formErrors.apartamento}
-                    FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-                  />
-                )}
-
-                {formData.tipoImovel === 'casa' && (
-                  <TextField
-                    sx={{
-                      width: '100%',
-                      fontSize: '1.5rem',
-                      fontWeight: '700',
-                    }}
-                    type="text"
-                    label="Casa"
-                    variant="outlined"
-                    size="small"
-                    value={formData.casa}
-                    onChange={(e) => handleInputChange('casa', e.target.value)}
-                  />
-                )}
-              </CardStylSearche.nweWarrpeBox>
-
-              <Stack
+          <CardStylSearche.containerBox>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.3rem',
+                width: '100%',
+              }}
+            >
+              <TextField
                 sx={{
                   width: '100%',
-                  display: 'grid',
-                  gridTemplateColumns: '1fr',
-                  gridGap: '10px',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
                 }}
+                type="text"
+                label="Nome Completo"
+                variant="outlined"
+                size="small"
+                value={formData.nome}
+                onChange={(e) => handleInputChange('nome', e.target.value)}
+                error={!!formErrors.nome}
+                helperText={formErrors.nome}
+                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.3rem',
+                width: '100%',
+              }}
+            >
+              <TextField
+                sx={{
+                  width: '100%',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                }}
+                type="email"
+                label="Email"
+                variant="outlined"
+                size="small"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                error={!!formErrors.email}
+                helperText={formErrors.email}
+                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.3rem',
+                width: '100%',
+              }}
+            >
+              <InputMask
+                mask="(99) 99999-9999"
+                value={formData.telefone}
+                onChange={(e) => handleInputChange('telefone', e.target.value)}
               >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.3rem',
-                    width: '100%',
-                  }}
-                >
-                  <TextareaAutosize
-                    style={{
+                {() => (
+                  <TextField
+                    sx={{
                       width: '100%',
                       fontSize: '1.5rem',
                       fontWeight: '700',
-                      padding: '12px',
-                      borderRadius: '4px',
-                      borderColor: formErrors.mensagem ? 'red' : '#ccc',
                     }}
-                    minRows={5}
-                    placeholder="Digite sua mensagem"
-                    value={formData.mensagem}
-                    onChange={(e) =>
-                      handleInputChange('mensagem', e.target.value)
-                    }
+                    type="text"
+                    label="Telefone"
+                    variant="outlined"
+                    size="small"
+                    error={!!formErrors.telefone}
+                    helperText={formErrors.telefone}
+                    FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
                   />
-                  {formErrors.mensagem && (
-                    <Typography color="red" sx={{ fontSize: '1.4rem' }}>
-                      {formErrors.mensagem}
-                    </Typography>
-                  )}
-                </Box>
-              </Stack>
+                )}
+              </InputMask>
+            </Box>
 
-              <CardStylSearche.containerButton
-
-                type="submit"
-                disabled={loading}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.3rem',
+                width: '100%',
+              }}
+            >
+              <InputMask
+                mask="999.999.999-99"
+                value={formData.cpf}
+                onChange={(e) => handleInputChange('cpf', e.target.value)}
               >
-                Enviar
-              </CardStylSearche.containerButton>
+                {() => (
+                  <TextField
+                    sx={{
+                      width: '100%',
+                      fontSize: '1.5rem',
+                      fontWeight: '700',
+                    }}
+                    type="text"
+                    label="CPF"
+                    variant="outlined"
+                    size="small"
+                    error={!!formErrors.cpf}
+                    helperText={formErrors.cpf}
+                    FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+                  />
+                )}
+              </InputMask>
+            </Box>
+          </CardStylSearche.containerBox>
 
-              {successMessage && (
-                <Typography
-                  color="green"
+          <CardStylSearche.containerBox>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.3rem',
+                width: '100%',
+              }}
+            >
+              <TextField
+                sx={{
+                  width: '100%',
+                  fontSize: '1.7rem',
+                  fontWeight: '700',
+                }}
+                type="text"
+                label="Endereço de Entrega"
+                variant="outlined"
+                size="small"
+                value={formData.endercoDaEntrega}
+                onChange={(e) =>
+                  handleInputChange('endercoDaEntrega', e.target.value)
+                }
+                error={!!formErrors.endercoDaEntrega}
+                helperText={formErrors.endercoDaEntrega}
+                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.7rem',
+                width: '100%',
+              }}
+            >
+              <FormControl variant="outlined" size="small" fullWidth>
+                <InputLabel>Método de Pagamento</InputLabel>
+                <Select
                   sx={{
-                    fontSize: '1.4rem',
-                    textAlign: 'center',
-                    marginTop: '1rem',
+                    fontSize: '17px',
+                  }}
+                  value={formData.paymentMethod}
+                  onChange={(e) =>
+                    handleInputChange('paymentMethod', e.target.value)
+                  }
+                  label="Método de Pagamento"
+                  error={!!formErrors.paymentMethod}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 200,
+                        fontSize: '18px',
+                      },
+                    },
                   }}
                 >
-                  {successMessage}
+                  {paymentMethods.map((method) => (
+                    <MenuItem key={method.value} value={method.value}>
+                      {method.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {formErrors.paymentMethod && (
+                  <Typography color="red" sx={{ fontSize: '1.4rem' }}>
+                    {formErrors.paymentMethod}
+                  </Typography>
+                )}
+              </FormControl>
+            </Box>
+          </CardStylSearche.containerBox>
+
+          <CardStylSearche.nweWarrpeBox>
+            <FormControl>
+              <RadioGroup
+                row
+                value={formData.tipoImovel}
+                onChange={(e) =>
+                  handleInputChange('tipoImovel', e.target.value)
+                }
+              >
+                <FormControlLabel
+                  value="casa"
+                  control={<Radio />}
+                  label="Casa"
+                />
+                <FormControlLabel
+                  value="apartamento"
+                  control={<Radio />}
+                  label="Apartamento"
+                />
+              </RadioGroup>
+            </FormControl>
+
+            {formData.tipoImovel === 'apartamento' && (
+              <TextField
+                sx={{
+                  width: '100%',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                }}
+                type="text"
+                label="Bloco"
+                variant="outlined"
+                size="small"
+                value={formData.bloco}
+                onChange={(e) => handleInputChange('bloco', e.target.value)}
+                error={!!formErrors.bloco}
+                helperText={formErrors.bloco}
+                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+              />
+            )}
+
+            {formData.tipoImovel === 'apartamento' && (
+              <TextField
+                sx={{
+                  width: '100%',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                }}
+                type="text"
+                label="Apartamento"
+                variant="outlined"
+                size="small"
+                value={formData.apartamento}
+                onChange={(e) =>
+                  handleInputChange('apartamento', e.target.value)
+                }
+                error={!!formErrors.apartamento}
+                helperText={formErrors.apartamento}
+                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+              />
+            )}
+
+            {formData.tipoImovel === 'casa' && (
+              <TextField
+                sx={{
+                  width: '100%',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                }}
+                type="text"
+                label="Casa"
+                variant="outlined"
+                size="small"
+                value={formData.casa}
+                onChange={(e) => handleInputChange('casa', e.target.value)}
+              />
+            )}
+          </CardStylSearche.nweWarrpeBox>
+
+          <Stack
+            sx={{
+              width: '100%',
+              display: 'grid',
+              gridTemplateColumns: '1fr',
+              gridGap: '10px',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.3rem',
+                width: '100%',
+              }}
+            >
+              <TextareaAutosize
+                style={{
+                  width: '100%',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  padding: '12px',
+                  borderRadius: '4px',
+                  borderColor: formErrors.mensagem ? 'red' : '#ccc',
+                }}
+                minRows={5}
+                placeholder="Digite sua mensagem"
+                value={formData.mensagem}
+                onChange={(e) => handleInputChange('mensagem', e.target.value)}
+              />
+              {formErrors.mensagem && (
+                <Typography color="red" sx={{ fontSize: '1.4rem' }}>
+                  {formErrors.mensagem}
                 </Typography>
               )}
-            </CardStylSearche.wrapperfort >
+            </Box>
+          </Stack>
 
-        </form>
-      </CardStylSearche.ContainerCard>
+          <CardStylSearche.containerButton type="submit" disabled={loading}>
+            Enviar
+          </CardStylSearche.containerButton>
+
+          {successMessage && (
+            <Typography
+              color="green"
+              sx={{
+                fontSize: '1.4rem',
+                textAlign: 'center',
+                marginTop: '1rem',
+              }}
+            >
+              {successMessage}
+            </Typography>
+          )}
+        </CardStylSearche.wrapperfort>
+      </form>
+
       <style>{globalStyles}</style>
     </>
   )
 }
-

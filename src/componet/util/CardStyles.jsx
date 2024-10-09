@@ -10,18 +10,27 @@ export const CardStylSearche = {
     width: '100%',
     fontWeight: '7000',
     padding: '10px 20px',
-
     color: 'green',
+  
+    
+    overflow: 'hidden', 
+    maxHeight: '100vh', 
+    '@media (max-width: 750px)': {
+      width: '100%',
+      padding: '15px',
+    },
   })),
-
+  
   wrapperfort: styled(Box)(({}) => ({
-    width: '659px',
+    width: '100%',
+
     gap: '2.6rem',
     display: 'flex',
     padding: '20px',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '15px',
+
     boxShadow: '1px 2px 11px 4px rgb(14 55 54 / 25%)',
     flexDirection: 'column',
     '@media (max-width: 750px)': {
