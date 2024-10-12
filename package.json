@@ -16,6 +16,8 @@
     "@mui/icons-material": "^5.15.2",
     "@mui/material": "^5.15.2",
     "@mui/styled-engine-sc": "^6.0.0-alpha.10",
+    "@react-google-maps/api": "^2.20.3",
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "boxicons": "^2.1.4",
     "firebase": "^10.7.2",

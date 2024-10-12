@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import InputMask from 'react-input-mask';
-import './stalys/signUp.css';
+import React, { useEffect, useState } from 'react'
+import InputMask from 'react-input-mask'
+import './stalys/signUp.css'
 import {
   Box,
   Stack,
@@ -9,18 +9,26 @@ import {
   Button,
   InputAdornment,
   IconButton,
-} from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Link, useNavigate  } from 'react-router-dom'; // Atualize aqui
-import { styled } from '@mui/system';
+} from '@mui/material'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { Link, useNavigate } from 'react-router-dom' // Atualize aqui
+import { styled } from '@mui/system'
 
-import { StyleClientNweLib } from './stalys/newStalys';
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { addDoc, collection, getFirestore, query, where, getDocs } from "firebase/firestore";
-
-
-
+import { StyleClientNweLib } from './stalys/newStalys'
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth'
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  query,
+  where,
+  getDocs,
+} from 'firebase/firestore'
 
 // Estilização para a tela de carregamento
 const ContainerCardLaoder = styled(Stack)(({ theme }) => ({
@@ -75,13 +83,10 @@ const globalStyles = `
   }
 `
 
-
-
-
 export const SignUp = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [myNewloading, setMyNewloading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [myNewloading, setMyNewloading] = useState(false)
   const [formData, setFormData] = useState({
     cep: '',
     imgUser: '',
@@ -96,12 +101,12 @@ export const SignUp = () => {
     cpf: '',
     email: '',
     telefone: '',
-  });
+  })
 
   const [formErrors, setFormErrors] = useState({
     cep: '',
     bairro: '',
-   
+
     cidade: '',
     estado: '',
     rua: '',
@@ -112,20 +117,13 @@ export const SignUp = () => {
     cpf: '',
     email: '',
     telefone: '',
-  });
+  })
 
-
-
-
-
-
-
-
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const handleInputChange = (fieldName, value) => {
-    setFormData({ ...formData, [fieldName]: value });
-    setFormErrors({ ...formErrors, [fieldName]: '' });
-  };
+    setFormData({ ...formData, [fieldName]: value })
+    setFormErrors({ ...formErrors, [fieldName]: '' })
+  }
 
   const clearErrors = () => {
     setFormErrors({
@@ -142,28 +140,28 @@ export const SignUp = () => {
       cpf: '',
       email: '',
       telefone: '',
-    });
-  };
+    })
+  }
 
   const displayError = (fieldName, message) => {
-    setFormErrors({ ...formErrors, [fieldName]: message });
-  };
+    setFormErrors({ ...formErrors, [fieldName]: message })
+  }
 
   const checkCEP = (e) => {
-    const cep = e.target.value.replace(/\D/g, '');
-    const cepValido = cep.length === 8;
+    const cep = e.target.value.replace(/\D/g, '')
+    const cepValido = cep.length === 8
 
     if (cepValido) {
       fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then((res) => {
           if (!res.ok) {
-            throw new Error('CEP não encontrado');
+            throw new Error('CEP não encontrado')
           }
-          return res.json();
+          return res.json()
         })
         .then((data) => {
           if (data.erro) {
-            throw new Error('CEP não encontrado');
+            throw new Error('CEP não encontrado')
           }
 
           setFormData((prevData) => ({
@@ -172,111 +170,190 @@ export const SignUp = () => {
             bairro: data.bairro || '',
             cidade: data.localidade || '',
             estado: data.uf || '',
-          }));
+          }))
         })
         .catch((error) => {
-          console.error(error.message);
-          displayError('cep', 'CEP não encontrado');
-        });
+          console.error(error.message)
+          displayError('cep', 'CEP não encontrado')
+        })
     } else {
-      displayError('cep', 'Por favor, informe um CEP válido.');
+      displayError('cep', 'Por favor, informe um CEP válido.')
     }
-  };
+  }
 
   const validateForm = () => {
-    clearErrors();
-    let isValid = true;
+    clearErrors()
+    let isValid = true
 
     if (formData.cep.trim() === '') {
-      displayError('cep', 'Por favor, informe o CEP.');
-      isValid = false;
+      displayError('cep', 'Por favor, informe o CEP.')
+      isValid = false
     } else if (!validarCEP(formData.cep)) {
-      displayError('cep', 'Por favor, informe um CEP válido.');
-      isValid = false;
+      displayError('cep', 'Por favor, informe um CEP válido.')
+      isValid = false
     }
 
     if (formData.rua.trim() === '') {
-      displayError('rua', 'Por favor, informe o nome da rua.');
-      isValid = false;
+      displayError('rua', 'Por favor, informe o nome da rua.')
+      isValid = false
     }
 
     if (formData.bairro.trim() === '') {
-      displayError('bairro', 'Por favor, informe o nome do bairro.');
-      isValid = false;
+      displayError('bairro', 'Por favor, informe o nome do bairro.')
+      isValid = false
     }
 
     if (formData.cidade.trim() === '') {
-      displayError('cidade', 'Por favor, informe o nome da cidade.');
-      isValid = false;
+      displayError('cidade', 'Por favor, informe o nome da cidade.')
+      isValid = false
     }
 
     if (formData.estado.trim() === '') {
-      displayError('estado', 'Por favor, informe o nome do estado.');
-      isValid = false;
+      displayError('estado', 'Por favor, informe o nome do estado.')
+      isValid = false
     }
 
     if (formData.numeroDoEdificios.trim() === '') {
-      displayError('numeroDoEdificios', 'Por favor, informe o número do edifício.');
-      isValid = false;
+      displayError(
+        'numeroDoEdificios',
+        'Por favor, informe o número do edifício.'
+      )
+      isValid = false
     }
 
-    if (formData.fullName.trim() === '' || formData.fullName.split(' ').length < 2) {
-      displayError('fullName', 'Por favor, digite seu nome completo.');
-      isValid = false;
+    if (
+      formData.fullName.trim() === '' ||
+      formData.fullName.split(' ').length < 2
+    ) {
+      displayError('fullName', 'Por favor, digite seu nome completo.')
+      isValid = false
     }
 
     if (formData.telefone.trim() === '') {
-      displayError('telefone', 'Por favor, informe o telefone.');
-      isValid = false;
+      displayError('telefone', 'Por favor, informe o telefone.')
+      isValid = false
     } else if (!validarTelefone(formData.telefone)) {
-      displayError('telefone', 'Por favor, informe um telefone válido.');
-      isValid = false;
+      displayError('telefone', 'Por favor, informe um telefone válido.')
+      isValid = false
     }
 
     if (formData.password.length < 6) {
-      displayError('password', 'A senha deve ter pelo menos 6 dígitos.');
-      isValid = false;
+      displayError('password', 'A senha deve ter pelo menos 6 dígitos.')
+      isValid = false
     }
 
     if (formData.password !== formData.confirmPassword) {
-      displayError('confirmPassword', 'As senhas não coincidem.');
-      isValid = false;
+      displayError('confirmPassword', 'As senhas não coincidem.')
+      isValid = false
     }
 
     if (formData.email.trim() === '' || !isValidEmail(formData.email)) {
-      displayError('email', 'Por favor, digite um e-mail válido.');
-      isValid = false;
+      displayError('email', 'Por favor, digite um e-mail válido.')
+      isValid = false
     }
 
     if (formData.cpf.trim() === '' || !validarCPF(formData.cpf)) {
-      displayError('cpf', 'Por favor, digite um CPF válido.');
-      isValid = false;
+      displayError('cpf', 'Por favor, digite um CPF válido.')
+      isValid = false
     }
 
-    return isValid;
-  };
+    return isValid
+  }
+
+  // const handleSubmit = async () => {
+  //   if (validateForm()) {
+  //     const auth = getAuth()
+  //     const firestore = getFirestore()
+  //     const usersCollection = collection(firestore, 'users')
+  //     try {
+  //       setMyNewloading(true)
+  //       const userCredential = await createUserWithEmailAndPassword(
+  //         auth,
+  //         formData.email,
+  //         formData.password
+  //       )
+  //       const user = userCredential.user
+  //       await updateProfile(user, { displayName: formData.fullName })
+  //       const emailQuery = query(
+  //         usersCollection,
+  //         where('email', '==', formData.email)
+  //       )
+  //       const emailQuerySnapshot = await getDocs(emailQuery)
+  //       if (!emailQuerySnapshot.empty) {
+  //         throw new Error('O email já está sendo usado por outro usuário.')
+  //       }
+  //       await addDoc(usersCollection, {
+  //         id: user.uid,
+  //         email: formData.email,
+  //         fullName: formData.fullName,
+  //         imgUser: formData.imgUser,
+  //         cpf: formData.cpf,
+  //         telefone: formData.telefone,
+  //         cep: formData.cep,
+  //         rua: formData.rua,
+  //         bairro: formData.bairro,
+  //         cidade: formData.cidade,
+  //         estado: formData.estado,
+  //         numeroDoEdificios: formData.numeroDoEdificios,
+  //       })
+
+  //       // **Salvar dados no LocalStorage**
+  //       localStorage.setItem('userData', JSON.stringify(formData))
+
+  //       alert('Usuário cadastrado com sucesso!')
+  //       setFormData({
+  //         cep: '',
+  //         imgUser: '',
+  //         bairro: '',
+  //         cidade: '',
+  //         estado: '',
+  //         rua: '',
+  //         numeroDoEdificios: '',
+  //         fullName: '',
+  //         password: '',
+  //         confirmPassword: '',
+  //         cpf: '',
+  //         email: '',
+  //         telefone: '',
+  //       })
+  //       navigate('/')
+  //     } catch (error) {
+  //       alert('Erro ao criar usuário: ' + error.message)
+  //     }
+  //   } else {
+  //     setMyNewloading(false)
+  //     console.log('Formulário inválido, corrigir erros.')
+  //   }
+  // }
 
 
   const handleSubmit = async () => {
     if (validateForm()) {
       const auth = getAuth();
       const firestore = getFirestore();
-      const usersCollection = collection(firestore, "users");
+      const usersCollection = collection(firestore, 'users');
+      
       try {
-        setMyNewloading(true)
-        const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+        setMyNewloading(true);
+  
+        // Verificar se o email já existe no Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
+        
         const user = userCredential.user;
+  
+        // Atualizar o perfil com o nome completo
         await updateProfile(user, { displayName: formData.fullName });
-        const emailQuery = query(usersCollection, where("email", "==", formData.email));
-        const emailQuerySnapshot = await getDocs(emailQuery);
-        if (!emailQuerySnapshot.empty) {
-          throw new Error("O email já está sendo usado por outro usuário.");
-        }
+  
+        // Adicionar o usuário ao Firestore
         await addDoc(usersCollection, {
           id: user.uid,
           email: formData.email,
           fullName: formData.fullName,
-          imgUser: formData.imgUser,
+          imgUser: formData.imgUser || '', // Verificar se imgUser está definido
           cpf: formData.cpf,
           telefone: formData.telefone,
           cep: formData.cep,
@@ -287,7 +364,10 @@ export const SignUp = () => {
           numeroDoEdificios: formData.numeroDoEdificios,
         });
   
-        alert("Usuário cadastrado com sucesso!");
+        // **Salvar dados no LocalStorage**
+        localStorage.setItem('userData', JSON.stringify(formData));
+  
+        alert('Usuário cadastrado com sucesso!');
         setFormData({
           cep: '',
           imgUser: '',
@@ -303,57 +383,58 @@ export const SignUp = () => {
           email: '',
           telefone: '',
         });
-        navigate("/");
+  
+        navigate('/');
       } catch (error) {
-        alert("Erro ao criar usuário: " + error.message);
+        alert('Erro ao criar usuário: ' + error.message);
+      } finally {
+        setMyNewloading(false); // Garantir que o loading seja desativado
       }
     } else {
-      setMyNewloading(false)
       console.log('Formulário inválido, corrigir erros.');
     }
   };
   
-  
 
   const validarTelefone = (telefone) => {
-    const padrao = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
-    return padrao.test(telefone);
-  };
+    const padrao = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/
+    return padrao.test(telefone)
+  }
 
   const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
 
   const validarCPF = (cpf) => {
-    cpf = cpf.replace(/\D/g, '');
-    if (cpf.length !== 11) return false;
+    cpf = cpf.replace(/\D/g, '')
+    if (cpf.length !== 11) return false
 
-    let total = 0;
+    let total = 0
     for (let i = 0; i < 9; i++) {
-      total += parseInt(cpf[i]) * (10 - i);
+      total += parseInt(cpf[i]) * (10 - i)
     }
-    let resto = total % 11;
-    let digito1 = resto > 1 ? 11 - resto : 0;
+    let resto = total % 11
+    let digito1 = resto > 1 ? 11 - resto : 0
 
-    total = 0;
+    total = 0
     for (let i = 0; i < 10; i++) {
-      total += parseInt(cpf[i]) * (11 - i);
+      total += parseInt(cpf[i]) * (11 - i)
     }
-    resto = total % 11;
-    let digito2 = resto > 1 ? 11 - resto : 0;
+    resto = total % 11
+    let digito2 = resto > 1 ? 11 - resto : 0
 
-    return parseInt(cpf[9]) === digito1 && parseInt(cpf[10]) === digito2;
-  };
+    return parseInt(cpf[9]) === digito1 && parseInt(cpf[10]) === digito2
+  }
 
   const validarCEP = (cep) => {
-    const padrao = /^[0-9]{5}-[0-9]{3}$/;
-    return padrao.test(cep);
-  };
+    const padrao = /^[0-9]{5}-[0-9]{3}$/
+    return padrao.test(cep)
+  }
 
   return (
     <>
-       {myNewloading && (
+      {myNewloading && (
         <ContainerCardLaoder>
           <Loader sx={{ animation: 'rotation 1s linear infinite' }}>
             <LoaderAfter />
@@ -370,8 +451,7 @@ export const SignUp = () => {
               fontSize: '1.8rem',
               gap: '2.9rem',
               width: '100%',
-             
-            
+
               fontWeight: '800',
               '@media (max-width: 800px)': {
                 fontSize: '1.4rem',
@@ -610,7 +690,9 @@ export const SignUp = () => {
                 size="small"
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={formData.confirmPassword}
-                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('confirmPassword', e.target.value)
+                }
                 error={!!formErrors.confirmPassword}
                 helperText={formErrors.confirmPassword}
                 InputProps={{
@@ -622,7 +704,11 @@ export const SignUp = () => {
                           setShowConfirmPassword(!showConfirmPassword)
                         }
                       >
-                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                        {showConfirmPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -678,5 +764,5 @@ export const SignUp = () => {
         </StyleClientNweLib.wrapper>
       </StyleClientNweLib.container>
     </>
-  );
-};
+  )
+}

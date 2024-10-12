@@ -86,48 +86,39 @@ const globalStyles = `
 export const SearchItem = () => {
   const auth = getAuth()
 
-  useEffect(() => {
-    // Verificar se o usuário está logado e buscar seus dados
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          // Obtenha os dados do usuário na coleção 'users'
-          const userDocRef = doc(db, 'users', user.uid)
-          const userDoc = await getDoc(userDocRef)
-          if (userDoc.exists()) {
-            const userData = userDoc.data()
-            setFormData((prev) => ({
-              ...prev,
-              nome: userData.nome || '',
-              telefone: userData.telefone || '',
-              cpf: userData.cpf || '',
-              email: userData.email || '',
-              endercoDaEntrega: userData.endereco || '',
-            }))
-          }
-        } catch (error) {
-          console.error('Erro ao buscar dados do Firestore:', error)
-        }
-      }
-    })
 
-    return () => unsubscribe() // Limpar o listener ao desmontar o componente
-  }, [])
 
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
-    nome: '',
+    fullName: '',
     telefone: '',
     cpf: '',
-    mensagem: '',
     email: '',
-    bloco: '',
-    casa: '',
-    apartamento: '',
-    endercoDaEntrega: '',
-    paymentMethod: '',
-    tipoImovel: '',
+    numeroDoEdificios: '',
+    rua: '',
   })
+
+  // Recuperar os dados do LocalStorage
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('newUser'))
+
+    if (savedData) {
+      setFormData(savedData) // Preencher o formulário com os dados salvos
+    }
+  }, [])
+
+
+// Recupera dados do localStorage e concatena rua + número
+useEffect(() => {
+  const savedData = JSON.parse(localStorage.getItem('newUser'))
+
+  if (savedData) {
+    const enderecoCompleto = `${savedData.rua}, ${savedData.numeroDoEdificios || ''}`.trim()
+    setFormData({ ...savedData, rua: enderecoCompleto })
+  }
+}, [])
+
+
 
   const [formErrors, setFormErrors] = useState({})
   const [successMessage, setSuccessMessage] = useState('')
@@ -141,27 +132,31 @@ export const SearchItem = () => {
     { label: 'Pagamento na Entrega', value: 'cash_on_delivery' },
   ]
 
-  const handleInputChange = (field, value) => {
-    const newFormData = { ...formData, [field]: value }
+  const handleInputChange = (fullName, value) => {
+    setFormData({ ...formData, [fullName]: value })
+    localStorage.setItem(
+      'userData',
+      JSON.stringify({ ...formData, [fullName]: value })
+    )
 
     if (field === 'tipoImovel') {
       if (value === 'casa') {
-        newFormData.apartamento = ''
-        newFormData.bloco = ''
+        formData.apartamento = ''
+        formData.bloco = ''
       } else if (value === 'apartamento') {
-        newFormData.casa = ''
+        formData.casa = ''
       }
     }
 
-    setFormData(newFormData)
+    setFormData(formData)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     const errors = {}
 
-    if (!formData.nome) {
-      errors.nome = 'O nome é obrigatório'
+    if (!formData.fullName) {
+      errors.fullName = 'O fullName é obrigatório'
     }
 
     if (!formData.paymentMethod) {
@@ -277,13 +272,13 @@ export const SearchItem = () => {
                   fontWeight: '700',
                 }}
                 type="text"
-                label="Nome Completo"
+                label="Name Completo"
                 variant="outlined"
                 size="small"
-                value={formData.nome}
-                onChange={(e) => handleInputChange('nome', e.target.value)}
-                error={!!formErrors.nome}
-                helperText={formErrors.nome}
+                value={formData.fullName}
+                onChange={(e) => handleInputChange('fullName', e.target.value)}
+                error={!!formErrors.fullName}
+                helperText={formErrors.fullName}
                 FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
               />
             </Box>
@@ -388,7 +383,7 @@ export const SearchItem = () => {
                 width: '100%',
               }}
             >
-              <TextField
+              {/* <TextField
                 sx={{
                   width: '100%',
                   fontSize: '1.7rem',
@@ -398,12 +393,29 @@ export const SearchItem = () => {
                 label="Endereço de Entrega"
                 variant="outlined"
                 size="small"
-                value={formData.endercoDaEntrega}
+                value={formData.rua}
                 onChange={(e) =>
                   handleInputChange('endercoDaEntrega', e.target.value)
                 }
-                error={!!formErrors.endercoDaEntrega}
-                helperText={formErrors.endercoDaEntrega}
+                error={!!formErrors.rua}
+                helperText={formErrors.rua}
+                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+              /> */}
+
+              <TextField
+                sx={{
+                  width: '100%',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                }}
+                type="text"
+                label="Endereço (Rua e Número)"
+                variant="outlined"
+                size="small"
+                value={formData.rua}
+                onChange={(e) => handleInputChange('endereco', e.target.value)}
+                error={!!formErrors.rua}
+                helperText={formErrors.rua}
                 FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
               />
             </Box>

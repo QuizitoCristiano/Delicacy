@@ -1,58 +1,80 @@
-import { Box, Stack, Button, styled, Input } from '@mui/material'
+import React, { useState, useEffect } from 'react'
+import {
+  Box,
+  Stack,
+  Typography,
+  Button,
+  TextField,
+  styled,
+} from '@mui/material'
+import axios from 'axios'
+import InputMask from 'react-input-mask'
+import { getAuth } from 'firebase/auth'
+import { db } from '../../../firebaseconfig/firebaseconfig'
 
+const SearchItem = () => {
+  const auth = getAuth()
+  const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    fullName: '',
+    telefone: '',
+    cpf: '',
+    email: '',
+    enderecoDaEntrega: '',
+  })
 
-const avatarInput = document.getElementById("avatar");
-avatarInput.addEventListener("change", handleAvatarChange);
-
-function handleAvatarChange() {
-  const file = avatarInput.files[0];
-
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const imageSrc = e.target.result;
-      myAvatar.innerHTML = `<img class="profileIgmAvatar" src="${imageSrc}" alt="Avatar">`;
-      myAvatar.style.display = "flex";
-      profile.style.display = "none";
-      photoURL = imageSrc;
-    };
-    reader.readAsDataURL(file);
+  const fetchUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords
+          await getAddressFromCoordinates(latitude, longitude)
+        },
+        (error) => {
+          console.error('Erro ao obter localização: ', error)
+        }
+      )
+    } else {
+      alert('A geolocalização não é suportada pelo seu navegador.')
+    }
   }
-}
 
+  const getAddressFromCoordinates = async (lat, lon) => {
+    try {
+      const apiKey = 'SUA_API_KEY_GOOGLE'
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}`
+      )
 
+      const address = response.data.results[0]?.formatted_address || ''
+      setFormData(prevData => ({ ...prevData, enderecoDaEntrega: address })) // Atualiza o campo de endereço
+    } catch (error) {
+      console.error('Erro ao obter endereço:', error)
+    }
+  }
 
+  useEffect(() => {
+    fetchUserLocation()
+  }, [])
 
-export const Ubtada = () => {
+  const handleInputChange = (fullName, value) => {
+    setFormData(prevData => ({ ...prevData, [fullName]: value }))
+    localStorage.setItem('userData', JSON.stringify({ ...formData, [fullName]: value }))
+  }
 
-  return(
-    <div>
-      
-      <div class="profile">
-         {/* <img src="./image/Quizito.jpeg" alt="" />  */}
-      </div>
-      <div class="isNoAvatar"></div>
-
-      <form id="profileEditForm">
-        <label for="avatar">Editar Avatar:</label>
-        <input
-          type="file"
-          id="avatar"
-          name="avatar"
-          accept="image/*"
-          onchange="handleAvatarChange()"
-        />
-        <button
-          type="button"
-          class="mybuttonAvatar"
-          onclick="saveProfileChanges()"
-        >
-          Salvar
-        </button>
-      </form>
-    </div>
+  return (
+    <form onSubmit={handleSubmit}>
+      <TextField
+        label="Endereço de Entrega"
+        value={formData.enderecoDaEntrega}
+        onChange={(e) => handleInputChange('enderecoDaEntrega', e.target.value)}
+      />
+      {/* ... outros campos ... */}
+    </form>
   )
 }
+
+export default SearchItem
 
 
 
