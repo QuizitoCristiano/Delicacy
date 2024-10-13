@@ -21,11 +21,13 @@
     "bootstrap": "^5.3.3",
     "boxicons": "^2.1.4",
     "firebase": "^10.7.2",
+    "jsbarcode": "^3.11.6",
     "lottie-react": "^2.4.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
     "react-input-mask": "^2.0.4",
+    "react-qr-code": "^2.0.15",
     "react-router-dom": "^6.21.1",
     "styled-components": "^6.1.4"
   },

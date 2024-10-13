@@ -1,83 +1,85 @@
-import React, { useState, useEffect } from 'react'
-import {
-  Box,
-  Stack,
-  Typography,
-  Button,
-  TextField,
-  styled,
-} from '@mui/material'
-import axios from 'axios'
-import InputMask from 'react-input-mask'
-import { getAuth } from 'firebase/auth'
-import { db } from '../../../firebaseconfig/firebaseconfig'
+import React, { useState } from 'react';
+import { Box, FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material';
+import { ModalBoleto } from './ModalBoleto';
 
-const SearchItem = () => {
-  const auth = getAuth()
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    fullName: '',
-    telefone: '',
-    cpf: '',
-    email: '',
-    enderecoDaEntrega: '',
-  })
+const Comprovante = () => {
+  const [formData, setFormData] = useState({ paymentMethod: '' });
+  const [isBoletoModalOpen, setBoletoModalOpen] = useState(false);
+  const [boletoData, setBoletoData] = useState(null); // Dados do boleto
 
-  const fetchUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords
-          await getAddressFromCoordinates(latitude, longitude)
-        },
-        (error) => {
-          console.error('Erro ao obter localização: ', error)
-        }
-      )
-    } else {
-      alert('A geolocalização não é suportada pelo seu navegador.')
+  // Função para gerar o boleto
+  const generateBoleto = async () => {
+    const codigoDeBarras = Math.random().toString().slice(2, 14); // Exemplo simples
+    return {
+      codigoDeBarras,
+      linkPdf: 'https://www.example.com/boleto.pdf',
+    };
+  };
+
+  // Abrir o modal e gerar o boleto
+  const handleOpenBoletoModal = async () => {
+    const data = await generateBoleto();
+    setBoletoData(data);
+    setBoletoModalOpen(true);
+  };
+
+  const handleCloseBoletoModal = () => {
+    setBoletoModalOpen(false);
+  };
+
+  // Alteração no método de pagamento
+  const handlePaymentMethodChange = async (value) => {
+    setFormData({ ...formData, paymentMethod: value });
+
+    if (value === 'código de barras') {
+      await handleOpenBoletoModal();
     }
-  }
+  };
 
-  const getAddressFromCoordinates = async (lat, lon) => {
-    try {
-      const apiKey = 'SUA_API_KEY_GOOGLE'
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}`
-      )
-
-      const address = response.data.results[0]?.formatted_address || ''
-      setFormData(prevData => ({ ...prevData, enderecoDaEntrega: address })) // Atualiza o campo de endereço
-    } catch (error) {
-      console.error('Erro ao obter endereço:', error)
-    }
-  }
-
-  useEffect(() => {
-    fetchUserLocation()
-  }, [])
-
-  const handleInputChange = (fullName, value) => {
-    setFormData(prevData => ({ ...prevData, [fullName]: value }))
-    localStorage.setItem('userData', JSON.stringify({ ...formData, [fullName]: value }))
-  }
+  const paymentMethods = [
+    { label: 'Pix', value: 'pix' },
+    { label: 'Cartão de Crédito', value: 'credit_card' },
+    { label: 'Cartão de Débito', value: 'debit_card' },
+    { label: 'Alimentação', value: 'alimentacao' },
+    { label: 'Código de Barras', value: 'código de barras' },
+    { label: 'Refeição', value: 'refeicao' },
+    { label: 'Pagamento na Entrega', value: 'cash_on_delivery' },
+  ];
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Endereço de Entrega"
-        value={formData.enderecoDaEntrega}
-        onChange={(e) => handleInputChange('enderecoDaEntrega', e.target.value)}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.7rem',
+        width: '100%',
+      }}
+    >
+      <FormControl fullWidth>
+        <InputLabel>Método de Pagamento</InputLabel>
+        <Select
+          value={formData.paymentMethod || ''}
+          onChange={(e) => handlePaymentMethodChange(e.target.value)}
+        >
+          {paymentMethods.map((method) => (
+            <MenuItem key={method.value} value={method.value}>
+              {method.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      {/* Modal do Boleto */}
+      <ModalBoleto
+        open={isBoletoModalOpen}
+        onClose={handleCloseBoletoModal}
+        boletoData={boletoData}
       />
-      {/* ... outros campos ... */}
-    </form>
-  )
-}
+    </Box>
+  );
+};
 
-export default SearchItem
-
-
-
+export default Comprovante;
 
 
 
@@ -95,6 +97,12 @@ export default SearchItem
 
 // anaclaudia@gmail.com
 // AnaClaudia28
+
+// kuizitocritiano@10gmail.com
+// Agostinho10
+
+// lynacristiano28@gmai.com"
+// lyina28
 
 // biancamario29@gmail.com
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Stack,
@@ -14,7 +14,7 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
-} from '@mui/material'
+} from '@mui/material';
 import {
   addDoc,
   collection,
@@ -24,12 +24,15 @@ import {
   getDoc,
   doc,
   getFirestore,
-} from 'firebase/firestore'
+} from 'firebase/firestore';
 
-import InputMask from 'react-input-mask'
-import { CardStylSearche } from './CardStyles'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { db } from '../../../firebaseconfig/firebaseconfig'
+import InputMask from 'react-input-mask';
+import { CardStylSearche } from './CardStyles';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { db } from '../../../firebaseconfig/firebaseconfig';
+import { ModalQRCode } from './modalQrcode';
+import { ModalBoleto } from './boleto';
+
 
 const ContainerCardLoader = styled(Stack)(({ theme }) => ({
   position: 'fixed',
@@ -85,6 +88,45 @@ const globalStyles = `
 
 export const SearchItem = () => {
   const auth = getAuth()
+  const [formNweData, setFormNweData] = useState({ paymentMethod: '' });
+  const [open, setOpen] = useState(false)
+  const [onClose, setOnClose] = useState(true)
+
+  const [isBoletoModalOpen, setBoletoModalOpen] = useState(false);
+  const [boletoData, setBoletoData] = useState(null);
+
+  const [isPixModalOpen, setPixModalOpen] = useState(false)
+
+
+  const handleOpenPixModal = () => {
+    setPixModalOpen(true)
+  }
+
+  const handleClosePixModal = () => {
+    setPixModalOpen(false)
+  }
+
+
+  const handleOpenBoletoModal = async () => {
+    const boleto = await generateBoleto(); // Chama a função que simula o boleto
+    setBoletoData(boleto);
+    setBoletoModalOpen(true);
+  };
+
+
+
+  const handleCloseBoletoModal = () => setBoletoModalOpen(false);
+
+    // Função para gerar o boleto
+    const generateBoleto = async () => {
+      const codigoDeBarras = Math.random().toString().slice(2, 14); // Exemplo simples
+      return {
+        codigoDeBarras,
+        linkPdf: 'https://www.example.com/boleto.pdf',
+      };
+    };
+  
+
 
 
 
@@ -107,27 +149,37 @@ export const SearchItem = () => {
     }
   }, [])
 
+  // Recupera dados do localStorage e concatena rua + número
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('newUser'))
 
-// Recupera dados do localStorage e concatena rua + número
-useEffect(() => {
-  const savedData = JSON.parse(localStorage.getItem('newUser'))
-
-  if (savedData) {
-    const enderecoCompleto = `${savedData.rua}, ${savedData.numeroDoEdificios || ''}`.trim()
-    setFormData({ ...savedData, rua: enderecoCompleto })
-  }
-}, [])
-
-
+    if (savedData) {
+      const enderecoCompleto = `${savedData.rua}, ${
+        savedData.numeroDoEdificios || ''
+      }`.trim()
+      setFormData({ ...savedData, rua: enderecoCompleto })
+    }
+  }, [])
 
   const [formErrors, setFormErrors] = useState({})
   const [successMessage, setSuccessMessage] = useState('')
+
+  const handlePaymentMethodChange = (value) => {
+    setFormNweData({ ...formData, paymentMethod: value })
+
+    if (value === 'pix') {
+      handleOpenPixModal();
+    } else if (value === 'código de barras') {
+      handleOpenBoletoModal();
+    }
+  }
 
   const paymentMethods = [
     { label: 'Pix', value: 'pix' },
     { label: 'Cartão de Crédito', value: 'credit_card' },
     { label: 'Cartão de Débito', value: 'debit_card' },
     { label: 'Alimentação', value: 'alimentacao' },
+    { label: 'Código de Barras', value: 'código de barras' },
     { label: 'Refeição', value: 'refeicao' },
     { label: 'Pagamento na Entrega', value: 'cash_on_delivery' },
   ]
@@ -383,25 +435,6 @@ useEffect(() => {
                 width: '100%',
               }}
             >
-              {/* <TextField
-                sx={{
-                  width: '100%',
-                  fontSize: '1.7rem',
-                  fontWeight: '700',
-                }}
-                type="text"
-                label="Endereço de Entrega"
-                variant="outlined"
-                size="small"
-                value={formData.rua}
-                onChange={(e) =>
-                  handleInputChange('endercoDaEntrega', e.target.value)
-                }
-                error={!!formErrors.rua}
-                helperText={formErrors.rua}
-                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-              /> */}
-
               <TextField
                 sx={{
                   width: '100%',
@@ -428,39 +461,19 @@ useEffect(() => {
                 width: '100%',
               }}
             >
-              <FormControl variant="outlined" size="small" fullWidth>
-                <InputLabel>Método de Pagamento</InputLabel>
-                <Select
-                  sx={{
-                    fontSize: '17px',
-                  }}
-                  value={formData.paymentMethod}
-                  onChange={(e) =>
-                    handleInputChange('paymentMethod', e.target.value)
-                  }
-                  label="Método de Pagamento"
-                  error={!!formErrors.paymentMethod}
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: 200,
-                        fontSize: '18px',
-                      },
-                    },
-                  }}
-                >
-                  {paymentMethods.map((method) => (
-                    <MenuItem key={method.value} value={method.value}>
-                      {method.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formErrors.paymentMethod && (
-                  <Typography color="red" sx={{ fontSize: '1.4rem' }}>
-                    {formErrors.paymentMethod}
-                  </Typography>
-                )}
-              </FormControl>
+             <FormControl fullWidth>
+        <InputLabel>Método de Pagamento</InputLabel>
+        <Select
+          value={formNweData.paymentMethod || ''}
+          onChange={(e) => handlePaymentMethodChange(e.target.value)}
+        >
+          {paymentMethods.map((method) => (
+            <MenuItem key={method.value} value={method.value}>
+              {method.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
             </Box>
           </CardStylSearche.containerBox>
 
@@ -598,6 +611,14 @@ useEffect(() => {
             </Typography>
           )}
         </CardStylSearche.wrapperfort>
+
+        {isBoletoModalOpen && (
+  <ModalBoleto open={isBoletoModalOpen} onClose={handleCloseBoletoModal} boletoData={boletoData} />
+)}
+
+        {isPixModalOpen && (
+          <ModalQRCode open={isPixModalOpen} onClose={handleClosePixModal} />
+        )}
       </form>
 
       <style>{globalStyles}</style>
