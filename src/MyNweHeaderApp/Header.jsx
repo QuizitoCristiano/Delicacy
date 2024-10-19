@@ -44,6 +44,44 @@ import { PoupNewItem } from '../componet/bbitem/poupItem'
 import Modal from '@mui/material/Modal'
 import Fade from '@mui/material/Fade'
 
+import { styled } from '@mui/material/styles'
+import Badge from '@mui/material/Badge'
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: '#44b700',
+    color: '#44b700',
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    '&::after': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: 'ripple 1.2s infinite ease-in-out',
+      border: '1px solid currentColor',
+      content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0,
+    },
+  },
+}))
+
+const SmallAvatar = styled(Avatar)(({ theme }) => ({
+  width: 22,
+  height: 22,
+  border: `2px solid ${theme.palette.background.paper}`,
+}))
+
 const myLink = [
   { label: 'Home', link: '' },
   { label: 'Quem_Somos', link: '/HomePage' },
@@ -75,7 +113,7 @@ class ErrorBoundary extends React.Component {
 }
 
 export const Header = () => {
-  const { user, carinho } = useContext(AuthContext)
+  const { user, newUser, carinho } = useContext(AuthContext)
   const [openModal, setOpenModal] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [lastAddedItem, setLastAddedItem] = useState(null)
@@ -84,7 +122,7 @@ export const Header = () => {
     isPaused: false,
   })
 
-  const { fullName, id, imgUser } = user
+  const { fullName, id, imgUser } = newUser
   const defaultOptions = {
     loop: true,
     autoplay: false,
@@ -131,11 +169,11 @@ export const Header = () => {
   }, [animationState])
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'))
+    const storedUser = JSON.parse(localStorage.getItem('newUser'))
     if (storedUser && storedUser.imgUser) {
       setImageUrl(storedUser.imgUser)
     }
-  }, [])
+  }, []) // Fechamento correto do useEffect
 
   const getInitials = (name) => {
     const names = name.split(' ')
@@ -178,8 +216,8 @@ export const Header = () => {
         await updateDoc(userDocRef, { imgUser: imageDataUrl })
 
         // Atualiza o localStorage com a nova imagem
-        const updatedUser = { ...user, imgUser: imageDataUrl }
-        localStorage.setItem('user', JSON.stringify(updatedUser))
+        const updatedUser = { ...newUser, imgUser: imageDataUrl }
+        localStorage.setItem('newUser', JSON.stringify(updatedUser))
 
         setImageUrl(imageDataUrl) // Atualiza o estado local
       } else {
@@ -305,6 +343,10 @@ export const Header = () => {
           </div>
 
           {/* Ícones */}
+
+       
+          
+              
           <Stack
             sx={{
               display: 'flex',
@@ -316,19 +358,22 @@ export const Header = () => {
               width: '100%',
             }}
           >
-            <Box
-              sx={{
-                flexGrow: 0,
-                borderRadius: '50%',
-                border: '1px solid #3cb815',
-              }}
-            >
-              <Tooltip title="Editar Avatar" onClick={handleAvatarClick}>
-                
-                <Avatar alt={user ? getInitials(user.fullName) : ''} src={imgUrl || null} />
+           
+           <Stack direction="row" spacing={2} >
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  variant="dot"
+                >
+                  <Avatar
+                    sx={{ border: '1px solid #3cb815' }}
+                    onClick={handleAvatarClick}
+                    alt={newUser ? getInitials(newUser.fullName) : ''}
+                    src={newUser.imgUser || undefined}
+                  />
+                </StyledBadge>
+              </Stack>
 
-              </Tooltip>
-            </Box>
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
@@ -547,50 +592,7 @@ export const Header = () => {
         )}
       </Stack>
       {/* Componente da Sacola de Compras */}
-      {/* {sacola && (
-        <Stack
-          sx={{
-            position: 'fixed',
-            height: '100vh',
-            width: '360px',
 
-            bgcolor: '#fff',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            zIndex: '1000',
-            top: '82px',
-            right: '0',
-            padding: '20px',
-            boxShadow: '0 8px 11px rgb(14 55 54 / 55%)',
-            '@media only screen and (max-width: 805px)': {
-              width: '97%',
-            },
-          }}
-          className={sacola ? 'sacola-ativa' : ''}
-        >
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '10px',
-              right: '5px',
-              cursor: 'pointer',
-              color: 'var(--light-orange-color)',
-              fontSize: '30px',
-            }}
-          >
-            <CloseIcon sx={{ fontSize: '20px' }} onClick={handleToggleSacola} />
-          </Box>
-
-          <BagMarket
-            handleToggleSacola={handleToggleSacola}
-            openModal={openModal}
-            setOpenModal={setOpenModal}
-            sacola={sacola}
-            setSacola={setSacola}
-          />
-        </Stack>
-      )} */}{' '}
       {sacola && (
         <Stack
           sx={{
