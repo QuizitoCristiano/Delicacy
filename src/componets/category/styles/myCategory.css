@@ -7,11 +7,15 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
   list-style: none;
   text-decoration: none;
   scroll-padding-top: 2rem;
   scroll-behavior: smooth;
 }
+
+
 
 :root {
   --green-color: #3cb815;
@@ -67,14 +71,6 @@ a {
   margin: auto;
 }
 
-.categoria-container .box {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  border-radius: 0.5rem;
-}
 
 .heading {
   display: flex;
@@ -83,6 +79,7 @@ a {
   flex-direction: column;
   gap: 2rem;
   color: var(--text-color);
+  
 }
 .heading h1 {
   color: var(--text-color);
@@ -96,38 +93,34 @@ a {
 }
 .heading p {
   color: var(--text-color);
-  font-size: 4rem;
+  font-size: 4rem ;
   font-weight: 700;
 }
 
-.categoria-container .box img {
-  width: 600px;
-  height: 100px; 
-  object-fit: contain;
-  object-position: center;
-}
 
-.box .textName {
+
+
+.ItemMubox .textName {
   font-size: 1.4rem;
   font-weight: 600;
   color: var(--text-color);
   margin-bottom: 1rem;
 }
 
-.box h1 {
+.ItemMubox h1 {
   font-size: 9.8rem;
   font-weight: 800;
   color: var(--text-color);
 }
 
-.box p {
+.ItemMubox p {
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-color);
   margin-bottom: 1rem;
 }
 
-.categoria-container .box .bx {
+/* .categoria-container .ItemMubox .bx {
   padding: 10px;
   background: var(--green-color);
   color: var(--bg-color);
@@ -136,38 +129,38 @@ a {
   position: absolute;
   bottom: -8%;
   display: none;
-}
-.categoria-container .box .bx:hover {
+} */
+/* .categoria-container .ItemMubox .bx:hover {
   background: var(--light-orange-color);
   transition: 0.5s all linear;
-}
+} */
 
-.categoria-container .box:hover .bx {
+/* .categoria-container .ItemMubox:hover .bx {
   display: block;
   transition: 0.5s all linear;
-}
+} */
 
-.box1 {
+.ItemMubox1 {
   background: #fef4ea;
 }
-.box2 {
+.ItemMubox2 {
   background: #e9f4e3;
 }
-.box3 {
+.ItemMubox3 {
   background: #faeaea;
 }
-.box4 {
+.ItemMubox4 {
   background: #eeeef9;
 }
-.box5 {
+.ItemMubox5 {
   background: #f7f6d7;
 }
 
 /* Produtos */
 @media (max-width: 680px) {
-  .categoria-container {
+  /* .categoria-container {
     gap: 1.2rem;
-  }
+  } */
 
   .categoria {
     width: 100%;
@@ -187,9 +180,7 @@ a {
 }
 
 @media (max-width: 380px) {
-  .categoria-container {
-    gap: 1.2rem;
-  }
+
 
   .categoria {
     width: 100%;
