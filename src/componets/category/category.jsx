@@ -1,17 +1,20 @@
-import React from 'react'
-import { TextField, Typography, Stack, Box } from '@mui/material'
-import './styles/myCategory.css'
+import React from 'react';
+import { TextField, Typography, Stack, Box } from '@mui/material';
+import './styles/myCategory.css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
-import manga from '../../images/manga.jpg'
-import morango from '../../images/morango.jpg'
-import Uva1 from '../../images/Uva1.png'
-import abacate from '../../images/abacate.jpg'
-import papaia from '../../images/papaia.png'
+import manga from '../../images/manga.jpg';
+import morango from '../../images/morango.jpg';
+import Uva1 from '../../images/Uva1.png';
+import abacate from '../../images/abacate.jpg';
+import papaia from '../../images/papaia.png';
+
+
 
 const CategoryItem = [
   {
     nome: 'Abacate e Manga',
+    descricao: '22 Item',
     img: manga,
     backgroundColor: '#fef4ea',
   },
@@ -19,124 +22,187 @@ const CategoryItem = [
     nome: 'Morango',
     descricao: '19 Item',
     img: morango,
-    backgroundColor: '#e9f4e3',
+    backgroundColor: '#e9f4e3', 
   },
   {
     nome: 'Uva',
+    descricao: '13 Item',
     img: Uva1,
-    backgroundColor: '#faeaea',
+    backgroundColor: '#faeaea', 
   },
   {
     nome: 'Abacate',
+    descricao: '9 Item',
     img: abacate,
-    backgroundColor: '#eeeef9',
+    backgroundColor: '#eeeef9', 
   },
   {
     nome: 'Mamão ou Papaia',
+    descricao: '22 Item',
     img: papaia,
-    backgroundColor: '#f7f6d7',
+    backgroundColor: '#f7f6d7', 
   },
-]
+];
+
+// delicacy-company 
+
+
 
 export const Category = () => {
-  const newCategoryItem = CategoryItem.map((item, index) => (
-    <Box
-      key={index}
-      className="ItemMubox"
-      sx={{
-        width: '100%',
-        maxWidth: '250px',
-        backgroundColor: item.backgroundColor,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        borderRadius: '2.5rem',
-        padding: '1rem',
-        gap: '0.5rem',
-        position: 'relative',
+  const newCategoryItem = CategoryItem.map((item, index) => {
+    return (
+      <>
+      <Stack
+        key={index}
+        sx={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          gap: '2rem',
+         
+          '@media only screen and (max-width: 305px)': {
+            gap: '1rem',
+          },
+        }}
+      >
+        <Box
+          className="box"
+          sx={{
+            width: '100%',
+            backgroundColor: item.backgroundColor,
+            display: 'flex',
+         
+            flexDirection: 'column',
+            alignItems: 'center',
+        
+            borderRadius: '0.5rem',
+            '& img': {
+              width: '100%',
+              height: '100px',
+              objectFit: 'contain',
+              objectPosition: 'center',
+            },
+            '& h2': {
+              fontSize: '1.7rem',
+              color: 'black',
+              fontWeight: 600,
+            },
+            '& span': {
+              fontSize: '0.8rem',
+              fontWeight: 400,
+              marginBottom: '1rem',
+            },
+            '& .bx': {
+              padding: '10px',
+              color: 'var(--bg-color)',
+              borderRadius: '5rem',
+              marginTop: '2rem',
+              position: 'absolute',
+              bottom: '-8%',
+              display: 'none',
+            },
+            '&:hover .bx': {
+              display: 'block',
+              transition: '0.5s all linear',
+            },
+          }}
+        >
+          <img src={item.img} alt="Opa!! Não deu certo, tenta novamente." />
+          <Typography className='textName'>{item.nome}</Typography>
+          <p>{item.descricao}</p>
+          <ArrowForwardIcon sx={{
+            color: 'var(--bg-color)',
+            fontSize: '3.8rem',
+         
+          }} className="bx"/>
+        </Box>
+      </Stack>
+      </>
+    );
+  });
 
-        '& img': {
-          width: '80%',
-          height: '100px',
-          objectFit: 'contain',
-        },
+  return (
+    <Stack className="categoria">
+      <Stack sx={{
 
-        '& h2': {
-          fontSize: '1.5rem',
-          color: 'black',
+        '& h1 ': {
+          fontSize: '2.5rem',
+          color: 'var(--text-color)',
           fontWeight: 600,
+          letterSpacing: '-0.015em',
         },
 
         '& span': {
-          fontSize: '0.8rem',
-          fontWeight: 400,
-          marginBottom: '1rem',
+          fontSize: '2rem',
+          color: ' #3cb815',
+          fontWeight: 800,
+          letterSpacing: '-0.01em',
         },
 
-        '& .bx': {
-          padding: '10px',
-          color: 'var(--bg-color)',
-          borderRadius: '50%',
+
+
+        '& a': {
+          textDecoration: 'none',
+          color: '#fff',
+          fontSize: '1.4rem',
+          fontWeight: 600,
+          letterSpacing: '-0.01em',
           marginTop: '2rem',
-          position: 'absolute',
-          bottom: '-8%',
-          display: 'none',
+          '&:hover': {
+            color: 'var(--light-orange-color)',
+            transition: '0.4s all linear',
+          },
         },
-
-        '&:hover .bx': {
-          display: 'block',
-          transition: '0.5s all linear',
+        
+        '@media only screen and (max-width: 355px)': {
+          '& h1 ': {
+            fontSize: '1.5rem',
+            color: 'var(--text-color)',
+            fontWeight: 600,
+            letterSpacing: '-0.015em',
+          },
         },
-      }}
-    >
-      <img src={item.img} alt={`Imagem de ${item.nome}`} />
-      <Typography className="textName">{item.nome}</Typography>
-      <p>{item.descricao}</p>
-      <ArrowForwardIcon
-        sx={{ color: 'var(--bg-color)', fontSize: '3.2rem' }}
-        className="bx"
-      />
-    </Box>
-  ))
-
-  return (
-    <Stack className="categoria" sx={{ width: '100%' }}>
-      <Stack
-        className="heading"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          gap: '2rem',
-          width: '100%',
-        }}
-      >
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginLeft: '1rem' }}>
+      }}>
+        <h1>
           Explorando a Diversidade da Natureza <br />
-          <span style={{ fontSize: '2rem', fontWeight: 700 }}>Frutas</span>
+          <span>Frutas</span>
         </h1>
         <a href="#" className="btnMyButton">
-          Ver tudo <ArrowForwardIcon className="bx" />
+          Ver tudo <ArrowForwardIcon className="bx"/>
         </a>
       </Stack>
 
-      {/* Container para os Cards */}
+
+      
+
+      {/* container content  */}
       <Stack
+        className="categoria-container"
         sx={{
           display: 'grid',
+          width:'100',
           gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
           gap: '1rem',
-          width: '100%',
           marginTop: '2rem',
-          justifyContent: 'center',
-
-          '@media (max-width: 500px)': {
-            gridTemplateColumns: 'repeat(2, 1fr)',
+         
+        
+          alignItems: 'center',
+          justifyContent: 'center', 
+          '@media only screen and (max-width: 500px)': {
+         
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          
+            gridTemplateColumns: '1fr',
           },
         }}
       >
         {newCategoryItem}
       </Stack>
     </Stack>
-  )
-}
+  );
+};

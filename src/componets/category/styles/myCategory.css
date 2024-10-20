@@ -7,15 +7,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-wrap: break-word;
-  box-sizing: border-box;
   list-style: none;
   text-decoration: none;
   scroll-padding-top: 2rem;
   scroll-behavior: smooth;
 }
-
-
 
 :root {
   --green-color: #3cb815;
@@ -24,6 +20,7 @@
   --light-orange-color: #f75f1d;
   --text-color: #1a2428;
   --bg-color: #fff;
+ 
   overflow-x: hidden !important;
 }
 
@@ -34,7 +31,11 @@
   position: relative !important;
   display: flex;
   padding: 5rem 9% 2rem;
+ 
 }
+
+
+
 
 a {
   text-decoration: none;
@@ -71,6 +72,14 @@ a {
   margin: auto;
 }
 
+.categoria-container .box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 0.5rem;
+}
 
 .heading {
   display: flex;
@@ -79,7 +88,6 @@ a {
   flex-direction: column;
   gap: 2rem;
   color: var(--text-color);
-  
 }
 .heading h1 {
   color: var(--text-color);
@@ -93,34 +101,38 @@ a {
 }
 .heading p {
   color: var(--text-color);
-  font-size: 4rem ;
+  font-size: 4rem;
   font-weight: 700;
 }
 
+.categoria-container .box img {
+  width: 600px;
+  height: 100px; 
+  object-fit: contain;
+  object-position: center;
+}
 
-
-
-.ItemMubox .textName {
+.box .textName {
   font-size: 1.4rem;
   font-weight: 600;
   color: var(--text-color);
   margin-bottom: 1rem;
 }
 
-.ItemMubox h1 {
+.box h1 {
   font-size: 9.8rem;
   font-weight: 800;
   color: var(--text-color);
 }
 
-.ItemMubox p {
+.box p {
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-color);
   margin-bottom: 1rem;
 }
 
-/* .categoria-container .ItemMubox .bx {
+.categoria-container .box .bx {
   padding: 10px;
   background: var(--green-color);
   color: var(--bg-color);
@@ -129,38 +141,38 @@ a {
   position: absolute;
   bottom: -8%;
   display: none;
-} */
-/* .categoria-container .ItemMubox .bx:hover {
+}
+.categoria-container .box .bx:hover {
   background: var(--light-orange-color);
   transition: 0.5s all linear;
-} */
+}
 
-/* .categoria-container .ItemMubox:hover .bx {
+.categoria-container .box:hover .bx {
   display: block;
   transition: 0.5s all linear;
-} */
+}
 
-.ItemMubox1 {
+.box1 {
   background: #fef4ea;
 }
-.ItemMubox2 {
+.box2 {
   background: #e9f4e3;
 }
-.ItemMubox3 {
+.box3 {
   background: #faeaea;
 }
-.ItemMubox4 {
+.box4 {
   background: #eeeef9;
 }
-.ItemMubox5 {
+.box5 {
   background: #f7f6d7;
 }
 
 /* Produtos */
 @media (max-width: 680px) {
-  /* .categoria-container {
+  .categoria-container {
     gap: 1.2rem;
-  } */
+  }
 
   .categoria {
     width: 100%;
@@ -180,7 +192,9 @@ a {
 }
 
 @media (max-width: 380px) {
-
+  .categoria-container {
+    gap: 1.2rem;
+  }
 
   .categoria {
     width: 100%;

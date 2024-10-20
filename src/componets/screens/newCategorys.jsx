@@ -158,7 +158,46 @@ export const NewCategorys = () => {
 
   return (
     <Stack className="categoria">
-      <Stack className="heading">
+      <Stack sx={{
+
+'& h1 ': {
+  fontSize: '2.5rem',
+  color: 'var(--text-color)',
+  fontWeight: 600,
+  letterSpacing: '-0.015em',
+},
+
+'& span': {
+  fontSize: '2rem',
+  color: ' #3cb815',
+  fontWeight: 800,
+  letterSpacing: '-0.01em',
+},
+
+
+
+'& a': {
+  textDecoration: 'none',
+  color: '#fff',
+  fontSize: '1.4rem',
+  fontWeight: 600,
+  letterSpacing: '-0.01em',
+  marginTop: '2rem',
+  '&:hover': {
+    color: '#fff',
+    transition: '0.4s all linear',
+  },
+},
+
+'@media only screen and (max-width: 355px)': {
+  '& h1 ': {
+    fontSize: '1.5rem',
+    color: 'var(--text-color)',
+    fontWeight: 600,
+    letterSpacing: '-0.015em',
+  },
+},
+}}>
         <h1>
         Nossos Produtos Populares<br />
           <span>Frutas</span>
