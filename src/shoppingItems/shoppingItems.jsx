@@ -26,6 +26,8 @@ export const ShoppingItems = () => {
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'row',
+         
+         
         }}
       ></Stack>
 

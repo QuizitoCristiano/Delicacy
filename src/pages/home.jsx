@@ -22,16 +22,17 @@ import { useNavigate } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { SearchItem } from '../componet/util/CardBodySearc'
+import { MainFolder } from '../NewSagas/sagas'
 export const MyHome = () => {
   const { user, logout } = useContext(AuthContext)
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem('newUser');
-    localStorage.removeItem('isLogged');
+    localStorage.removeItem('newUser')
+    localStorage.removeItem('isLogged')
     logout()
-    navigate('/');
+    navigate('/')
   }
 
   const handleClickOpen = () => {
@@ -50,6 +51,7 @@ export const MyHome = () => {
       <Stack
         sx={{
           minHeight: '100vh',
+          bgcolor: '#fff !important',
           width: '100%',
           gap: '2rem',
           display: 'flex',
@@ -83,7 +85,6 @@ export const MyHome = () => {
                 fontSize: '1.8rem',
                 color: '#f75f1d;',
                 fontWeight: 'bold',
-              
               }}
             >
               Você tem certeza que deseja sair?
@@ -97,7 +98,7 @@ export const MyHome = () => {
               gap: '1rem',
               padding: '1rem 2rem',
               borderRadius: '0.5rem',
-              
+
               color: '#3ca63a',
             }}
           >
@@ -115,7 +116,6 @@ export const MyHome = () => {
                   border: '2px solid #3ca63a',
                   background: '#f75f1d',
                   color: '#000',
-
                 },
               }}
               onClick={() => handleClose(true)}
@@ -147,14 +147,14 @@ export const MyHome = () => {
           </DialogActions>
         </Dialog>
 
-       
-
         <Category />
+
         <Products />
         <NewCategorys />
         <ProductsLegumes />
         <AboutUs />
         <Clientes />
+        <MainFolder />
         <MyFooter />
       </Stack>
     </>

@@ -10,6 +10,7 @@ import { HomePage } from '../environments/helpers/history'
 import { NewHelpeContato } from '../environments/complaint/helpeContato'
 import { CustomerEvaluation } from '../environments/assessment/customerReview'
 import { ForgotPassword } from '../recovery/recoverySenha'
+import { MainFolder } from '../NewSagas/sagas'
 
 // Definindo a rota protegida
 const ProtectedRoute = ({ children }) => {
@@ -20,6 +21,7 @@ const ProtectedRoute = ({ children }) => {
 // Configuração das rotas principais
 export const MainRoutes = () => {
   const { isLoggedIn } = useContext(AuthContext)
+  
 
   if (isLoggedIn) {
     return (
@@ -29,6 +31,8 @@ export const MainRoutes = () => {
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/NewHelpeContato" element={<NewHelpeContato />} />
           <Route path="/CustomerEvaluation" element={<CustomerEvaluation />} />
+          <Route path="/MainFolder" element={<MainFolder/>} />
+
         </Routes>
       </MainLayout>
     )
