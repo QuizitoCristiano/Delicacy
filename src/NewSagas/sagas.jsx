@@ -3,10 +3,10 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
-import Frutasft from '../imgLogomarca/frutasft.jpg'
-import Frutas from '../images/frutas.png'
-import Frotas43 from '../imgLogomarca/priclogo1.png'
-import Newdellicasse from '../imgLogomarca/priclog2.png'
+import Frutasft from '../imgLogomarca/NweImagfrutasft.png'
+import Frutas from '../imgLogomarca/frutas1pr.png'
+import Frotas43 from '../imgLogomarca/NweImagfrutasft.png'
+import Newdellicasse from '../imgLogomarca/fruta233.jpg'
 
 // Array com as informações do carrossel
 const ArrowImgs = [
