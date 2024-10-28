@@ -23,6 +23,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { SearchItem } from '../componet/util/CardBodySearc'
 import { MainFolder } from '../NewSagas/sagas'
+import { MyEmptyCrad } from '../NewSagas/empty/emptyCrad'
 export const MyHome = () => {
   const { user, logout } = useContext(AuthContext)
   const [open, setOpen] = useState(false)
@@ -155,6 +156,7 @@ export const MyHome = () => {
         <AboutUs />
         <Clientes />
         <MainFolder />
+      
         <MyFooter />
       </Stack>
     </>
