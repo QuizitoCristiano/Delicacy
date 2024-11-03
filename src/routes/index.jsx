@@ -11,6 +11,9 @@ import { NewHelpeContato } from '../environments/complaint/helpeContato'
 import { CustomerEvaluation } from '../environments/assessment/customerReview'
 import { ForgotPassword } from '../recovery/recoverySenha'
 import { MainFolder } from '../NewSagas/sagas'
+import { PrimaryAppBarHeadr } from '../NewSagas/empty/emptyHeadr'
+import { CustomerDliveryClant } from '../componet/deliveryfolder/customerDelivery'
+
 
 // Definindo a rota protegida
 const ProtectedRoute = ({ children }) => {
@@ -26,13 +29,16 @@ export const MainRoutes = () => {
   if (isLoggedIn) {
     return (
       <MainLayout>
+        
         <Routes>
-          <Route path="/" element={<MyHome />} />
+          <Route path="/" element={<MainFolder/>} />
+          <Route path="/MyHome" element={<MyHome />} />
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/NewHelpeContato" element={<NewHelpeContato />} />
           <Route path="/CustomerEvaluation" element={<CustomerEvaluation />} />
-          <Route path="/MainFolder" element={<MainFolder/>} />
-
+          <Route path="/PrimaryAppBarHeadr" element={<PrimaryAppBarHeadr />} />
+          <Route path="/CustomerDliveryClant" element={<CustomerDliveryClant />} />
+          
         </Routes>
       </MainLayout>
     )
@@ -45,3 +51,7 @@ export const MainRoutes = () => {
     </Routes>
   )
 }
+
+
+
+

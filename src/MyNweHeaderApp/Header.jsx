@@ -83,7 +83,7 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 }))
 
 const myLink = [
-  { label: 'Home', link: '' },
+  { label: 'Home', link: '/MyHome' },
   { label: 'Quem_Somos', link: '/HomePage' },
   { label: 'Clientes', link: '/CustomerEvaluation' },
   { label: 'Contato', link: '/NewHelpeContato' },

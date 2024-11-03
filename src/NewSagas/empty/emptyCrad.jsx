@@ -11,7 +11,11 @@ import Bahamas from '../../imgLogomarca/Bahamas.png'
 import koch from '../../imgLogomarca/koch.png'
 import Carrefour from '../../imgLogomarca/Carrefour.png'
 
+
 import ProductModal from './newProductModal '
+import { MyFooter } from '../../componets/footer/Footer'
+import { PrimaryAppBarHeadr } from './emptyHeadr'
+
 
 const ArrayCardIdCammpane = [
   {
@@ -66,11 +70,12 @@ const ArrayCardIdCammpane = [
 
 export const MyEmptyCrad = () => {
   const [openModal, setOpenModal] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filteredCards, setFilteredCards] = useState([])
 
-  const [selectedProduct, setSelectedProduct] = useState('')
-
-  const handleOpenModal = (productName) => {
-    setSelectedProduct(productName)
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product)
     setOpenModal(true)
   }
 
@@ -78,7 +83,39 @@ export const MyEmptyCrad = () => {
     setOpenModal(false)
   }
 
+  const handleSearch = (e) => {
+    const term = e.target.value
+    setSearchTerm(term)
+    const filtered = ArrayCardIdCammpane.filter((card) =>
+      card.TextName.toLowerCase().includes(term.toLowerCase())
+    )
+    setFilteredCards(term ? filtered : [])
+  }
+
+  const handleSearchSubmit = (searchText) => {
+    const exactMatch = ArrayCardIdCammpane.find(
+      (card) => card.TextName.toLowerCase() === (searchText || searchTerm).toLowerCase()
+    )
+    if (exactMatch) handleOpenModal(exactMatch)
+  }
+
   return (
+    <>
+
+
+    <Stack 
+     
+    >
+
+     <PrimaryAppBarHeadr
+          handleSearch={handleSearch}
+          handleSearchSubmit={handleSearchSubmit}
+          filteredCards={filteredCards}
+        />
+    </Stack>
+ 
+
+
     <Stack
       sx={{
         display: 'flex',
@@ -91,6 +128,9 @@ export const MyEmptyCrad = () => {
         padding: '20px 20px',
       }}
     >
+
+
+
       <Box>
         <Typography
           sx={{
@@ -241,7 +281,9 @@ export const MyEmptyCrad = () => {
             </Box>
           </Stack>
         ))}
+
       </Stack>
+        <MyFooter />
 
       {/* Modal para selecionar cor e quantidade */}
       <ProductModal
@@ -250,5 +292,8 @@ export const MyEmptyCrad = () => {
         selectedProduct={selectedProduct} // Passa o nome do produto selecionado
       />
     </Stack>
+
+    </>
+
   )
 }

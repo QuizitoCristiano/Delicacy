@@ -17,60 +17,9 @@ import { AuthContext } from '../../authcontext'
 import './EstiloDeLogin.css'
 import { db } from '../../../firebaseconfig/firebaseconfig'
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'; // Importações necessárias
+import { StyleEmptyLoader } from '../../NewSagas/empty/emptyLoader'
 
 
-// Estilização para a tela de carregamento
-const ContainerCardLaoder = styled(Stack)(({ theme }) => ({
-  position: 'fixed',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  gap: '10px',
-  color: 'white',
-  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-  height: '100vh',
-  width: '100%',
-  zIndex: 9000,
-  top: 0,
-  left: 0,
-}))
-
-const Loader = styled(Box)(({ theme }) => ({
-  width: '48px',
-  height: '48px',
-  borderRadius: '50%',
-  display: 'inline-block',
-  borderTop: '4px solid #3cb815',
-  borderRight: '4px solid transparent',
-  boxSizing: 'border-box',
-  animation: 'rotation 1s linear infinite',
-  position: 'relative',
-}))
-
-const LoaderAfter = styled(Box)(({ theme }) => ({
-  content: "''",
-  boxSizing: 'border-box',
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  width: '48px',
-  height: '48px',
-  borderRadius: '50%',
-  borderBottom: '4px solid #f75f1d',
-  borderLeft: '4px solid transparent',
-}))
-
-const globalStyles = `
-  @keyframes rotation {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-`
 
 export const SignIn = () => {
   const myNewnavigate = useNavigate()
@@ -168,13 +117,15 @@ export const SignIn = () => {
   return (
     <>
       {loading && (
-        <ContainerCardLaoder>
-          <Loader sx={{ animation: 'rotation 1s linear infinite' }}>
-            <LoaderAfter />
-          </Loader>
+        <StyleEmptyLoader.containerCardLoader>
+          <StyleEmptyLoader.loader sx={{ animation: 'rotation 1s linear infinite' }}>
+            <StyleEmptyLoader.loaderAfter />
+          </StyleEmptyLoader.loader>
           <div>Logando...</div>
-        </ContainerCardLaoder>
+        </StyleEmptyLoader.containerCardLoader>
       )}
+
+      
       <Stack className="container_form">
         <Stack className="conatiner-login">
           <Typography variant="h4">O Delicacy Aguarda por Você!!</Typography>

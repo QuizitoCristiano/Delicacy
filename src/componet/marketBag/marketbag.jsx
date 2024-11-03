@@ -13,7 +13,9 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import './newStyle.css'
 import { AuthContext } from '../../authcontext'
-import { SearchItem } from '../util/CardBodySearc'
+import { SearchItem } from '../util/CardBodySearc';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../../../firebaseconfig/firebaseconfig/';
 
 export const BagMarket = ({ handleToggleSacola, openModal, setOpenModal, setSacola, openAlert, setOpenAlert }) => {
   const {
@@ -30,7 +32,25 @@ export const BagMarket = ({ handleToggleSacola, openModal, setOpenModal, setSaco
   const [itemToRemove, setItemToRemove] = useState(null)
 
   
-  const handleOpenModal = () => {
+  // const handleOpenModal = () => {
+  //   if (carinho.length === 0) {
+  //     setOpenAlert(true); // Exibe alerta se o carrinho estiver vazio
+  //   } else {
+  //     setSacola(false); // Fecha a sacola
+  //     setTimeout(() => {
+  //       setOpenModal(true); // Abre o modal de confirmação de entrega
+  //     }, 500); // Ajuste o tempo de atraso conforme necessário (500ms, por exemplo)
+  //   }
+
+
+  //   const total = carinho.reduce((acc, item) => acc + item.price * item.quantidade, 0).toFixed(2);
+
+  //   localStorage.setItem('carinho', JSON.stringify(carinho));
+  //   localStorage.setItem('total', total);
+  // };
+
+
+  const handleOpenModal = async () => {
     if (carinho.length === 0) {
       setOpenAlert(true); // Exibe alerta se o carrinho estiver vazio
     } else {
@@ -39,7 +59,31 @@ export const BagMarket = ({ handleToggleSacola, openModal, setOpenModal, setSaco
         setOpenModal(true); // Abre o modal de confirmação de entrega
       }, 500); // Ajuste o tempo de atraso conforme necessário (500ms, por exemplo)
     }
+  
+    // Calcula o total e salva no localStorage
+    const total = carinho.reduce((acc, item) => acc + item.price * item.quantidade, 0).toFixed(2);
+    localStorage.setItem('carinho', JSON.stringify(carinho));
+    localStorage.setItem('total', total);
+  
+    // Armazena no Firebase
+    try {
+      await addDoc(collection(db, 'userRequest'), {
+        items: carinho.map(item => ({
+          nome: item.nome,
+          price: item.price,
+          quantidade: item.quantidade,
+          subtotal: (item.price * item.quantidade).toFixed(2)
+        })),
+        total: total,
+        createdAt: new Date(), // adiciona uma data de criação
+      });
+      console.log('Dados armazenados no Firebase com sucesso!');
+    } catch (error) {
+      console.error('Erro ao salvar no Firebase:', error);
+    }
   };
+
+
 
   const handleCloseAlert = () => {
     setOpenAlert(false);

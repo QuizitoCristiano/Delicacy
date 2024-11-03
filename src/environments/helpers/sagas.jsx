@@ -1,6 +1,6 @@
-import { Box, Stack, Typography, styled } from "@mui/material";
+import { Box, Stack, Typography, styled } from '@mui/material'
 
-export const ContainerCarousel  = {
+export const ContainerCarousel = {
   containerBody: styled(Stack)(({}) => ({
     position: 'relative',
     marginTop: '4rem',
@@ -18,34 +18,27 @@ export const ContainerCarousel  = {
     },
   })),
 
-    content: styled(Stack)(({}) => ({
-      display: "flex",
-      maxWidth: "1290px",
-      background: "#fefefe",
-      height: 'auto',
-      "@media only screen and (max-width: 905px)": {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        position: "relative",
-        width: "100%",
-      },
-    })),
-
-      
-
-  wrapper: styled(Typography)(({ }) => ({
-  
-    fontWeight: '500',
-    fontSize: "1.7rem",
-    lineHeight: '1.75',
-    color: "black",
-    padding: "20px 20px",
-    height: '100%'
+  content: styled(Stack)(({}) => ({
+    display: 'flex',
+    maxWidth: '1290px',
+    background: '#fefefe',
+    height: 'auto',
+    '@media only screen and (max-width: 905px)': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      position: 'relative',
+      width: '100%',
+    },
   })),
 
- 
-
-  
+  wrapper: styled(Typography)(({}) => ({
+    fontWeight: '500',
+    fontSize: '1.7rem',
+    lineHeight: '1.75',
+    color: 'black',
+    padding: '20px 20px',
+    height: '100%',
+  })),
 }

@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Box,
 } from '@mui/material'
 import { ShoppingItems } from '../shoppingItems/shoppingItems'
 import { MyFooter } from '../componets/footer/Footer'
@@ -21,9 +22,10 @@ import { NewCategorys } from '../componets/screens/newCategorys'
 import { useNavigate } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import { SearchItem } from '../componet/util/CardBodySearc'
 import { MainFolder } from '../NewSagas/sagas'
 import { MyEmptyCrad } from '../NewSagas/empty/emptyCrad'
+import { CustomerDliveryClant } from '../componet/deliveryfolder/customerDelivery'
+
 export const MyHome = () => {
   const { user, logout } = useContext(AuthContext)
   const [open, setOpen] = useState(false)
@@ -45,6 +47,10 @@ export const MyHome = () => {
     if (confirmLogout) {
       handleLogout()
     }
+  }
+
+  const handleNavigateBack = () => {
+    navigate('/') // Garante que redireciona para a página inicial MainFolder
   }
 
   return (
@@ -80,6 +86,41 @@ export const MyHome = () => {
           >
             {'Confirmar Logout'}
           </DialogTitle>
+          <Box
+            sx={{
+              display: 'flex',
+              alignContent: 'center',
+              justifyContent: 'space-evenly',
+              gap: '1rem',
+              padding: '1rem 2rem',
+              borderRadius: '0.5rem',
+              width: '100%',
+              color: '#3ca63a',
+            }}
+          >
+            <Button
+              sx={{
+                padding: '1.5rem',
+                color: '#fff',
+                borderRadius: '8px',
+                fontSize: '14px',
+                gap: '1rem',
+                width: '100%',
+                backgroundColor: '#1a2428',
+                boxShadow: '1px 5px 20px #3ca63a',
+                '&:hover': {
+                  boxShadow: '1px 5px 20px #000',
+                  border: '2px solid #3ca63a',
+                  background: '#3cb815',
+                  color: '#fff',
+                },
+              }}
+              onClick={handleNavigateBack} // Função de navegação
+            >
+              Voltar para a página anterior
+            </Button>
+          </Box>
+
           <DialogContent>
             <DialogContentText
               sx={{
@@ -99,7 +140,6 @@ export const MyHome = () => {
               gap: '1rem',
               padding: '1rem 2rem',
               borderRadius: '0.5rem',
-
               color: '#3ca63a',
             }}
           >
@@ -149,14 +189,14 @@ export const MyHome = () => {
         </Dialog>
 
         <Category />
-
         <Products />
         <NewCategorys />
         <ProductsLegumes />
         <AboutUs />
         <Clientes />
-        <MainFolder />
-      
+
+     
+              
         <MyFooter />
       </Stack>
     </>

@@ -37,14 +37,18 @@ export const MainFolder = () => {
   return (
     <Stack
       sx={{
+        top: '1em',
         width: '100%',
+        transition:' all 0.3s ease',
+
         height: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
         padding: '10px',
+        bgcolor: '#FFFF',
         // bgcolor: 'red',
-        '@media (max-width: 768px)': { height: 'auto' },
+        '@media (max-width: 768px)': { height: 'auto', top: '1rem', },
       }}
     >
       <Stack

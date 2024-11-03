@@ -101,7 +101,7 @@ export default Comprovante;
 // kuizitocritiano@10gmail.com
 // Agostinho10
 
-// lynacristiano28@gmai.com"
+// lynacristiano28@gmai.com
 // lyina28
 
 // biancamario29@gmail.com

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   Stack,
@@ -14,7 +14,7 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
-} from '@mui/material';
+} from '@mui/material'
 import {
   addDoc,
   collection,
@@ -24,56 +24,17 @@ import {
   getDoc,
   doc,
   getFirestore,
-} from 'firebase/firestore';
+} from 'firebase/firestore'
 
-import InputMask from 'react-input-mask';
-import { CardStylSearche } from './CardStyles';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { db } from '../../../firebaseconfig/firebaseconfig';
-import { ModalQRCode } from './modalQrcode';
-import { ModalBoleto } from './boleto';
-
-
-const ContainerCardLoader = styled(Stack)(({ theme }) => ({
-  position: 'fixed',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  gap: '10px',
-  color: 'white',
-  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-  height: '100vh',
-  width: '100%',
-  zIndex: 9000,
-  top: 0,
-  left: 0,
-}))
-
-const Loader = styled(Box)(({ theme }) => ({
-  width: '48px',
-  height: '48px',
-  borderRadius: '50%',
-  display: 'inline-block',
-  borderTop: '4px solid #3cb815',
-  borderRight: '4px solid transparent',
-  boxSizing: 'border-box',
-  animation: 'rotation 1s linear infinite',
-  position: 'relative',
-}))
-
-const LoaderAfter = styled(Box)(({ theme }) => ({
-  content: "''",
-  boxSizing: 'border-box',
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  width: '48px',
-  height: '48px',
-  borderRadius: '50%',
-  borderBottom: '4px solid #f75f1d',
-  borderLeft: '4px solid transparent',
-}))
+import InputMask from 'react-input-mask'
+import { CardStylSearche } from './CardStyles'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { db } from '../../../firebaseconfig/firebaseconfig'
+import { ModalQRCode } from './modalQrcode'
+import { ModalBoleto } from './boleto'
+import { StyleEmptyLoader } from '../../NewSagas/empty/emptyLoader'
+import { useNavigate } from 'react-router-dom'
+import { CustomerDliveryClant } from '../deliveryfolder/customerDelivery'
 
 const globalStyles = `
   @keyframes rotation {
@@ -88,15 +49,27 @@ const globalStyles = `
 
 export const SearchItem = () => {
   const auth = getAuth()
-  const [formNweData, setFormNweData] = useState({ paymentMethod: '' });
+  const [formNweData, setFormNweData] = useState({ paymentMethod: '' })
   const [open, setOpen] = useState(false)
   const [onClose, setOnClose] = useState(true)
 
-  const [isBoletoModalOpen, setBoletoModalOpen] = useState(false);
-  const [boletoData, setBoletoData] = useState(null);
+  const [isBoletoModalOpen, setBoletoModalOpen] = useState(false)
+  const [boletoData, setBoletoData] = useState(null)
 
   const [isPixModalOpen, setPixModalOpen] = useState(false)
+  const navigateHomepag = useNavigate()
 
+  const handleClickMyHomepag = () => {
+    setLoading(true) // Ativa o estado de loading
+
+    // Navegação com um pequeno atraso
+    setTimeout(() => {
+      navigateHomepag('/CustomerDliveryClant', {
+        state: { selectedProduct },
+      })
+      setLoading(false) // Desativa o loading após a navegação
+    }, 1000) // 1 segundo de delay
+  }
 
   const handleOpenPixModal = () => {
     setPixModalOpen(true)
@@ -106,29 +79,22 @@ export const SearchItem = () => {
     setPixModalOpen(false)
   }
 
-
   const handleOpenBoletoModal = async () => {
-    const boleto = await generateBoleto(); // Chama a função que simula o boleto
-    setBoletoData(boleto);
-    setBoletoModalOpen(true);
-  };
+    const boleto = await generateBoleto() // Chama a função que simula o boleto
+    setBoletoData(boleto)
+    setBoletoModalOpen(true)
+  }
 
+  const handleCloseBoletoModal = () => setBoletoModalOpen(false)
 
-
-  const handleCloseBoletoModal = () => setBoletoModalOpen(false);
-
-    // Função para gerar o boleto
-    const generateBoleto = async () => {
-      const codigoDeBarras = Math.random().toString().slice(2, 14); // Exemplo simples
-      return {
-        codigoDeBarras,
-        linkPdf: 'https://www.example.com/boleto.pdf',
-      };
-    };
-  
-
-
-
+  // Função para gerar o boleto
+  const generateBoleto = async () => {
+    const codigoDeBarras = Math.random().toString().slice(2, 14) // Exemplo simples
+    return {
+      codigoDeBarras,
+      linkPdf: 'https://www.example.com/boleto.pdf',
+    }
+  }
 
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -168,9 +134,9 @@ export const SearchItem = () => {
     setFormNweData({ ...formData, paymentMethod: value })
 
     if (value === 'pix') {
-      handleOpenPixModal();
+      handleOpenPixModal()
     } else if (value === 'código de barras') {
-      handleOpenBoletoModal();
+      handleOpenBoletoModal()
     }
   }
 
@@ -269,14 +235,15 @@ export const SearchItem = () => {
   return (
     <>
       {loading && (
-        <ContainerCardLoader>
-          <Loader sx={{ animation: 'rotation 1s linear infinite' }}>
-            <LoaderAfter />
-          </Loader>
+        <StyleEmptyLoader.containerCardLoader>
+          <StyleEmptyLoader.loader
+            sx={{ animation: 'rotation 1s linear infinite' }}
+          >
+            <StyleEmptyLoader.loaderAfter />
+          </StyleEmptyLoader.loader>
           <div>Logando...</div>
-        </ContainerCardLoader>
+        </StyleEmptyLoader.containerCardLoader>
       )}
-
       <form
         style={{
           width: '100%',
@@ -461,19 +428,19 @@ export const SearchItem = () => {
                 width: '100%',
               }}
             >
-             <FormControl fullWidth>
-        <InputLabel>Método de Pagamento</InputLabel>
-        <Select
-          value={formNweData.paymentMethod || ''}
-          onChange={(e) => handlePaymentMethodChange(e.target.value)}
-        >
-          {paymentMethods.map((method) => (
-            <MenuItem key={method.value} value={method.value}>
-              {method.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+              <FormControl fullWidth>
+                <InputLabel>Método de Pagamento</InputLabel>
+                <Select
+                  value={formNweData.paymentMethod || ''}
+                  onChange={(e) => handlePaymentMethodChange(e.target.value)}
+                >
+                  {paymentMethods.map((method) => (
+                    <MenuItem key={method.value} value={method.value}>
+                      {method.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
           </CardStylSearche.containerBox>
 
@@ -594,7 +561,11 @@ export const SearchItem = () => {
             </Box>
           </Stack>
 
-          <CardStylSearche.containerButton type="submit" disabled={loading}>
+          <CardStylSearche.containerButton
+            type="submit"
+            onClick={handleClickMyHomepag}
+            disabled={loading}
+          >
             Enviar
           </CardStylSearche.containerButton>
 
@@ -613,8 +584,12 @@ export const SearchItem = () => {
         </CardStylSearche.wrapperfort>
 
         {isBoletoModalOpen && (
-  <ModalBoleto open={isBoletoModalOpen} onClose={handleCloseBoletoModal} boletoData={boletoData} />
-)}
+          <ModalBoleto
+            open={isBoletoModalOpen}
+            onClose={handleCloseBoletoModal}
+            boletoData={boletoData}
+          />
+        )}
 
         {isPixModalOpen && (
           <ModalQRCode open={isPixModalOpen} onClose={handleClosePixModal} />
