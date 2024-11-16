@@ -126,12 +126,24 @@ export const MyEmptyCrad = () => {
         justifyContent: 'center',
         gap: '2rem',
         padding: '20px 20px',
+        
+        '@media only screen and (max-width: 800px)': {
+          width: '100%',
+          padding: '12px 11px',
+        },
       }}
     >
 
 
 
-      <Box>
+      <Box sx={{
+        
+     
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0px',
+      }}>
         <Typography
           sx={{
             fontSize: '1.6rem',
@@ -148,6 +160,12 @@ export const MyEmptyCrad = () => {
               backgroundColor: 'white',
               boxShadow: '1px 2px 11px 4px rgb(14 55 54 / 70%)',
             },
+            
+           '@media only screen and (max-width: 800px)': {
+            width: '100%',
+            margin: '0rem',
+            padding: '1.3rem',
+          },
           }}
         >
           Conectamos consumidores a supermercados excepcionais, como Angeloni,
@@ -283,7 +301,7 @@ export const MyEmptyCrad = () => {
         ))}
 
       </Stack>
-        <MyFooter />
+     
 
       {/* Modal para selecionar cor e quantidade */}
       <ProductModal
@@ -292,7 +310,7 @@ export const MyEmptyCrad = () => {
         selectedProduct={selectedProduct} // Passa o nome do produto selecionado
       />
     </Stack>
-
+  
     </>
 
   )

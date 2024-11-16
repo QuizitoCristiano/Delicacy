@@ -58,18 +58,21 @@ export const SearchItem = () => {
 
   const [isPixModalOpen, setPixModalOpen] = useState(false)
   const navigateHomepag = useNavigate()
-
+  const selectedProduct = {/* Defina seu produto selecionado aqui */};
   const handleClickMyHomepag = () => {
-    setLoading(true) // Ativa o estado de loading
-
+    setOnClose(false); // Fecha o modal
+  
+    setLoading(true); // Ativa o estado de loading
+  
     // Navegação com um pequeno atraso
     setTimeout(() => {
       navigateHomepag('/CustomerDliveryClant', {
         state: { selectedProduct },
-      })
-      setLoading(false) // Desativa o loading após a navegação
-    }, 1000) // 1 segundo de delay
-  }
+      });
+      setLoading(false); // Desativa o loading após a navegação
+    }, 1000); // Ajuste o delay se necessário
+  };
+  
 
   const handleOpenPixModal = () => {
     setPixModalOpen(true)
@@ -563,7 +566,7 @@ export const SearchItem = () => {
 
           <CardStylSearche.containerButton
             type="submit"
-            onClick={handleClickMyHomepag}
+            onClick={handleClickMyHomepag}  
             disabled={loading}
           >
             Enviar

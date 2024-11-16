@@ -37,7 +37,7 @@ export const MainRoutes = () => {
           <Route path="/NewHelpeContato" element={<NewHelpeContato />} />
           <Route path="/CustomerEvaluation" element={<CustomerEvaluation />} />
           <Route path="/PrimaryAppBarHeadr" element={<PrimaryAppBarHeadr />} />
-          <Route path="/CustomerDliveryClant" element={<CustomerDliveryClant />} />
+          <Route path="/CustomerDlveryClant" element={<CustomerDliveryClant />} />
           
         </Routes>
       </MainLayout>

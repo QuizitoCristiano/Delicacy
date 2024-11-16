@@ -1,6 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Carousel } from 'react-bootstrap'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import { Stack, Typography, Box } from '@mui/material'
 import { ContainerCarousel } from './sagas'
 import { MyFooter } from '../../componets/footer/Footer'
@@ -9,6 +9,29 @@ import Azeitona from '../../images/Azeitona.png'
 import morangos from '../../images/morangos.png'
 import Ervilha from '../../img/Ervilha.png'
 import abacate from '../../images/Ameixa.png'
+
+const ArrayWImags = [
+  {
+    img: Azeitona,
+    labelText: 'Frutas doces e legumes fresquinhos te esperam!',
+    description: 'Não deixe para depois, garanta já o seu bedido no Delicacy',
+  },
+  {
+    img: morangos,
+    labelText: 'Não perca essa oportunidade',
+    description: 'Frutas e legumes de qualidade estão a apenas um clique de você.',
+  },
+  {
+    img: Ervilha,
+    labelText: 'Promoção imperdível no Delicacy! Venha conferir',
+    description: 'E leve frescor e saúde para o seu lar',
+  },
+  {
+    img: abacate,
+    labelText: 'Quer frutas frescas e legumes de qualidade ?',
+    description: 'É fácil, rápido tudo por aqui no Delicacy!',
+  },
+]
 
 const ArryHistory = [
   {
@@ -58,168 +81,239 @@ const ArryHistory = [
   },
 ]
 
+
 export const HomePage = () => {
-  const controlsMyArray = ArryHistory.map((Item, index) => (
-    <Stack key={index}>
-      <ContainerCarousel.wrapper>{Item.description}</ContainerCarousel.wrapper>
-      <ContainerCarousel.wrapper>
-        {Item.descriptionText}
-      </ContainerCarousel.wrapper>
-      <ContainerCarousel.wrapper>{Item.myText}</ContainerCarousel.wrapper>
-      <ContainerCarousel.wrapper>{Item.mytitle}</ContainerCarousel.wrapper>
-      <ContainerCarousel.wrapper>{Item.mytitle2}</ContainerCarousel.wrapper>
-
-      <ContainerCarousel.wrapper>
-        {Item.myNewdescription}
-      </ContainerCarousel.wrapper>
-    </Stack>
-  ))
-
   return (
     <>
-      <ContainerCarousel.containerBody>
-        <Carousel
-          style={{
-            width: '100%',
+      <Stack
+        sx={{
+          top: '1rem',
+          width: '100%',
+          transition: 'all 0.3s ease',
+          height: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          padding: '10px',
+          bgcolor: '#fff',
+          '@media (max-width: 768px)': {
             height: 'auto',
-            display: 'flex',
-            justifyContent: 'center',
+            top: '1rem',
+            padding: '10px 5px',
+          },
+        }}
+      >
+        <Stack
+          sx={{
+            width: '100%',
+            height: '940px',
             alignItems: 'center',
-            overflow: 'hidden',
-
-            '@media (min-width:800px)': {
-              height: '390px',
-              width: '100%',
-            },
+            justifyContent: 'center',
+            // bgcolor: 'purple',
+            position: 'relative',
+            '@media (max-width: 768px)': { height: '490px' },
           }}
-          controls
         >
-          <Carousel.Item
-            style={{
+          <Box
+            id="carouselExampleDark"
+            className="carousel carousel-dark slide"
+            data-bs-ride="carousel"
+            data-bs-wrap="true"
+            sx={{
+              height: '70%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+              position: 'relative',
               width: '100%',
-              height: '100%',
-              background: '#fff',
+
+              '@media (max-width: 768px)': { height: '490px' },
             }}
           >
-            <img
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-              className="d-block w-100"
-              src={abacate}
-              alt="Second slide"
-            />
-          </Carousel.Item>
+            <Box className="carousel-indicators">
+              {ArrayWImags.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  data-bs-target="#carouselExampleDark"
+                  data-bs-slide-to={index}
+                  className={index === 0 ? 'active' : ''}
+                  aria-current={index === 0 ? 'true' : undefined}
+                  aria-label={`Slide ${index + 1}`}
+                ></button>
+              ))}
+            </Box>
 
-          <Carousel.Item
-            style={{
-              width: '100%',
-              height: '100%',
-              background: '#fff',
-            }}
-          >
-            <img
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-              className="d-block w-100"
-              src={Azeitona}
-              alt="Second slide"
-            />
+            <div
+              className="carousel-inner"
+              style={{ height: '100%', width: '100%' }}
+            >
+              {ArrayWImags.map(({ img, labelText, description }, index) => (
+                <div
+                  key={index}
+                  className={`carousel-item ${index === 0 ? 'active' : ''}`}
+                  data-bs-interval="3000"
+                  style={{
+                    height: '100%',
+                    position: 'relative',
+                   
+                  }}
+                >
+                  <img
+                    src={img}
+                    alt={`Slide ${index + 1}`}
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
 
-            {/* <Carousel.Caption>
-              <h3>Second slide label</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Carousel.Caption> */}
-          </Carousel.Item>
+                      maxHeight: '100%',
+                      objectFit: 'contain',
+                      '@media (max-width: 768px)': {
+                        maxWidth: '989px',
+                        maxHeight: '100%',
+                      },
+                    }}
+                  />
+                  <div style={{
+                       color: '#000',
+                       fontSize: '1.4rem',
+                       fontWeight: 'bold'
+                    }} className="carousel-caption d-none d-md-block">
+                    <h5 style={{
+                       color: '#000',
+                       fontSize: '1.4rem',
+                       fontWeight: 'bold'
+                    }}>{labelText}</h5>
+                    <p>{description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          <Carousel.Item
-            style={{
-              width: '100%',
-              height: '100%',
-              background: '#fff',
-            }}
-          >
-            <img
+            <button
+              className="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleDark"
+              data-bs-slide="prev"
               style={{
-                width: '80%',
-                height: '80%',
-              }}
-              className="d-block w-100"
-              src={Ervilha}
-              alt="Second slide"
-            />
-
-            {/* <Carousel.Caption
-              style={{
-                color: 'black',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                backgroundColor: 'transparent',
               }}
             >
-              <h3>Second slide label</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Carousel.Caption> */}
-          </Carousel.Item>
+              <span
+                className="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
 
-          <Carousel.Item
-            style={{
+            <button
+              className="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleDark"
+              data-bs-slide="next"
+              style={{
+                top: '50%',
+                transform: 'translateY(-50%)',
+                backgroundColor: 'transparent',
+              }}
+            >
+              <span
+                className="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Next</span>
+            </button>
+          </Box>
+        </Stack>
+
+        <Stack
+          sx={{
+            width: '100%',
+            height: 'auto',
+            // backgroundColor: 'green',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Box
+            sx={{
               width: '100%',
-              height: '100%',
-              background: '#fff',
+              height: '50px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                maxWidth: '1200px',
+                width: '100%',
+                fontWeight: '7000',
+                padding: '10px 20px',
+                color: '#f75f1d',
+              }}
+            >
+              <h2>Quem somos e por que os clientes nos amam</h2>
+            </Box>
+          </Box>
 
-              '@media only screen and (max-width: 800px)': {
-                width: '97%',
-                height: '290px',
-                background: 'red',
+          <Stack
+            sx={{
+              display: 'flex',
+              maxWidth: '1290px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '2rem',
+              padding: '20px 20px',
+              '@media (max-width: 768px)': {
+                height: 'auto',
+                top: '1rem',
+              
+                width: '100%',
+                padding: '0px 0px',
               },
             }}
           >
-            <img
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '390px',
-              objectFit: 'cover',
-            }}
-            className="d-block w-100"
-            src={abacate}
-            alt="Abacate"
-            />
+            {ArryHistory.map((item, index) => (
+              <Stack key={index}>
+                <ContainerCarousel.wrapper>
+                  {item.description}
+                </ContainerCarousel.wrapper>
+                <ContainerCarousel.wrapper>
 
-            
-          </Carousel.Item>
-        </Carousel>
+                  {item.descriptionText}
+                </ContainerCarousel.wrapper>
+                <ContainerCarousel.wrapper>
+                  {item.myText}
+                </ContainerCarousel.wrapper>
+                <ContainerCarousel.wrapper>
+                  {item.mytitle}
+                </ContainerCarousel.wrapper>
+                <ContainerCarousel.wrapper>
+                  {item.mytitle2}
+                </ContainerCarousel.wrapper>
 
-        <ContainerCarousel.content>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              maxWidth: '1200px',
-              width: '100%',
-              fontWeight: '7000',
-              padding: '10px 20px',
-              color: '#f75f1d',
-            }}
-          >
-            <h2>Quem somos e por que os clientes nos amam</h2>
-          </Box>
-
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'column',
-            }}
-          >
-            {controlsMyArray}
-          </Box>
-        </ContainerCarousel.content>
-      </ContainerCarousel.containerBody>
+                <ContainerCarousel.wrapper>
+                  {item.myNewdescription}
+                </ContainerCarousel.wrapper>
+              </Stack>
+            ))}
+          </Stack>
+        </Stack>
+      </Stack>
       <MyFooter />
     </>
   )

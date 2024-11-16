@@ -24,18 +24,23 @@ const Cliente = ({ nome, imagem, mensagem }) => {
         <Stack direction="row" alignItems="center" spacing={2}>
           <Box
             sx={{
-              width: "80px",
-              height: "80px",
+              width: "70px",
+              height: "70px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               overflow: "hidden",
               borderRadius: "50%",
-              padding:'20px',
+           
+              
+             
+              border: '2px solid #3cb815',
              
               boxShadow:' rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px',
               marginBottom: "10px",
               position: 'relative'
+
+              
           
 
               
@@ -45,15 +50,14 @@ const Cliente = ({ nome, imagem, mensagem }) => {
               src={imagem}
               alt={nome}
               style={{
-                width: "auto",
-                borderRadius: "50%",
+                width: "370px", 
+                height: '150px',
+               
                 height: "auto",
                 objectFit: "cover",
                 objectPosition: "center",
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
+              
+              
               }}
             />
           </Box>

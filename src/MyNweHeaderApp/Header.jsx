@@ -344,9 +344,6 @@ export const Header = () => {
 
           {/* Ícones */}
 
-       
-          
-              
           <Stack
             sx={{
               display: 'flex',
@@ -358,21 +355,25 @@ export const Header = () => {
               width: '100%',
             }}
           >
-           
-           <Stack direction="row" spacing={2} >
-                <StyledBadge
-                  overlap="circular"
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  variant="dot"
-                >
-                  <Avatar
-                    sx={{ border: '1px solid #3cb815' }}
-                    onClick={handleAvatarClick}
-                    alt={newUser ? getInitials(newUser.fullName) : ''}
-                    src={newUser.imgUser || undefined}
-                  />
-                </StyledBadge>
-              </Stack>
+            <Stack direction="row" spacing={2}>
+              <StyledBadge
+                overlap="circular"
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                variant="dot"
+              >
+                <Avatar
+                  sx={{ border: '1px solid #3cb815' }}
+                  onClick={handleAvatarClick}
+                  alt={newUser ? getInitials(newUser.fullName) : ''}
+                  src={newUser.imgUser || undefined}
+                />
+              </StyledBadge>
+
+              
+              
+            </Stack>
+
+            
 
             <Menu
               anchorEl={anchorEl}
