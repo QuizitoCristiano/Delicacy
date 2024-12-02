@@ -24,21 +24,19 @@ const ProtectedRoute = ({ children }) => {
 // Configuração das rotas principais
 export const MainRoutes = () => {
   const { isLoggedIn } = useContext(AuthContext)
-  
 
   if (isLoggedIn) {
     return (
       <MainLayout>
-        
         <Routes>
-          <Route path="/" element={<MainFolder/>} />
+          <Route path="/" element={<MainFolder />} />
           <Route path="/MyHome" element={<MyHome />} />
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/NewHelpeContato" element={<NewHelpeContato />} />
           <Route path="/CustomerEvaluation" element={<CustomerEvaluation />} />
           <Route path="/PrimaryAppBarHeadr" element={<PrimaryAppBarHeadr />} />
-          <Route path="/CustomerDlveryClant" element={<CustomerDliveryClant />} />
-          
+        
+          <Route path="/CustomerDliveryClant" element={<CustomerDliveryClant />} />
         </Routes>
       </MainLayout>
     )
@@ -46,12 +44,9 @@ export const MainRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<SignIn />} />
+      
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="/ForgotPassword" element={<ForgotPassword />} />
     </Routes>
   )
 }
-
-
-
-

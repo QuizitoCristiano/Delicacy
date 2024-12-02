@@ -13,8 +13,29 @@
   overflow-x: hidden !important;
 }
 
+.containerImgAvatar{
+  display: block;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* background-color: red; */
+  width: 80px;
+  height: 80px;
 
+}
 
+#icnAvatar {
+  /* background-color: #1a2428; */
+  height: 40px !important;
+  width: 340px !important;
+  margin: 29px;
+
+  border-radius: 50%;
+  
+ 
+  
+
+}
 
 #profileEditForm {
   display: none;

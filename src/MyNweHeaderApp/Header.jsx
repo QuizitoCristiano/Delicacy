@@ -46,6 +46,8 @@ import Fade from '@mui/material/Fade'
 
 import { styled } from '@mui/material/styles'
 import Badge from '@mui/material/Badge'
+import { NewImgAvatar } from './myNewAvatar'
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -75,6 +77,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
   },
 }))
+
+
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
   width: 22,
@@ -117,6 +121,7 @@ export const Header = () => {
   const [openModal, setOpenModal] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [lastAddedItem, setLastAddedItem] = useState(null)
+  const [onCloseModl, setOnCloseModl] = useState(false)
   const [animationState, setAnimationState] = useState({
     isStopped: true,
     isPaused: false,
@@ -344,6 +349,14 @@ export const Header = () => {
 
           {/* Ícones */}
 
+          {/* <NewImgAvatar
+            newUser={newUser}
+            imgUser={imgUser}
+            getInitials={getInitials}
+            fullName={fullName}
+            handleAvatarClick={handleAvatarClick}
+          /> */}
+
           <Stack
             sx={{
               display: 'flex',
@@ -368,12 +381,7 @@ export const Header = () => {
                   src={newUser.imgUser || undefined}
                 />
               </StyledBadge>
-
-              
-              
             </Stack>
-
-            
 
             <Menu
               anchorEl={anchorEl}
@@ -445,10 +453,6 @@ export const Header = () => {
                 width: '37px',
               }}
             >
-              <SearchIcon
-                sx={{ color: 'var(--light-orange-color)', fontSize: '25px' }}
-                onClick={handleSearchIconClick}
-              />
               <Stack>
                 {SearchItemVisible && (
                   <Stack
@@ -674,7 +678,10 @@ export const Header = () => {
             padding: '5px',
           }}
         >
-          <SearchItem />
+          <SearchItem
+          onCloseModl={onCloseModl}
+          setOnCloseModl={setOnCloseModl}
+           />
         </DialogContent>
       </Modal>
       {/* Animação */}

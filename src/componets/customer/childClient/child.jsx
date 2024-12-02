@@ -46,6 +46,7 @@ const Cliente = ({ nome, imagem, mensagem }) => {
               
             }}
           >
+      
             <img
               src={imagem}
               alt={nome}
@@ -53,13 +54,15 @@ const Cliente = ({ nome, imagem, mensagem }) => {
                 width: "370px", 
                 height: '150px',
                
-                height: "auto",
+               
                 objectFit: "cover",
                 objectPosition: "center",
               
               
               }}
             />
+         
+           
           </Box>
 
 
@@ -67,7 +70,7 @@ const Cliente = ({ nome, imagem, mensagem }) => {
 
 
           <Typography sx={{ fontWeight: 700, fontSize: "1.7rem", color: "black" }}>{nome}</Typography>
-        </Stack>
+        </Stack> 
       </StyleClient.containerChild>
     </Grid>
   );

@@ -59,6 +59,7 @@ export const MyHome = () => {
         sx={{
           minHeight: '100vh',
           bgcolor: '#fff !important',
+  
           width: '100%',
           gap: '2rem',
           display: 'flex',
@@ -194,6 +195,7 @@ export const MyHome = () => {
         <ProductsLegumes />
         <AboutUs />
         <Clientes />
+
 
      
               

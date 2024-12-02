@@ -14,6 +14,7 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
+  InputAdornment,
 } from '@mui/material'
 import {
   addDoc,
@@ -47,32 +48,32 @@ const globalStyles = `
   }
 `
 
-export const SearchItem = () => {
+export const SearchItem = ({ onCloseModl, setOnCloseModl }) => {
   const auth = getAuth()
   const [formNweData, setFormNweData] = useState({ paymentMethod: '' })
   const [open, setOpen] = useState(false)
-  const [onClose, setOnClose] = useState(true)
 
   const [isBoletoModalOpen, setBoletoModalOpen] = useState(false)
   const [boletoData, setBoletoData] = useState(null)
 
   const [isPixModalOpen, setPixModalOpen] = useState(false)
   const navigateHomepag = useNavigate()
-  const selectedProduct = {/* Defina seu produto selecionado aqui */};
+  const selectedProduct = {
+    /* Defina seu produto selecionado aqui */
+  }
+
   const handleClickMyHomepag = () => {
-    setOnClose(false); // Fecha o modal
-  
-    setLoading(true); // Ativa o estado de loading
-  
+    setLoading(true) // Ativa o estado de loading
+
     // Navegação com um pequeno atraso
     setTimeout(() => {
       navigateHomepag('/CustomerDliveryClant', {
         state: { selectedProduct },
-      });
-      setLoading(false); // Desativa o loading após a navegação
-    }, 1000); // Ajuste o delay se necessário
-  };
-  
+      })
+      setLoading(false) // Desativa o loading após a navegação
+      setOnCloseModl(false) // Fecha o modal
+    }, 1000) // Ajuste o delay se necessário
+  }
 
   const handleOpenPixModal = () => {
     setPixModalOpen(true)
@@ -172,47 +173,61 @@ export const SearchItem = () => {
     setFormData(formData)
   }
 
+
+
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const errors = {}
+    e.preventDefault(); // Previne o comportamento padrão do formulário
 
+    const errors = {};
+
+    // Validação de campos obrigatórios
     if (!formData.fullName) {
-      errors.fullName = 'O fullName é obrigatório'
-    }
-
-    if (!formData.paymentMethod) {
-      errors.paymentMethod = 'O método de pagamento é obrigatório'
+        errors.fullName = 'O nome completo é obrigatório';
     }
 
     if (!formData.telefone) {
-      errors.telefone = 'O telefone é obrigatório'
+        errors.telefone = 'O telefone é obrigatório';
     }
 
     if (!formData.cpf || !validarCPF(formData.cpf)) {
-      errors.cpf = 'CPF inválido'
-    }
-
-    if (!formData.mensagem) {
-      errors.mensagem = 'A mensagem é obrigatória'
-    }
-
-    if (!formData.endercoDaEntrega) {
-      errors.endercoDaEntrega = 'O endereço de entrega é obrigatório'
+        errors.cpf = 'CPF inválido';
     }
 
     if (!formData.email) {
-      errors.email = 'O email é obrigatório'
+        errors.email = 'O email é obrigatório';
     }
 
-    if (formData.tipoImovel === 'apartamento' && !formData.bloco) {
-      errors.bloco = 'O bloco é obrigatório para apartamentos'
+    if (!formData.numeroDoEdificios) {
+        errors.numeroDoEdificios = 'O número do edifício é obrigatório';
     }
 
-    setFormErrors(errors)
+    if (!formData.rua) {
+        errors.rua = 'A rua é obrigatória';
+    }
+
+    if (!formData.paymentMethod) {
+        errors.paymentMethod = 'O método de pagamento é obrigatório';
+    }
+
+    // Validação específica para tipo de imóvel
+    if (formData.tipoImovel === 'apartamento') {
+        if (!formData.bloco) errors.bloco = 'O número do bloco é obrigatório';
+        if (!formData.apartamento) errors.apartamento = 'O número do apartamento é obrigatório';
+    }
+
+    if (formData.tipoImovel === 'casa') {
+        if (!formData.casa) errors.casa = 'O número da casa é obrigatório';
+    }
+
+    setFormErrors(errors); // Atualiza os erros de validação
+
+    // Se não houver erros, continua com o envio do formulário
     if (Object.keys(errors).length === 0) {
-      setSuccessMessage('Formulário enviado com sucesso!')
+        setSuccessMessage('Formulário enviado com sucesso!');
+        // Aqui você pode adicionar a lógica para enviar os dados ao Firebase ou outra ação necessária
     }
-  }
+};
+
 
   const validarCPF = (cpf) => {
     cpf = cpf.replace(/\D/g, '')
@@ -450,11 +465,13 @@ export const SearchItem = () => {
           <CardStylSearche.nweWarrpeBox>
             <FormControl>
               <RadioGroup
-                row
                 value={formData.tipoImovel}
                 onChange={(e) =>
                   handleInputChange('tipoImovel', e.target.value)
                 }
+                // onChange={(e) =>
+                //   handleInputChange('tipoImovel', e.target.value)
+                // }
               >
                 <FormControlLabel
                   value="casa"
@@ -470,43 +487,55 @@ export const SearchItem = () => {
             </FormControl>
 
             {formData.tipoImovel === 'apartamento' && (
-              <TextField
-                sx={{
-                  width: '100%',
-                  fontSize: '1.5rem',
-                  fontWeight: '700',
-                }}
-                type="text"
-                label="Bloco"
-                variant="outlined"
-                size="small"
-                value={formData.bloco}
-                onChange={(e) => handleInputChange('bloco', e.target.value)}
-                error={!!formErrors.bloco}
-                helperText={formErrors.bloco}
-                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-              />
-            )}
+              <>
+                <TextField
+                  sx={{
+                    width: '100%',
+                    fontSize: '1.5rem',
+                    fontWeight: '700',
+                  }}
+                  type="number"
+                  label="Bloco"
+                  variant="outlined"
+                  size="small"
+                  value={formData.bloco}
+                  onChange={(e) => handleInputChange('bloco', e.target.value)}
+                  error={!!formErrors.bloco}
+                  helperText={formErrors.bloco}
+                  FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment  position="start">Bloco</InputAdornment>
+                    ),
+                  }}
+                />
 
-            {formData.tipoImovel === 'apartamento' && (
-              <TextField
-                sx={{
-                  width: '100%',
-                  fontSize: '1.5rem',
-                  fontWeight: '700',
-                }}
-                type="text"
-                label="Apartamento"
-                variant="outlined"
-                size="small"
-                value={formData.apartamento}
-                onChange={(e) =>
-                  handleInputChange('apartamento', e.target.value)
-                }
-                error={!!formErrors.apartamento}
-                helperText={formErrors.apartamento}
-                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
-              />
+                <TextField
+                  sx={{
+                    width: '100%',
+                    fontSize: '1.5rem',
+                    fontWeight: '700',
+                  }}
+                  type="number"
+                  label="Apartamento"
+                  variant="outlined"
+                  size="small"
+                  value={formData.apartamento}
+                  onChange={(e) =>
+                    handleInputChange('apartamento', e.target.value)
+                  }
+                  error={!!formErrors.apartamento}
+                  helperText={formErrors.apartamento}
+                  FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        Apartamento
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </>
             )}
 
             {formData.tipoImovel === 'casa' && (
@@ -516,12 +545,20 @@ export const SearchItem = () => {
                   fontSize: '1.5rem',
                   fontWeight: '700',
                 }}
-                type="text"
+                type="number"
                 label="Casa"
                 variant="outlined"
                 size="small"
                 value={formData.casa}
                 onChange={(e) => handleInputChange('casa', e.target.value)}
+                error={!!formErrors.casa}
+                helperText={formErrors.casa}
+                FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">Casa</InputAdornment>
+                  ),
+                }}
               />
             )}
           </CardStylSearche.nweWarrpeBox>
@@ -533,41 +570,14 @@ export const SearchItem = () => {
               gridTemplateColumns: '1fr',
               gridGap: '10px',
             }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.3rem',
-                width: '100%',
-              }}
-            >
-              <TextareaAutosize
-                style={{
-                  width: '100%',
-                  fontSize: '1.5rem',
-                  fontWeight: '700',
-                  padding: '12px',
-                  borderRadius: '4px',
-                  borderColor: formErrors.mensagem ? 'red' : '#ccc',
-                }}
-                minRows={5}
-                placeholder="Digite sua mensagem"
-                value={formData.mensagem}
-                onChange={(e) => handleInputChange('mensagem', e.target.value)}
-              />
-              {formErrors.mensagem && (
-                <Typography color="red" sx={{ fontSize: '1.4rem' }}>
-                  {formErrors.mensagem}
-                </Typography>
-              )}
-            </Box>
-          </Stack>
+          ></Stack>
 
           <CardStylSearche.containerButton
             type="submit"
-            onClick={handleClickMyHomepag}  
+            onClick={handleClickMyHomepag}
             disabled={loading}
+
+            
           >
             Enviar
           </CardStylSearche.containerButton>

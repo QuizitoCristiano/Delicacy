@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom'
 import { StyleEmptyLoader } from '../../NewSagas/empty/emptyLoader'
 import { db } from '../../../firebaseconfig/firebaseconfig' // ajuste o caminho para a configuração do Firebase
 import { collection, getDocs } from 'firebase/firestore'
+import { MyFooter } from '../../componets/footer/Footer'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -80,7 +81,7 @@ export const CustomerDliveryClant = () => {
     // MyHome
     setTimeout(() => {
       setLoading(true)
-      navigateHome('/MyHome', {
+      navigateHome('/', {
         state: { selectedProduct },
       })
       setLoading(false)
@@ -180,36 +181,39 @@ export const CustomerDliveryClant = () => {
       <Stack
         sx={{
           display: 'flex',
-          width: '90%',
+          width: '100%',
+          padding: "0.1rem 5% 0.1rem",
           marginLeft: 'auto',
           marginRight: 'auto',
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
-          bgcolor: 'plum',
+          bgcolor: '#fff',
           gap: '2rem',
-          padding: '20px 20px',
+        
+
 
           '@media only screen and (max-width: 905px)': {
             gap: '1rem',
             padding: '10px 10px',
             position: 'relative',
-            bgcolor: 'plum',
+            bgcolor: '#fff',
             width: '100%',
           },
         }}
       >
-        <Toolbar
+        {/* <Toolbar
           sx={{
             fontFamily: '"Almarai","Helvetica","Arial",sans-serif',
             width: '100%',
             height: '80px',
-            position: 'absolute',
+          
             padding: '10px 20px',
             top: '0',
             left: '0',
             right: '0',
             flexDirection: 'row',
+            position: 'fixed',
             display: 'flex',
             background: 'var(--bg-color)',
 
@@ -300,7 +304,7 @@ export const CustomerDliveryClant = () => {
               </Badge>
             </IconButton>
           </Box>
-        </Toolbar>
+        </Toolbar> */}
 
         <Box>
           <Typography
@@ -545,6 +549,7 @@ export const CustomerDliveryClant = () => {
                 Voltar para para Home
               </Button>
             </Box>
+
           </Box>
 
           <Box>
@@ -579,7 +584,13 @@ export const CustomerDliveryClant = () => {
             </Typography>
           </Box>
         </Stack>
+
+        <Box>
+          
+        </Box>
       </Stack>
+
+      <MyFooter/>
     </>
   )
 }
