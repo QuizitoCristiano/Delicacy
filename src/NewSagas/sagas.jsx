@@ -9,6 +9,7 @@ import Frotas43 from '../imgLogomarca/NweImagfrutasft.png'
 import Newdellicasse from '../imgLogomarca/fruta233.jpg'
 import { MyEmptyCrad } from './empty/emptyCrad'
 import { MyFooter } from '../componets/footer/Footer'
+import { IsNotstorage } from './empty/companyNotification/NotStorage'
 
 const ArrowImgs = [
   {
@@ -216,6 +217,8 @@ export const MainFolder = () => {
           <MyEmptyCrad />
         </Stack>
       </Stack>
+
+    
       <MyFooter />
     </>
   )

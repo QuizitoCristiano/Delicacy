@@ -18,11 +18,9 @@ import { collection, addDoc } from 'firebase/firestore'
 import { db } from '../../../firebaseconfig/firebaseconfig/'
 
 export const BagMarket = ({
-  handleToggleSacola,
   openModal,
   setOpenModal,
   setSacola,
-  openAlert,
   setOpenAlert,
 }) => {
   const {
@@ -312,21 +310,24 @@ export const BagMarket = ({
         </Button>
       </Box>
 
-      <Dialog open={openAlert} onClose={handleCloseAlert}>
-        <DialogTitle>Aviso</DialogTitle>
-        <DialogContent>
-          <Alert severity="info">
-            Adicione itens ao carrinho para continuar com o processo.
-          </Alert>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAlert} color="primary">
-            Fechar
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={openConfirm} onClose={handleCancelRemove}>
+      <Dialog
+        sx={{
+          zIndex: 3300,
+          width: '100%',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+          '@media (max-width: 600px)': {
+            margin: 0,
+            borderRadius: 0,
+          },
+        }}
+        open={openConfirm}
+        onClose={handleCancelRemove}
+      >
         <DialogTitle>Remover Item</DialogTitle>
         <DialogContent>
           Tem certeza que deseja remover este item do carrinho?

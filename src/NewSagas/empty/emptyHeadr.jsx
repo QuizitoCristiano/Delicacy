@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 
 import { styled, alpha } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
@@ -19,6 +19,7 @@ import MoreIcon from '@mui/icons-material/MoreVert'
 import { List, ListItem } from '@mui/material'
 
 import Dellicacy from '../../imgLogomarca/priclogo1.png'
+import { IsNotstorage } from './companyNotification/NotStorage'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -66,6 +67,12 @@ export const PrimaryAppBarHeadr = ({
 }) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
+
+  const [showNotifications, setShowNotifications] = useState(false)
+
+  const toggleNotifications = () => {
+    setShowNotifications((prev) => !prev)
+  }
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -212,15 +219,37 @@ export const PrimaryAppBarHeadr = ({
         <Box>
           <IconButton
             size="large"
-            aria-label="show 17 new notifications"
+            aria-label="show notifications"
             color="inherit"
+            onClick={toggleNotifications}
           >
-            <Badge badgeContent={17} color="error">
+            <Badge badgeContent={7} color="error">
               <NotificationsIcon />
             </Badge>
           </IconButton>
         </Box>
       </Toolbar>
+
+      {showNotifications && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '100%',
+            height: '85vh',
+            right: 0,
+            zIndex: 10,
+            width: '100vw',
+            maxWidth: '400px',
+            bgcolor: 'white',
+            borderRadius: '10px',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+
+            overflowY: 'auto',
+          }}
+        >
+          <IsNotstorage />
+        </Box>
+      )}
     </Box>
   )
 }

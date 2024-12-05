@@ -13,6 +13,7 @@ import { ForgotPassword } from '../recovery/recoverySenha'
 import { MainFolder } from '../NewSagas/sagas'
 import { PrimaryAppBarHeadr } from '../NewSagas/empty/emptyHeadr'
 import { CustomerDliveryClant } from '../componet/deliveryfolder/customerDelivery'
+import { IsNotstorage } from '../NewSagas/empty/companyNotification/NotStorage'
 
 
 // Definindo a rota protegida
@@ -37,6 +38,8 @@ export const MainRoutes = () => {
           <Route path="/PrimaryAppBarHeadr" element={<PrimaryAppBarHeadr />} />
         
           <Route path="/CustomerDliveryClant" element={<CustomerDliveryClant />} />
+          <Route path="/IsNotstorage" element={<IsNotstorage />} />
+          
         </Routes>
       </MainLayout>
     )

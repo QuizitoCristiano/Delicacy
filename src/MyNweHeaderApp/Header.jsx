@@ -47,7 +47,7 @@ import Fade from '@mui/material/Fade'
 import { styled } from '@mui/material/styles'
 import Badge from '@mui/material/Badge'
 import { NewImgAvatar } from './myNewAvatar'
-
+import { ItemNotification } from './animatino/Not'
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -77,8 +77,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
   },
 }))
-
-
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
   width: 22,
@@ -120,6 +118,7 @@ export const Header = () => {
   const { user, newUser, carinho } = useContext(AuthContext)
   const [openModal, setOpenModal] = useState(false)
   const [notifications, setNotifications] = useState([])
+  const [notItems, setNotItems] = useState([])
   const [lastAddedItem, setLastAddedItem] = useState(null)
   const [onCloseModl, setOnCloseModl] = useState(false)
   const [animationState, setAnimationState] = useState({
@@ -153,16 +152,15 @@ export const Header = () => {
     if (carinho.length > 0) {
       const lastItem = carinho[carinho.length - 1]
       setLastAddedItem(lastItem.nome)
-      // Adicione o item às notificações e inicie a animação
+      
       setNotifications((prevNotifications) => [...prevNotifications, lastItem])
       setAnimationState({ isStopped: false, isPaused: false })
-      // Defina o tempo para parar a animação e remover a notificação
       const timer = setTimeout(() => {
         setNotifications((prevNotifications) =>
           prevNotifications.filter((item) => item !== lastItem)
         )
         setAnimationState({ isStopped: true, isPaused: false }) // Pare a animação
-      }, 2000) // Ajuste o tempo conforme a duração da animação
+      }, 2000) 
 
       return () => clearTimeout(timer)
     }
@@ -246,6 +244,13 @@ export const Header = () => {
         setOpenModal(true) // Abre o modal de confirmação de entrega após o atraso
       }, 500) // Ajuste o tempo de atraso conforme necessário (500ms, por exemplo)
     }
+  }
+
+  const handleOpenAlert = () => {
+    setOpenAlert(true)
+  }
+  const handleCloseAlert = () => {
+    setOpenAlert(false)
   }
 
   return (
@@ -679,9 +684,9 @@ export const Header = () => {
           }}
         >
           <SearchItem
-          onCloseModl={onCloseModl}
-          setOnCloseModl={setOnCloseModl}
-           />
+            onCloseModl={onCloseModl}
+            setOnCloseModl={setOnCloseModl}
+          />
         </DialogContent>
       </Modal>
       {/* Animação */}
@@ -694,6 +699,39 @@ export const Header = () => {
           defaultOptions={defaultOptions}
         />
       ))}
+
+      <Dialog
+        sx={{
+          zIndex: 2000,
+          width: '100%',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+          '@media (max-width: 600px)': {
+            margin: 0,
+            borderRadius: 0,
+          },
+        }}
+        open={openAlert}
+        onClose={handleCloseAlert}
+      >
+        <DialogTitle>Aviso</DialogTitle>
+        <DialogContent>
+          <Alert severity="info">
+            Adicione itens ao carrinho para continuar com o processo.
+          </Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAlert} color="primary">
+            Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+   
     </Stack>
   )
 }
