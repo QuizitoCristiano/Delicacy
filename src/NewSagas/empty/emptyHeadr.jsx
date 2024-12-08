@@ -235,16 +235,16 @@ export const PrimaryAppBarHeadr = ({
           sx={{
             position: 'absolute',
             top: '100%',
-            height: '85vh',
             right: 0,
             zIndex: 10,
             width: '100vw',
             maxWidth: '400px',
+            height: '85vh',
             bgcolor: 'white',
             borderRadius: '10px',
             boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-
-            overflowY: 'auto',
+            transform: showNotifications ? 'translateX(0)' : 'translateX(100%)',
+             overflowY: 'auto',
           }}
         >
           <IsNotstorage />

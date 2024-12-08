@@ -5,7 +5,6 @@ import { MyHome } from '../pages/home'
 import { SignIn } from '../componets/signin-in/signinIn'
 import { SignUp } from '../componets/signUp/signUp'
 import { AuthContext } from '../authcontext' // Apenas AuthContext aqui
-
 import { HomePage } from '../environments/helpers/history'
 import { NewHelpeContato } from '../environments/complaint/helpeContato'
 import { CustomerEvaluation } from '../environments/assessment/customerReview'
@@ -14,7 +13,7 @@ import { MainFolder } from '../NewSagas/sagas'
 import { PrimaryAppBarHeadr } from '../NewSagas/empty/emptyHeadr'
 import { CustomerDliveryClant } from '../componet/deliveryfolder/customerDelivery'
 import { IsNotstorage } from '../NewSagas/empty/companyNotification/NotStorage'
-
+import { ErrorPageNotFound } from '../NewSagas/empty/companyNotification/PageNotFound'
 
 // Definindo a rota protegida
 const ProtectedRoute = ({ children }) => {
@@ -36,10 +35,10 @@ export const MainRoutes = () => {
           <Route path="/NewHelpeContato" element={<NewHelpeContato />} />
           <Route path="/CustomerEvaluation" element={<CustomerEvaluation />} />
           <Route path="/PrimaryAppBarHeadr" element={<PrimaryAppBarHeadr />} />
-        
           <Route path="/CustomerDliveryClant" element={<CustomerDliveryClant />} />
           <Route path="/IsNotstorage" element={<IsNotstorage />} />
-          
+          {/* Rota para página de erro */}
+          <Route path="*" element={<ErrorPageNotFound />} />
         </Routes>
       </MainLayout>
     )
@@ -47,9 +46,10 @@ export const MainRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<SignIn />} />
-      
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="/ForgotPassword" element={<ForgotPassword />} />
+      {/* Rota para página de erro */}
+      <Route path="*" element={<ErrorPageNotFound />} />
     </Routes>
   )
 }
