@@ -5,6 +5,8 @@ import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import MicIcon from '@mui/icons-material/Mic';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+
 import './chatStyles.css';
 
 export const ChatWhatsApp = () => {
@@ -16,6 +18,9 @@ export const ChatWhatsApp = () => {
   const [isMicActive, setIsMicActive] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
+  
+  // Novo estado para armazenar a imagem ou vídeo
+  const [mediaFile, setMediaFile] = useState(null);
 
   const toggleChat = () => setIsChatOpen((prev) => !prev);
 
@@ -23,6 +28,12 @@ export const ChatWhatsApp = () => {
     if (message.trim()) {
       setMessages((prev) => [...prev, { type: 'outgoing', text: message }]);
       setMessage('');
+    }
+    // Enviar a imagem ou vídeo se houver
+    if (mediaFile) {
+      const mediaUrl = URL.createObjectURL(mediaFile);
+      setMessages((prev) => [...prev, { type: 'outgoing', text: 'Arquivo enviado', media: mediaUrl }]);
+      setMediaFile(null); // Limpar após enviar
     }
   };
 
@@ -56,7 +67,45 @@ export const ChatWhatsApp = () => {
       }
     }
   };
-  
+
+  // Função para abrir a câmera ou selecionar um arquivo
+  const handleMediaClick = () => {
+    const options = {
+      title: 'Selecione ou tire uma foto',
+      options: [
+        { text: 'Abrir câmera', onClick: openCamera },
+        { text: 'Selecionar da galeria', onClick: () => openFileSelector() },
+      ],
+    };
+
+    // Aqui você deve implementar um modal ou outro método para escolher as opções
+    // Por exemplo, usando um alert simples ou um modal personalizado
+    if (window.confirm(options.title + '\n1. ' + options.options[0].text + '\n2. ' + options.options[1].text)) {
+      options.options[0].onClick();
+    } else {
+      options.options[1].onClick();
+    }
+  };
+
+  const openCamera = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    // Aqui você deve implementar a lógica para capturar a imagem da câmera
+    // Isso pode incluir mostrar a câmera em um elemento <video> e capturar uma imagem
+    // Não implementaremos isso aqui, pois é um pouco mais complexo e depende de UI
+    console.log("Câmera aberta");
+  };
+
+  const openFileSelector = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*,video/*';
+    fileInput.onchange = (e) => {
+      if (e.target.files.length) {
+        setMediaFile(e.target.files[0]);
+      }
+    };
+    fileInput.click();
+  };
 
   return (
     <Stack
@@ -123,6 +172,8 @@ export const ChatWhatsApp = () => {
                   {msg.type === 'incoming' && <WhatshotIcon />}
                   {msg.audio ? (
                     <audio controls src={msg.audio}></audio>
+                  ) : msg.media ? (
+                    <img src={msg.media} alt="Arquivo enviado" style={{ maxWidth: '100px' }} />
                   ) : (
                     <p>{msg.text}</p>
                   )}
@@ -131,6 +182,25 @@ export const ChatWhatsApp = () => {
             </ul>
 
             <div className="chat-input">
+              <AddAPhotoIcon
+                onClick={handleMediaClick}
+                sx={{
+                  color: '#3cb815',
+                  fontSize: '2rem',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  borderRadius: '50%',
+                  backgroundColor: '#fff',
+                  boxShadow: '0 0 5px #3cb815',
+                  transition: 'box-shadow 0.3s ease',
+                  '&:hover': {
+                    boxShadow: '0 0 10px #3cb815',
+                  },
+                  '&:active': {
+                    boxShadow: '0 0 15px #3cb815',
+                  },
+                }}
+              />
               <textarea
                 placeholder="Enviar Mensagem..."
                 value={message}
@@ -138,7 +208,7 @@ export const ChatWhatsApp = () => {
                 required
               />
               <Button
-                onClick={message.trim() ? handleSendMessage : null}
+                onClick={handleSendMessage}
                 onMouseDown={handleMicPress}
                 onMouseUp={handleMicRelease}
               >

@@ -1,74 +1,83 @@
-import React, { useState } from 'react';
-import { Box, Button, Stack } from '@mui/material';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import SendIcon from '@mui/icons-material/Send';
-import CloseIcon from '@mui/icons-material/Close';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import MicIcon from '@mui/icons-material/Mic';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import React, { useState } from 'react'
+import { Box, Button, Stack, Modal, Typography } from '@mui/material'
+import WhatshotIcon from '@mui/icons-material/Whatshot'
+import SendIcon from '@mui/icons-material/Send'
+import CloseIcon from '@mui/icons-material/Close'
+import WhatsAppIcon from '@mui/icons-material/WhatsApp'
+import MicIcon from '@mui/icons-material/Mic'
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 
-import './chatStyles.css';
+import './chatStyles.css'
 
 export const ChatWhatsApp = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [message, setMessage] = useState('');
+  const [isChatOpen, setIsChatOpen] = useState(false)
+  const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([
     { type: 'incoming', text: 'Olá, como posso ajudá-lo hoje?' },
-  ]);
-  const [isMicActive, setIsMicActive] = useState(false);
-  const [recorder, setRecorder] = useState(null);
-  const [audioBlob, setAudioBlob] = useState(null);
-  
-  // Novo estado para armazenar a imagem ou vídeo
-  const [mediaFile, setMediaFile] = useState(null);
+  ])
+  const [isMicActive, setIsMicActive] = useState(false)
+  const [recorder, setRecorder] = useState(null)
+  const [audioBlob, setAudioBlob] = useState(null)
+  const [mediaFile, setMediaFile] = useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const toggleChat = () => setIsChatOpen((prev) => !prev);
+  const toggleChat = () => setIsChatOpen((prev) => !prev)
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      setMessages((prev) => [...prev, { type: 'outgoing', text: message }]);
-      setMessage('');
+      setMessages((prev) => [...prev, { type: 'outgoing', text: message }])
+      setMessage('')
     }
-    // Enviar a imagem ou vídeo se houver
     if (mediaFile) {
-      const mediaUrl = URL.createObjectURL(mediaFile);
-      setMessages((prev) => [...prev, { type: 'outgoing', text: 'Arquivo enviado', media: mediaUrl }]);
-      setMediaFile(null); // Limpar após enviar
+      const mediaUrl = URL.createObjectURL(mediaFile)
+      const mediaType = mediaFile.type.startsWith('image/')
+        ? 'image'
+        : mediaFile.type.startsWith('video/')
+        ? 'video'
+        : 'file'
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: 'outgoing',
+          text: 'Arquivo enviado',
+          media: mediaUrl,
+          mediaType,
+        },
+      ])
+      setMediaFile(null)
     }
-  };
+  }
 
   const handleMicPress = async () => {
-    setIsMicActive(true);
+    setIsMicActive(true)
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const newRecorder = new MediaRecorder(stream);
-      newRecorder.ondataavailable = (event) => setAudioBlob(event.data);
-      newRecorder.start();
-      setRecorder(newRecorder);
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const newRecorder = new MediaRecorder(stream)
+      newRecorder.ondataavailable = (event) => setAudioBlob(event.data)
+      newRecorder.start()
+      setRecorder(newRecorder)
     } catch (error) {
-      console.error('Erro ao acessar o microfone:', error);
-      setIsMicActive(false);
+      console.error('Erro ao acessar o microfone:', error)
+      setIsMicActive(false)
     }
-  };
+  }
 
   const handleMicRelease = () => {
     if (recorder) {
-      recorder.stop();
-      recorder.stream.getTracks().forEach((track) => track.stop());
-      setRecorder(null);
-      setIsMicActive(false);
-
+      recorder.stop()
+      recorder.stream.getTracks().forEach((track) => track.stop())
+      setRecorder(null)
+      setIsMicActive(false)
       if (audioBlob) {
-        const audioUrl = URL.createObjectURL(audioBlob);
+        const audioUrl = URL.createObjectURL(audioBlob)
         setMessages((prev) => [
           ...prev,
           { type: 'outgoing', text: 'Áudio enviado', audio: audioUrl },
-        ]);
+        ])
       }
     }
-  };
+  }
 
-  // Função para abrir a câmera ou selecionar um arquivo
   const handleMediaClick = () => {
     const options = {
       title: 'Selecione ou tire uma foto',
@@ -76,36 +85,61 @@ export const ChatWhatsApp = () => {
         { text: 'Abrir câmera', onClick: openCamera },
         { text: 'Selecionar da galeria', onClick: () => openFileSelector() },
       ],
-    };
-
-    // Aqui você deve implementar um modal ou outro método para escolher as opções
-    // Por exemplo, usando um alert simples ou um modal personalizado
-    if (window.confirm(options.title + '\n1. ' + options.options[0].text + '\n2. ' + options.options[1].text)) {
-      options.options[0].onClick();
-    } else {
-      options.options[1].onClick();
     }
-  };
+
+    if (
+      window.confirm(
+        options.title +
+          '\n1. ' +
+          options.options[0].text +
+          '\n2. ' +
+          options.options[1].text
+      )
+    ) {
+      options.options[0].onClick()
+    } else {
+      options.options[1].onClick()
+    }
+  }
 
   const openCamera = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true })
     // Aqui você deve implementar a lógica para capturar a imagem da câmera
-    // Isso pode incluir mostrar a câmera em um elemento <video> e capturar uma imagem
-    // Não implementaremos isso aqui, pois é um pouco mais complexo e depende de UI
-    console.log("Câmera aberta");
-  };
+    console.log('Câmera aberta')
+  }
 
   const openFileSelector = () => {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*,video/*';
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.accept = 'image/*,video/*'
     fileInput.onchange = (e) => {
       if (e.target.files.length) {
-        setMediaFile(e.target.files[0]);
+        setMediaFile(e.target.files[0])
+        setIsModalOpen(true) // Abre o modal ao selecionar o arquivo
       }
-    };
-    fileInput.click();
-  };
+    }
+    fileInput.click()
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setMediaFile(null) // Limpa o arquivo ao cancelar
+  }
+
+  const handleConfirmSend = () => {
+    const mediaUrl = URL.createObjectURL(mediaFile)
+    const mediaType = mediaFile.type.startsWith('image/')
+      ? 'image'
+      : mediaFile.type.startsWith('video/')
+      ? 'video'
+      : 'file'
+    setMessages((prev) => [
+      ...prev,
+      { type: 'outgoing', text: 'Arquivo enviado', media: mediaUrl, mediaType },
+    ])
+    setMediaFile(null)
+    setIsModalOpen(false) // Fecha o modal
+  }
 
   return (
     <Stack
@@ -126,19 +160,11 @@ export const ChatWhatsApp = () => {
         <button className="chatbot-toggler" onClick={toggleChat}>
           {isChatOpen ? (
             <CloseIcon
-              sx={{
-                fontSize: '40px',
-                color: '#fff',
-                cursor: 'pointer',
-              }}
+              sx={{ fontSize: '40px', color: '#fff', cursor: 'pointer' }}
             />
           ) : (
             <WhatsAppIcon
-              sx={{
-                fontSize: '50px',
-                color: '#fff',
-                cursor: 'pointer',
-              }}
+              sx={{ fontSize: '50px', color: '#fff', cursor: 'pointer' }}
             />
           )}
         </button>
@@ -172,8 +198,18 @@ export const ChatWhatsApp = () => {
                   {msg.type === 'incoming' && <WhatshotIcon />}
                   {msg.audio ? (
                     <audio controls src={msg.audio}></audio>
-                  ) : msg.media ? (
-                    <img src={msg.media} alt="Arquivo enviado" style={{ maxWidth: '100px' }} />
+                  ) : msg.mediaType === 'image' ? (
+                    <img
+                      src={msg.media}
+                      alt="Arquivo enviado"
+                      style={{ maxWidth: '200px', margin: '5px' }}
+                    />
+                  ) : msg.mediaType === 'video' ? (
+                    <video
+                      controls
+                      src={msg.media}
+                      style={{ maxWidth: '200px', margin: '5px' }}
+                    />
                   ) : (
                     <p>{msg.text}</p>
                   )}
@@ -193,12 +229,8 @@ export const ChatWhatsApp = () => {
                   backgroundColor: '#fff',
                   boxShadow: '0 0 5px #3cb815',
                   transition: 'box-shadow 0.3s ease',
-                  '&:hover': {
-                    boxShadow: '0 0 10px #3cb815',
-                  },
-                  '&:active': {
-                    boxShadow: '0 0 15px #3cb815',
-                  },
+                  '&:hover': { boxShadow: '0 0 10px #3cb815' },
+                  '&:active': { boxShadow: '0 0 15px #3cb815' },
                 }}
               />
               <textarea
@@ -234,6 +266,102 @@ export const ChatWhatsApp = () => {
           </Box>
         )}
       </Stack>
+
+      {/* Modal para confirmar o envio da imagem ou vídeo */}
+      <Modal open={isModalOpen} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            borderRadius: '8px',
+            boxShadow: 24,
+            p: 4,
+            maxWidth: 450,
+            margin: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute', // Usar 'absolute' para centralizar o modal
+            top: '50%', // Posiciona o topo do modal no meio da tela
+            left: '50%', // Posiciona a esquerda do modal no meio da tela
+            transform: 'translate(-50%, -50%)', // Move o modal para o centro
+            textAlign: 'center',
+          }}
+        >
+          <img
+            src={mediaFile ? URL.createObjectURL(mediaFile) : ''}
+            alt="Preview"
+            style={{ maxWidth: '100%', margin: '10px 0' }}
+          />
+
+          <h5
+            style={{
+              fontWeight: 800,
+              fontSize: '18px',
+              marginBottom: '20px',
+              color: 'rgb(51, 191, 48)',
+            }}
+          >
+            Confirmar envio de mídia
+          </h5>
+          <Box
+            sx={{
+              marginTop: '10px',
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Button
+              onClick={handleCloseModal}
+              sx={{
+                height: '50px',
+                width: '40%',
+                borderRadius: '15px 0px 15px 0px',
+                bgcolor: 'rgb(51, 191, 48)',
+                color: '#fff',
+                boxShadow: '20px 20px 50px rgba(0, 0, 0, 0.4)',
+                cursor: 'pointer',
+                fontSize: '15px',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  boxShadow: '0 0 15px 5px #3cb815',
+                  background: '#3cb815',
+                  transform: 'scale(1.05)',
+                },
+              }}
+            >
+              Cancelar
+            </Button>
+
+            <Button
+              onClick={handleConfirmSend}
+              sx={{
+                height: '50px',
+                width: '40%',
+                fontSize: '15px',
+                fontWeight: 'bold',
+                borderRadius: '15px 0px 15px 0px',
+                bgcolor: 'rgb(51, 191, 48)',
+                color: '#fff',
+                boxShadow: '20px 20px 50px rgba(0, 0, 0, 0.4)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  boxShadow: '0 0 15px 5px #f75f1d',
+                  background: '#3cb815',
+                  transform: 'scale(1.05)',
+                  color: '#f75f1d',
+                },
+              }}
+            >
+              Enviar
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Stack>
-  );
-};
+  )
+}
