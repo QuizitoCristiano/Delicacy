@@ -25,7 +25,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Link, useLocation } from 'react-router-dom'
 
 import { BagMarket } from '../componet/marketBag/marketbag'
-import { SearchItem } from '../componet/util/CardBodySearc'
+import { FilterItemForm } from '../componet/util/CardBodySearc'
 import { AuthContext } from '../authcontext'
 import {
   getFirestore,
@@ -500,7 +500,7 @@ export const Header = () => {
                       />
                     </Box>
 
-                    <SearchItem
+                    <FilterItemForm
                       SearchItemVisible={SearchItemVisible}
                       setSearchItemVisible={setSearchItemVisible}
                     />
@@ -683,7 +683,7 @@ export const Header = () => {
             padding: '5px',
           }}
         >
-          <SearchItem
+          <FilterItemForm
             onCloseModl={onCloseModl}
             setOnCloseModl={setOnCloseModl}
           />

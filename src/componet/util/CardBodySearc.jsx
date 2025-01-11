@@ -36,6 +36,8 @@ import { ModalBoleto } from './boleto'
 import { StyleEmptyLoader } from '../../NewSagas/empty/emptyLoader'
 import { useNavigate } from 'react-router-dom'
 import { CustomerDliveryClant } from '../deliveryfolder/customerDelivery'
+import { AuthContext } from '../../authcontext'
+
 
 const globalStyles = `
   @keyframes rotation {
@@ -48,15 +50,13 @@ const globalStyles = `
   }
 `
 
-export const SearchItem = ({ onCloseModl, setOnCloseModl }) => {
-  const auth = getAuth()
-  const [formNweData, setFormNweData] = useState({ paymentMethod: '' })
-  const [open, setOpen] = useState(false)
+export const FilterItemForm = ({ onCloseModl, setOnCloseModl }) => {
+const [formNweData, setFormNweData] = useState({ paymentMethod: '' })
+const [open, setOpen] = useState(false)
+const [isBoletoModalOpen, setBoletoModalOpen] = useState(false)
+const [boletoData, setBoletoData] = useState(null)
 
-  const [isBoletoModalOpen, setBoletoModalOpen] = useState(false)
-  const [boletoData, setBoletoData] = useState(null)
-
-  const [isPixModalOpen, setPixModalOpen] = useState(false)
+const [isPixModalOpen, setPixModalOpen] = useState(false)
   const navigateHomepag = useNavigate()
   const selectedProduct = {
     /* Defina seu produto selecionado aqui */
@@ -108,6 +108,11 @@ export const SearchItem = ({ onCloseModl, setOnCloseModl }) => {
     email: '',
     numeroDoEdificios: '',
     rua: '',
+    tipoImovel: '',
+    bloco: '',
+    apartamento: '',
+    casa: '',
+    paymentMethod: '',
   })
 
   // Recuperar os dados do LocalStorage
@@ -118,6 +123,10 @@ export const SearchItem = ({ onCloseModl, setOnCloseModl }) => {
       setFormData(savedData) // Preencher o formulário com os dados salvos
     }
   }, [])
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   // Recupera dados do localStorage e concatena rua + número
   useEffect(() => {
@@ -173,61 +182,140 @@ export const SearchItem = ({ onCloseModl, setOnCloseModl }) => {
     setFormData(formData)
   }
 
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('newUser'));
+    if (savedData) {
+      const enderecoCompleto = `${savedData.rua}, ${savedData.numeroDoEdificios || ''}`.trim();
+      setFormData({ ...savedData, rua: enderecoCompleto });
+    }
+  }, []);
 
+  //   const handleSubmit = (e) => {
+  //     e.preventDefault(); // Previne o comportamento padrão do formulário
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Previne o comportamento padrão do formulário
+  //     const errors = {};
 
-    const errors = {};
+  //     // Validação de campos obrigatórios
+  //     if (!formData.fullName) {
+  //         errors.fullName = 'O nome completo é obrigatório';
+  //     }
+
+  //     if (!formData.telefone) {
+  //         errors.telefone = 'O telefone é obrigatório';
+  //     }
+
+  //     if (!formData.cpf || !validarCPF(formData.cpf)) {
+  //         errors.cpf = 'CPF inválido';
+  //     }
+
+  //     if (!formData.email) {
+  //         errors.email = 'O email é obrigatório';
+  //     }
+
+  //     if (!formData.numeroDoEdificios) {
+  //         errors.numeroDoEdificios = 'O número do edifício é obrigatório';
+  //     }
+
+  //     if (!formData.rua) {
+  //         errors.rua = 'A rua é obrigatória';
+  //     }
+
+  //     if (!formData.paymentMethod) {
+  //         errors.paymentMethod = 'O método de pagamento é obrigatório';
+  //     }
+
+  //     // Validação específica para tipo de imóvel
+  //     if (formData.tipoImovel === 'apartamento') {
+  //         if (!formData.bloco) errors.bloco = 'O número do bloco é obrigatório';
+  //         if (!formData.apartamento) errors.apartamento = 'O número do apartamento é obrigatório';
+  //     }
+
+  //     if (formData.tipoImovel === 'casa') {
+  //         if (!formData.casa) errors.casa = 'O número da casa é obrigatório';
+  //     }
+
+  //     setFormErrors(errors); // Atualiza os erros de validação
+
+  //     // Se não houver erros, continua com o envio do formulário
+  //     if (Object.keys(errors).length === 0) {
+  //         setSuccessMessage('Formulário enviado com sucesso!');
+  //         // Aqui você pode adicionar a lógica para enviar os dados ao Firebase ou outra ação necessária
+  //     }
+  // };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault() // Previne o comportamento padrão do formulário
+
+    const errors = {}
 
     // Validação de campos obrigatórios
     if (!formData.fullName) {
-        errors.fullName = 'O nome completo é obrigatório';
+      errors.fullName = 'O nome completo é obrigatório'
     }
 
     if (!formData.telefone) {
-        errors.telefone = 'O telefone é obrigatório';
+      errors.telefone = 'O telefone é obrigatório'
     }
 
     if (!formData.cpf || !validarCPF(formData.cpf)) {
-        errors.cpf = 'CPF inválido';
+      errors.cpf = 'CPF inválido'
     }
 
     if (!formData.email) {
-        errors.email = 'O email é obrigatório';
+      errors.email = 'O email é obrigatório'
     }
 
     if (!formData.numeroDoEdificios) {
-        errors.numeroDoEdificios = 'O número do edifício é obrigatório';
+      errors.numeroDoEdificios = 'O número do edifício é obrigatório'
     }
 
     if (!formData.rua) {
-        errors.rua = 'A rua é obrigatória';
+      errors.rua = 'A rua é obrigatória'
     }
 
     if (!formData.paymentMethod) {
-        errors.paymentMethod = 'O método de pagamento é obrigatório';
+      errors.paymentMethod = 'O método de pagamento é obrigatório'
     }
 
-    // Validação específica para tipo de imóvel
     if (formData.tipoImovel === 'apartamento') {
-        if (!formData.bloco) errors.bloco = 'O número do bloco é obrigatório';
-        if (!formData.apartamento) errors.apartamento = 'O número do apartamento é obrigatório';
+      if (!formData.bloco) errors.bloco = 'O número do bloco é obrigatório'
+      if (!formData.apartamento)
+        errors.apartamento = 'O número do apartamento é obrigatório'
     }
 
     if (formData.tipoImovel === 'casa') {
-        if (!formData.casa) errors.casa = 'O número da casa é obrigatório';
+      if (!formData.casa) errors.casa = 'O número da casa é obrigatório'
     }
 
-    setFormErrors(errors); // Atualiza os erros de validação
+    setFormErrors(errors)
 
-    // Se não houver erros, continua com o envio do formulário
     if (Object.keys(errors).length === 0) {
+      try {
+        await addDoc(collection(db, 'userRequest'), {
+          cliente: formData,
+          createdAt: new Date(),
+        });
         setSuccessMessage('Formulário enviado com sucesso!');
-        // Aqui você pode adicionar a lógica para enviar os dados ao Firebase ou outra ação necessária
+        setFormData({
+          fullName: '',
+          telefone: '',
+          cpf: '',
+          email: '',
+          numeroDoEdificios: '',
+          rua: '',
+          tipoImovel: '',
+          bloco: '',
+          apartamento: '',
+          casa: '',
+          paymentMethod: '',
+        });
+      } catch (error) {
+        console.error('Erro ao salvar no Firebase:', error);
+      }
     }
-};
 
+    setLoading(false);
+  }
 
   const validarCPF = (cpf) => {
     cpf = cpf.replace(/\D/g, '')
@@ -505,7 +593,7 @@ export const SearchItem = ({ onCloseModl, setOnCloseModl }) => {
                   FormHelperTextProps={{ sx: { fontSize: '1.4rem' } }}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment  position="start">Bloco</InputAdornment>
+                      <InputAdornment position="start">Bloco</InputAdornment>
                     ),
                   }}
                 />
@@ -576,8 +664,6 @@ export const SearchItem = ({ onCloseModl, setOnCloseModl }) => {
             type="submit"
             onClick={handleClickMyHomepag}
             disabled={loading}
-
-            
           >
             Enviar
           </CardStylSearche.containerButton>
@@ -613,3 +699,5 @@ export const SearchItem = ({ onCloseModl, setOnCloseModl }) => {
     </>
   )
 }
+
+

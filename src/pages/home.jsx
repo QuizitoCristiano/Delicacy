@@ -27,6 +27,7 @@ import { MyEmptyCrad } from '../NewSagas/empty/emptyCrad'
 import { CustomerDliveryClant } from '../componet/deliveryfolder/customerDelivery'
 import { ItemNotification } from '../MyNweHeaderApp/animatino/Not'
 import { ErrorPageNotFound } from '../NewSagas/empty/companyNotification/PageNotFound'
+import { ChatWhatsApp } from '../chatWats/zap'
 
 export const MyHome = () => {
   const { user, logout } = useContext(AuthContext)
@@ -196,7 +197,15 @@ export const MyHome = () => {
         <NewCategorys />
         <ProductsLegumes />
         <AboutUs />
+
+              <ChatWhatsApp/>
+
+
+
+
+
         <Clientes />
+
        
 
             

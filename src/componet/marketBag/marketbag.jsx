@@ -13,7 +13,6 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import './newStyle.css'
 import { AuthContext } from '../../authcontext'
-import { SearchItem } from '../util/CardBodySearc'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '../../../firebaseconfig/firebaseconfig/'
 
@@ -21,7 +20,7 @@ export const BagMarket = ({
   openModal,
   setOpenModal,
   setSacola,
-  setOpenAlert,
+
 }) => {
   const {
     carinho,
@@ -30,7 +29,10 @@ export const BagMarket = ({
     removerItem,
     totalItensCarrinho,
     setCarinho,
-  } = useContext(AuthContext)
+    purchaseData,
+    setPurchaseData,
+    setOpenAlert, // Using from AuthContext
+  } = useContext(AuthContext);
 
   const [removItemArray, setRemoveItemArray] = useState(null)
   const [openConfirm, setOpenConfirm] = useState(false)
@@ -39,53 +41,83 @@ export const BagMarket = ({
   // const handleOpenModal = () => {
   //   if (carinho.length === 0) {
   //     setOpenAlert(true); // Exibe alerta se o carrinho estiver vazio
-  //   } else {
-  //     setSacola(false); // Fecha a sacola
-  //     setTimeout(() => {
-  //       setOpenModal(true); // Abre o modal de confirmação de entrega
-  //     }, 500); // Ajuste o tempo de atraso conforme necessário (500ms, por exemplo)
+  //     setAlertMessage("O carrinho está vazio! Adicione itens antes de finalizar a compra.");
+  //     return;
   //   }
-
-  //   const total = carinho.reduce((acc, item) => acc + item.price * item.quantidade, 0).toFixed(2);
-
-  //   localStorage.setItem('carinho', JSON.stringify(carinho));
-  //   localStorage.setItem('total', total);
+  
+  //   setSacola(false); // Fecha a sacola
+  //   setTimeout(() => {
+  //     setOpenModal(true); // Abre o modal de confirmação de entrega
+  //   }, 500); // Ajuste o tempo de atraso conforme necessário
+  
+  //   // Calcula o total
+  //   const total = carinho
+  //     .reduce((acc, item) => acc + item.price * item.quantidade, 0)
+  //     .toFixed(2);
+  
+  //   // Atualiza o contexto com os dados da compra
+  //   setPurchaseData({
+  //     items: carinho.map((item) => ({
+  //       nome: item.nome,
+  //       price: item.price,
+  //       quantidade: item.quantidade,
+  //       subtotal: (item.price * item.quantidade).toFixed(2),
+  //     })),
+  //     total: total,
+  //     createdAt: new Date(),
+  //   });
+  
+  //   // Salva os dados no localStorage
+  //   try {
+  //     localStorage.setItem("carinho", JSON.stringify(carinho));
+  //     localStorage.setItem("total", total);
+  //   } catch (error) {
+  //     console.error("Erro ao salvar dados no localStorage:", error);
+  //   }
   // };
+  
 
-  const handleOpenModal = async () => {
+
+  const handleOpenModal = () => {
     if (carinho.length === 0) {
-      setOpenAlert(true) // Exibe alerta se o carrinho estiver vazio
-    } else {
-      setSacola(false) // Fecha a sacola
-      setTimeout(() => {
-        setOpenModal(true) // Abre o modal de confirmação de entrega
-      }, 500) // Ajuste o tempo de atraso conforme necessário (500ms, por exemplo)
+      setOpenAlert(true);
+      setAlertMessage("O carrinho está vazio! Adicione itens antes de finalizar a compra.");
+      return;
     }
-
-    // Calcula o total e salva no localStorage
+  
+    setSacola(false); // Fecha a sacola
+    setTimeout(() => {
+      setOpenModal(true); // Abre o modal de confirmação de entrega
+    }, 500);
+  
     const total = carinho
       .reduce((acc, item) => acc + item.price * item.quantidade, 0)
-      .toFixed(2)
-    localStorage.setItem('carinho', JSON.stringify(carinho))
-    localStorage.setItem('total', total)
-
-    // Armazena no Firebase
+      .toFixed(2);
+  
+    const dadosCompra = {
+      items: carinho.map((item) => ({
+        nome: item.nome,
+        price: item.price,
+        quantidade: item.quantidade,
+        subtotal: (item.price * item.quantidade).toFixed(2),
+      })),
+      total: total,
+      createdAt: new Date(),
+    };
+  
+    // Atualiza o contexto com os dados
+    salvarDadosCarrinho(dadosCompra);
+  
+    // Salva os dados no localStorage
     try {
-      await addDoc(collection(db, 'userRequest'), {
-        items: carinho.map((item) => ({
-          nome: item.nome,
-          price: item.price,
-          quantidade: item.quantidade,
-          subtotal: (item.price * item.quantidade).toFixed(2),
-        })),
-        total: total,
-        createdAt: new Date(), // adiciona uma data de criação
-      })
-      console.log('Dados armazenados no Firebase com sucesso!')
+      localStorage.setItem("carinho", JSON.stringify(carinho));
+      localStorage.setItem("total", total);
     } catch (error) {
-      console.error('Erro ao salvar no Firebase:', error)
+      console.error("Erro ao salvar dados no localStorage:", error);
     }
-  }
+  };
+  
+
 
   const handleCloseAlert = () => {
     setOpenAlert(false)
@@ -94,9 +126,7 @@ export const BagMarket = ({
   const removerItemIcon = (index) => {
     removerItem(index)
   }
-  // const handleDecrementClick = (index) => {
-  //   decrementarQuantidade(index);
-  // };
+
 
   const handleDecrementClick = (index) => {
     const item = carinho[index]
@@ -225,7 +255,6 @@ export const BagMarket = ({
       </Stack>
     ))
   }
-
   return (
     <Stack
       sx={{
@@ -304,7 +333,7 @@ export const BagMarket = ({
             },
           }}
           onClick={handleOpenModal}
-          // onClick={handleToggleSacola}
+          
         >
           Finalizar Compra
         </Button>

@@ -15,7 +15,10 @@ import {
   doc,
   setDoc,
   updateDoc,
+  
+  
 } from "firebase/firestore";
+
 
 import ProductItemLegume from "../componets/ProductsLegumes/legunes";
 import ProductItem from "../componets/Products/frutas";
@@ -25,35 +28,69 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const auth = getAuth();
-  const firestore = getFirestore();
+  const firestore = getFirestore();  
   const provider = new GoogleAuthProvider();
-
   // Estados principais
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [newUser, setNewUser] = useState(null);
 
   const [user, setUser] = useState(null);
   const [carinho, setCarinho] = useState([]);
+  
   const [termoPesquisa, setTermoPesquisa] = useState('');
   const [resultados, setResultados] = useState([]);
+  const [dadosFormulario, setDadosFormulario] = useState(null);
 
-  // Função para adicionar ou incrementar um item no carinho
-  const adicionarNovoItem = (produto) => {
-    const itemExistenteIndex = carinho.findIndex(
-      (item) => item.nome === produto.nome && item.price === produto.price
-    );
+  const [purchaseData, setPurchaseData] = useState(null);
+  
 
-    if (itemExistenteIndex !== -1) {
-      // Incrementa a quantidade do item existente
-      const novoCarrinho = [...carinho];
-      novoCarrinho[itemExistenteIndex].quantidade++;
-      setCarinho(novoCarrinho);
-    } else {
-      // Adiciona um novo item ao carinho
-      const novoItem = { ...produto, quantidade: 1 };
-      setCarinho([...carinho, novoItem]);
+  const salvarDadosCarrinho = (dados) => {
+    try {
+      setPurchaseData(dados);
+    } catch (error) {
+      console.error("Erro ao salvar dados no contexto:", error);
     }
   };
+
+  const salvarDadosFormulario = (dados) => {
+    setDadosFormulario(dados);
+  };
+
+  // Função para adicionar ou incrementar um item no carinho
+ 
+
+
+
+  const adicionarNovoItem = async (produto) => {
+    setCarinho((prevCarinho) => {
+      const novoCarrinho = [...prevCarinho];
+      const itemExistenteIndex = novoCarrinho.findIndex(
+        (item) => item.nome === produto.nome && item.price === produto.price
+      );
+  
+      if (itemExistenteIndex !== -1) {
+        novoCarrinho[itemExistenteIndex].quantidade++;
+      } else {
+        novoCarrinho.push({ ...produto, quantidade: 1 });
+      }
+  
+      // Salvar no Firebase
+      // if (user) {
+      //   const userRef = doc(firestore, 'userRequest', user.uid);
+      //   updateDoc(userRef, { carinho: novoCarrinho }).catch((error) =>
+      //     console.error('Erro ao atualizar carrinho no Firebase:', error)
+      //   );
+      // }
+  
+      return novoCarrinho;
+    });
+  };
+
+
+  
+  
+
+
 
   // Função para incrementar a quantidade de um item no carinho
   const incrementarQuantidade = (index) => {
@@ -171,15 +208,20 @@ const removerItem = (index) => {
       setCarinho,
       adicionarNovoItem,
       incrementarQuantidade,
-      decrementarQuantidade, // Mantém decrementarQuantidade
-      removerItem, // Agora removerItem está definido e sendo passado
+      decrementarQuantidade, 
+      removerItem, 
       totalItensCarrinho,
       termoPesquisa,
       setTermoPesquisa,
       resultados,
       setResultados,
       handlePesquisar,
-      newUser
+      newUser,
+      salvarDadosCarrinho,
+      dadosFormulario,
+      salvarDadosFormulario,
+      purchaseData,
+      setPurchaseData
     }}
     >
       {children}
