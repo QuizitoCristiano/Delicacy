@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import SendIcon from '@mui/icons-material/Send';
@@ -15,6 +15,8 @@ export const ChatWhatsApp = () => {
   ]);
   const [isMicActive, setIsMicActive] = useState(false);
   const [recorder, setRecorder] = useState(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);
 
   const toggleChat = () => setIsChatOpen((prev) => !prev);
 
@@ -32,6 +34,9 @@ export const ChatWhatsApp = () => {
     }
 
     setIsMicActive(true);
+    setIsRecording(true);
+    setRecordingTime(10); // Gravação máxima de 10 segundos
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const newRecorder = new MediaRecorder(stream);
@@ -57,6 +62,7 @@ export const ChatWhatsApp = () => {
       console.error('Erro ao acessar o microfone:', error);
       alert('Não foi possível acessar o microfone. Verifique as permissões.');
       setIsMicActive(false);
+      setIsRecording(false);
     }
   };
 
@@ -64,9 +70,37 @@ export const ChatWhatsApp = () => {
     if (recorder) {
       recorder.stop();
       setRecorder(null);
-      setIsMicActive(false);
+    }
+    setIsMicActive(false);
+    setIsRecording(false);
+    setRecordingTime(0);
+  };
+
+  const handleLongPressMessage = (index) => {
+    const confirmDelete = window.confirm('Deseja apagar esta mensagem?');
+    if (confirmDelete) {
+      setMessages((prev) => prev.filter((_, i) => i !== index));
     }
   };
+
+  const handleDragMessage = (index) => {
+    const draggedMessage = messages[index];
+    setMessages((prev) => [
+      draggedMessage,
+      ...prev.filter((_, i) => i !== index),
+    ]);
+  };
+
+  useEffect(() => {
+    let timer;
+    if (isRecording && recordingTime > 0) {
+      timer = setTimeout(() => setRecordingTime((prev) => prev - 1), 1000);
+    }
+    if (recordingTime === 0 && isRecording) {
+      handleMicRelease();
+    }
+    return () => clearTimeout(timer);
+  }, [isRecording, recordingTime]);
 
   return (
     <Stack
@@ -129,6 +163,8 @@ export const ChatWhatsApp = () => {
                     justifyContent:
                       msg.type === 'incoming' ? 'flex-start' : 'flex-end',
                   }}
+                  onDragEnd={() => handleDragMessage(index)}
+                  onDoubleClick={() => handleLongPressMessage(index)}
                 >
                   {msg.type === 'incoming' && <WhatshotIcon />}
                   {msg.audio ? (
@@ -144,7 +180,10 @@ export const ChatWhatsApp = () => {
               <textarea
                 placeholder="Enviar Mensagem..."
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  setIsMicActive(false); // Desabilita o microfone ao digitar
+                }}
                 required
               />
               <Button
@@ -153,6 +192,7 @@ export const ChatWhatsApp = () => {
                 onMouseUp={handleMicRelease}
                 onTouchStart={handleMicPress}
                 onTouchEnd={handleMicRelease}
+                disabled={!isMicActive && !message.trim()}
               >
                 {message.trim() ? (
                   <SendIcon
@@ -172,6 +212,11 @@ export const ChatWhatsApp = () => {
                   />
                 )}
               </Button>
+              {isRecording && (
+                <p style={{ color: 'red', marginTop: '8px' }}>
+                  Gravando: {recordingTime}s restantes
+                </p>
+              )}
             </div>
           </Box>
         )}
