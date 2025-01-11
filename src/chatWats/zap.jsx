@@ -15,7 +15,6 @@ export const ChatWhatsApp = () => {
   ]);
   const [isMicActive, setIsMicActive] = useState(false);
   const [recorder, setRecorder] = useState(null);
-  const [audioBlob, setAudioBlob] = useState(null);
 
   const toggleChat = () => setIsChatOpen((prev) => !prev);
 
@@ -27,15 +26,36 @@ export const ChatWhatsApp = () => {
   };
 
   const handleMicPress = async () => {
+    if (!navigator.mediaDevices || !window.MediaRecorder) {
+      alert('Seu navegador não suporta gravação de áudio.');
+      return;
+    }
+
     setIsMicActive(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const newRecorder = new MediaRecorder(stream);
-      newRecorder.ondataavailable = (event) => setAudioBlob(event.data);
+      const chunks = [];
+
+      newRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) chunks.push(event.data);
+      };
+
+      newRecorder.onstop = () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setMessages((prev) => [
+          ...prev,
+          { type: 'outgoing', text: 'Áudio enviado', audio: audioUrl },
+        ]);
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
       newRecorder.start();
       setRecorder(newRecorder);
     } catch (error) {
       console.error('Erro ao acessar o microfone:', error);
+      alert('Não foi possível acessar o microfone. Verifique as permissões.');
       setIsMicActive(false);
     }
   };
@@ -43,17 +63,8 @@ export const ChatWhatsApp = () => {
   const handleMicRelease = () => {
     if (recorder) {
       recorder.stop();
-      recorder.stream.getTracks().forEach((track) => track.stop());
       setRecorder(null);
       setIsMicActive(false);
-
-      if (audioBlob) {
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setMessages((prev) => [
-          ...prev,
-          { type: 'outgoing', text: 'Áudio enviado', audio: audioUrl },
-        ]);
-      }
     }
   };
 
@@ -140,6 +151,8 @@ export const ChatWhatsApp = () => {
                 onClick={message.trim() ? handleSendMessage : null}
                 onMouseDown={handleMicPress}
                 onMouseUp={handleMicRelease}
+                onTouchStart={handleMicPress}
+                onTouchEnd={handleMicRelease}
               >
                 {message.trim() ? (
                   <SendIcon

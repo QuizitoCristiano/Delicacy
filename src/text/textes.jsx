@@ -13,22 +13,50 @@ export const ChatWhatsApp = () => {
   const [messages, setMessages] = useState([
     { type: 'incoming', text: 'Olá, como posso ajudá-lo hoje?' },
   ]);
-  const [isMicActive, setIsMicActive] = useState(false); // Estado do microfone
+  const [isMicActive, setIsMicActive] = useState(false);
+  const [recorder, setRecorder] = useState(null);
+  const [audioBlob, setAudioBlob] = useState(null);
 
   const toggleChat = () => setIsChatOpen((prev) => !prev);
 
   const handleSendMessage = () => {
     if (message.trim()) {
       setMessages((prev) => [...prev, { type: 'outgoing', text: message }]);
-      setMessage(''); // Limpa o campo de mensagem
+      setMessage('');
     }
   };
 
-  const handleMicClick = () => {
+  const handleMicPress = async () => {
     setIsMicActive(true);
-    alert('Microfone ativado!'); // Exemplo de funcionalidade ao clicar no microfone
-    setTimeout(() => setIsMicActive(false), 2000); // Desativa após 2 segundos (opcional)
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const newRecorder = new MediaRecorder(stream);
+      newRecorder.ondataavailable = (event) => setAudioBlob(event.data);
+      newRecorder.start();
+      setRecorder(newRecorder);
+    } catch (error) {
+      console.error('Erro ao acessar o microfone:', error);
+      setIsMicActive(false);
+    }
   };
+
+  const handleMicRelease = () => {
+    if (recorder) {
+      recorder.stop();
+      recorder.stream.getTracks().forEach((track) => track.stop());
+      setRecorder(null);
+      setIsMicActive(false);
+
+      if (audioBlob) {
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setMessages((prev) => [
+          ...prev,
+          { type: 'outgoing', text: 'Áudio enviado', audio: audioUrl },
+        ]);
+      }
+    }
+  };
+  
 
   return (
     <Stack
@@ -93,7 +121,11 @@ export const ChatWhatsApp = () => {
                   }}
                 >
                   {msg.type === 'incoming' && <WhatshotIcon />}
-                  <p>{msg.text}</p>
+                  {msg.audio ? (
+                    <audio controls src={msg.audio}></audio>
+                  ) : (
+                    <p>{msg.text}</p>
+                  )}
                 </li>
               ))}
             </ul>
@@ -105,7 +137,11 @@ export const ChatWhatsApp = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 required
               />
-              <Button onClick={message.trim() ? handleSendMessage : handleMicClick}>
+              <Button
+                onClick={message.trim() ? handleSendMessage : null}
+                onMouseDown={handleMicPress}
+                onMouseUp={handleMicRelease}
+              >
                 {message.trim() ? (
                   <SendIcon
                     sx={{
