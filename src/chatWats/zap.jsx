@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import MicIcon from '@mui/icons-material/Mic';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+
 import './chatStyles.css';
 
 export const ChatWhatsApp = () => {
@@ -15,8 +17,10 @@ export const ChatWhatsApp = () => {
   ]);
   const [isMicActive, setIsMicActive] = useState(false);
   const [recorder, setRecorder] = useState(null);
-  const [recordingTime, setRecordingTime] = useState(0);
-  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  
+  // Novo estado para armazenar a imagem ou vídeo
+  const [mediaFile, setMediaFile] = useState(null);
 
   const toggleChat = () => setIsChatOpen((prev) => !prev);
 
@@ -25,82 +29,83 @@ export const ChatWhatsApp = () => {
       setMessages((prev) => [...prev, { type: 'outgoing', text: message }]);
       setMessage('');
     }
+    // Enviar a imagem ou vídeo se houver
+    if (mediaFile) {
+      const mediaUrl = URL.createObjectURL(mediaFile);
+      setMessages((prev) => [...prev, { type: 'outgoing', text: 'Arquivo enviado', media: mediaUrl }]);
+      setMediaFile(null); // Limpar após enviar
+    }
   };
 
   const handleMicPress = async () => {
-    if (!navigator.mediaDevices || !window.MediaRecorder) {
-      alert('Seu navegador não suporta gravação de áudio.');
-      return;
-    }
-
     setIsMicActive(true);
-    setIsRecording(true);
-    setRecordingTime(10); // Gravação máxima de 10 segundos
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const newRecorder = new MediaRecorder(stream);
-      const chunks = [];
-
-      newRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) chunks.push(event.data);
-      };
-
-      newRecorder.onstop = () => {
-        const audioBlob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setMessages((prev) => [
-          ...prev,
-          { type: 'outgoing', text: 'Áudio enviado', audio: audioUrl },
-        ]);
-        stream.getTracks().forEach((track) => track.stop());
-      };
-
+      newRecorder.ondataavailable = (event) => setAudioBlob(event.data);
       newRecorder.start();
       setRecorder(newRecorder);
     } catch (error) {
       console.error('Erro ao acessar o microfone:', error);
-      alert('Não foi possível acessar o microfone. Verifique as permissões.');
       setIsMicActive(false);
-      setIsRecording(false);
     }
   };
 
   const handleMicRelease = () => {
     if (recorder) {
       recorder.stop();
+      recorder.stream.getTracks().forEach((track) => track.stop());
       setRecorder(null);
+      setIsMicActive(false);
+
+      if (audioBlob) {
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setMessages((prev) => [
+          ...prev,
+          { type: 'outgoing', text: 'Áudio enviado', audio: audioUrl },
+        ]);
+      }
     }
-    setIsMicActive(false);
-    setIsRecording(false);
-    setRecordingTime(0);
   };
 
-  const handleLongPressMessage = (index) => {
-    const confirmDelete = window.confirm('Deseja apagar esta mensagem?');
-    if (confirmDelete) {
-      setMessages((prev) => prev.filter((_, i) => i !== index));
+  // Função para abrir a câmera ou selecionar um arquivo
+  const handleMediaClick = () => {
+    const options = {
+      title: 'Selecione ou tire uma foto',
+      options: [
+        { text: 'Abrir câmera', onClick: openCamera },
+        { text: 'Selecionar da galeria', onClick: () => openFileSelector() },
+      ],
+    };
+
+    // Aqui você deve implementar um modal ou outro método para escolher as opções
+    // Por exemplo, usando um alert simples ou um modal personalizado
+    if (window.confirm(options.title + '\n1. ' + options.options[0].text + '\n2. ' + options.options[1].text)) {
+      options.options[0].onClick();
+    } else {
+      options.options[1].onClick();
     }
   };
 
-  const handleDragMessage = (index) => {
-    const draggedMessage = messages[index];
-    setMessages((prev) => [
-      draggedMessage,
-      ...prev.filter((_, i) => i !== index),
-    ]);
+  const openCamera = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    // Aqui você deve implementar a lógica para capturar a imagem da câmera
+    // Isso pode incluir mostrar a câmera em um elemento <video> e capturar uma imagem
+    // Não implementaremos isso aqui, pois é um pouco mais complexo e depende de UI
+    console.log("Câmera aberta");
   };
 
-  useEffect(() => {
-    let timer;
-    if (isRecording && recordingTime > 0) {
-      timer = setTimeout(() => setRecordingTime((prev) => prev - 1), 1000);
-    }
-    if (recordingTime === 0 && isRecording) {
-      handleMicRelease();
-    }
-    return () => clearTimeout(timer);
-  }, [isRecording, recordingTime]);
+  const openFileSelector = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*,video/*';
+    fileInput.onchange = (e) => {
+      if (e.target.files.length) {
+        setMediaFile(e.target.files[0]);
+      }
+    };
+    fileInput.click();
+  };
 
   return (
     <Stack
@@ -163,12 +168,12 @@ export const ChatWhatsApp = () => {
                     justifyContent:
                       msg.type === 'incoming' ? 'flex-start' : 'flex-end',
                   }}
-                  onDragEnd={() => handleDragMessage(index)}
-                  onDoubleClick={() => handleLongPressMessage(index)}
                 >
                   {msg.type === 'incoming' && <WhatshotIcon />}
                   {msg.audio ? (
                     <audio controls src={msg.audio}></audio>
+                  ) : msg.media ? (
+                    <img src={msg.media} alt="Arquivo enviado" style={{ maxWidth: '100px' }} />
                   ) : (
                     <p>{msg.text}</p>
                   )}
@@ -177,22 +182,35 @@ export const ChatWhatsApp = () => {
             </ul>
 
             <div className="chat-input">
+              <AddAPhotoIcon
+                onClick={handleMediaClick}
+                sx={{
+                  color: '#3cb815',
+                  fontSize: '2rem',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  borderRadius: '50%',
+                  backgroundColor: '#fff',
+                  boxShadow: '0 0 5px #3cb815',
+                  transition: 'box-shadow 0.3s ease',
+                  '&:hover': {
+                    boxShadow: '0 0 10px #3cb815',
+                  },
+                  '&:active': {
+                    boxShadow: '0 0 15px #3cb815',
+                  },
+                }}
+              />
               <textarea
                 placeholder="Enviar Mensagem..."
                 value={message}
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                  setIsMicActive(false); // Desabilita o microfone ao digitar
-                }}
+                onChange={(e) => setMessage(e.target.value)}
                 required
               />
               <Button
-                onClick={message.trim() ? handleSendMessage : null}
+                onClick={handleSendMessage}
                 onMouseDown={handleMicPress}
                 onMouseUp={handleMicRelease}
-                onTouchStart={handleMicPress}
-                onTouchEnd={handleMicRelease}
-                disabled={!isMicActive && !message.trim()}
               >
                 {message.trim() ? (
                   <SendIcon
@@ -212,11 +230,6 @@ export const ChatWhatsApp = () => {
                   />
                 )}
               </Button>
-              {isRecording && (
-                <p style={{ color: 'red', marginTop: '8px' }}>
-                  Gravando: {recordingTime}s restantes
-                </p>
-              )}
             </div>
           </Box>
         )}
