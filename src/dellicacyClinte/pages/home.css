@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* bgcolor: 'rgba(0, 200, 100, 0.1)', */
+/* #minha-imagem {
+  background: #dd242a;
+  color: #dedede;
+
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  scroll-behavior: smooth;
+}
+
+.dark-mode {
+  --bg-color: #0b061f;
+  --text-color: #fdfdfd;
+  --shadow-color: rgba(0, 0, 0, 0.7);
+}
+
+:root {
+  --green-color: #3cb815;
+  --Light-green-color: #c0eb7b;
+  --orange-color: #ff7e00;
+  --light-orange-color: #f75f1d;
+  --text-color: #1a2428;
+  --bg-color: #fff;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+.Home_container {
+ 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150vh;
+  position: relative;
+  margin-top: 0px;
+  width: 100%;
+  padding: 2rem 7%;
+}
+
+
+
+.contato-icons{
+  height:145px;
+  width: 345px;
+  background: #ff4d05;
+  color: #dedede;
+ 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin-right: 15px;
+  transition: all .45s ease;
+}
+
+.contato-icons:hover {
+  background: #dedede;
+  color: #ff4d05;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.list a {
+  color: #dedede;
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 25px;
+  transition: all .45s ease;
+}
+
+.list a:hover {
+  color: #dedede;
+  margin-bottom: 5rem;
+  transition: all .45s ease;
+}
+
+
+
+.logoutButton {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 50px;
+  font-weight: 800;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--light-orange-color);
+  color: white;
+  border: none;
+  outline: none !important;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.6);
+  transition: box-shadow 0.3s ease;
+  z-index: 2000;
+}
+
+.logoutButton:hover {
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.9);
+  background-color: var(--light-orange-color);
+}
+
+
+@media screen and (max-width: 805px) {
+  #minha-imagem {
+    width: 350px;
+    height: auto;
+    transition: all 0.45s ease;
+  }
+}
+
+@media screen and (max-width: 720px) {
+    #minha-imagem {
+      width: 100%;
+      height: auto;
+      transition: all 0.45s ease;
+    }
+  }
+  

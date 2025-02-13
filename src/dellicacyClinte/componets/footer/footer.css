@@ -1,0 +1,143 @@
+/*Goole Fontes*/
+@import url('https://fonts.googleapis.com/css2? family= Poppins:wght@200;300;400;500;600;700;800 & display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+/*Some Variables */
+
+* {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  scroll-padding-top: 2rem;
+  scroll-behavior: smooth;
+}
+
+:root {
+  --green-color: #3cb815;
+  --Light-green-color: #c0eb7b;
+  --orange-color: #ff7e00;
+  --light-orange-color: #f75f1d;
+  --text-color: #1a2428;
+  --bg-color: #fff;
+  overflow-x: hidden !important;
+}
+
+/* Footer */
+.footer {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+  gap: 5rem;
+  margin-top: 2rem;
+  background: #fef4ea;
+  position: relative;
+  padding: 20px 100px;
+  
+}
+
+
+
+.footer-box {
+  display: flex;
+  flex-direction: column;
+}
+.footer-box p {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+
+.social {
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+  font-size: 1.9rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.boxNewIcon {
+  padding: 10px;
+  background: var(--bg-color);
+  color: var(--green-color);
+  border-radius: 5rem;
+  font-size: 20px;
+}
+.social .boxNewIcon:hover {
+  background: var(--green-color);
+  color: var(--bg-color);
+  transition: 0.2s all linear;
+}
+
+.footer-box h2 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.footer-box a {
+  color: #868a92;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+.footer-box a:hover {
+  color: var(--light-orange-color);
+}
+
+.footer-box form {
+  border-bottom: 1px solid var(--text-color);
+  font-size: 1.4rem;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+
+.footer-box form input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1.4rem;
+}
+
+.footer-box form .bx {
+  font-size: 20px;
+  color: var(--light-orange-color);
+  cursor: pointer;
+}
+
+.footer-box form .bxs-envelope {
+  color: var(--green-color);
+}
+/* copyright */
+
+.copyright {
+  text-align: center;
+  font-size: 1.4rem;
+  padding: 20px;
+  background: #faeaea;
+  color: var(--green-color);
+  font-weight: 700;
+  width: 100%;
+}
+
+.logoDelicacy{
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem !important;
+  font-weight: 600;
+  color: #f75f1d !important;
+}
+
+@media (max-width: 852px) {
+  
+.copyright {
+  text-align: center;
+  font-size: 1.2rem;
+
+}
+}

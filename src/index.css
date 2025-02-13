@@ -65,6 +65,64 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+
+.btnArrow {
+  padding: 1.2rem 1.5rem;
+  background: var(--green-color);
+  color: var(--bg-color);
+  font-weight: 600;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 0.5rem;
+  font-size: 1.2rem;
+  max-width: 180px;
+
+  &:hover {
+    background: var(--orange-color);
+    color: var(--bg-color);
+    font-weight: 600;
+  }
+}
+
+.swiper-slide {
+  /* background: rgb(106, 98, 98); */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.btnArrow  {
+
+  font-size: 12px;
+  font-weight: bold;
+  
+}
+
+.btnArrow .bx {
+  padding: 1px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  margin: auto;
+}
+
+.containerImg img {
+  width: 100%;
+}
+
+
+@media (max-width: 712px) {
+  .containerImg img {
+    width: 100%;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
